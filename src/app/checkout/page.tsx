@@ -244,28 +244,16 @@ export default function CheckoutPage() {
                 <h2 className="text-3xl font-bold uppercase tracking-tighter">Оплата заказа</h2>
                 <div className="bg-slate-50 p-8 border border-slate-100 space-y-6">
                   <div className="text-center space-y-4">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600">Система Быстрых Платежей</span>
-                    <div className="aspect-square w-48 mx-auto bg-white border border-slate-200 flex items-center justify-center relative overflow-hidden">
-                      {/* Сюда вставьте ваш QR код */}
-                      <div className="text-[10px] text-slate-400 uppercase tracking-widest p-4 text-center">
-                        QR-код для оплаты <br /> ИП Москвин
-                      </div>
-                      <div className="absolute inset-0 bg-blue-600/5 flex items-center justify-center">
-                         <span className="text-[8px] font-bold uppercase tracking-tighter text-blue-600 opacity-20">PLACEHOLDER</span>
-                      </div>
-                    </div>
                     <div className="space-y-1">
                       <p className="text-2xl font-bold tracking-tighter">{totalPrice} ₽</p>
-                      <p className="text-[10px] text-slate-400 uppercase tracking-widest">К оплате без комиссии</p>
+                      <p className="text-[10px] text-slate-400 uppercase tracking-widest">К оплате</p>
                     </div>
                   </div>
                   
                   <div className="space-y-3 pt-4 border-t border-slate-200">
                     <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-relaxed">
-                      1. Откройте приложение вашего банка <br />
-                      2. Выберите "Оплата по QR-коду" <br />
-                      3. Отсканируйте код выше <br />
-                      4. После оплаты нажмите кнопку ниже
+                      Нажмите кнопку ниже для перехода к безопасной оплате заказа. 
+                      После успешной транзакции наш менеджер свяжется с вами для уточнения деталей доставки.
                     </p>
                   </div>
                 </div>
@@ -280,10 +268,10 @@ export default function CheckoutPage() {
                   </Button>
                   <Button 
                     onClick={payWithTBank}
-                    className="flex-1 rounded-none py-8 uppercase tracking-widest text-xs bg-blue-600 hover:bg-blue-700"
+                    className="flex-1 rounded-none py-8 uppercase tracking-widest text-xs bg-slate-900 hover:bg-blue-600 transition-colors"
                     disabled={loading}
                   >
-                    {loading ? "Обработка..." : "Оплатить через Т-Банк"}
+                    {loading ? "Обработка..." : "Оплатить"}
                   </Button>
                 </div>
               </div>

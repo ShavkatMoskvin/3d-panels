@@ -82,7 +82,7 @@ export default function ContactsPage() {
                         <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1 block">
                           {info.title}
                         </span>
-                        <p className="text-lg font-bold uppercase tracking-tight mb-1">{info.value}</p>
+                        <p className="text-lg font-bold uppercase tracking-tight mb-1 break-all">{info.value}</p>
                         <p className="text-xs text-slate-400 uppercase tracking-widest leading-relaxed">
                           {info.description}
                         </p>

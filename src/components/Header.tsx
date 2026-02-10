@@ -126,10 +126,10 @@ export function Header() {
                   Поддержка
                 </p>
                 <div className="flex flex-col gap-3">
-                  <a href="mailto:shavkatmoskvin@gmail.com" className="text-slate-600 hover:text-blue-600 transition-colors text-sm">
+                  <a href="mailto:shavkatmoskvin@gmail.com" className="text-slate-600 hover:text-blue-600 transition-colors text-sm break-all">
                     shavkatmoskvin@gmail.com
                   </a>
-                  <a href="https://t.me/moskwin" className="inline-flex items-center justify-center py-3 px-4 bg-slate-900 text-white text-xs font-bold uppercase tracking-widest hover:bg-blue-600 transition-all">
+                  <a href="https://t.me/moskvinsh" className="inline-flex items-center justify-center py-3 px-4 bg-slate-900 text-white text-xs font-bold uppercase tracking-widest hover:bg-blue-600 transition-all">
                     Написать в Telegram
                   </a>
                 </div>
