@@ -2,14 +2,18 @@
 
 import { Calculator } from "@/components/Calculator";
 import { AddToCart } from "@/components/AddToCart";
-import { ArrowLeft, Check, Truck } from "lucide-react";
+import { ArrowLeft, Check, Truck, Plus, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { Product } from "@/types";
-import { CATEGORIES } from "@/lib/data";
+import { CATEGORIES, PRODUCTS } from "@/lib/data";
 import { useState } from "react";
 
 export default function ProductPageClient({ product }: { product: Product }) {
   const [mainImage, setMainImage] = useState(product.images[0] || "");
+
+  // Фильтруем профили для секции "Покупают вместе"
+  const suggestedProfiles = PRODUCTS.filter(p => p.category === 'profiles').slice(0, 3);
+  const isProfile = product.category === 'profiles';
 
   return (
     <div className="bg-white min-h-screen">
@@ -131,6 +135,54 @@ export default function ProductPageClient({ product }: { product: Product }) {
             </div>
           </div>
         </div>
+
+        {/* Bought Together Section */}
+        {!isProfile && suggestedProfiles.length > 0 && (
+          <section className="mt-32 pt-20 border-t border-slate-100">
+            <div className="flex flex-col mb-12">
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-600 mb-4">Дополните ваш интерьер</span>
+              <h3 className="text-3xl font-bold uppercase tracking-tighter">Покупают вместе</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {suggestedProfiles.map((profile) => (
+                <div key={profile.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl">
+                  <div className="aspect-square mb-6 overflow-hidden bg-white">
+                    <img 
+                      src={profile.images[0]} 
+                      alt={profile.name} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-start gap-4">
+                      <h4 className="text-xs font-bold uppercase tracking-widest leading-tight flex-1">
+                        {profile.name}
+                      </h4>
+                      <p className="text-xs font-bold tracking-tighter whitespace-nowrap">
+                        {profile.price} ₽
+                      </p>
+                    </div>
+                    <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-6">
+                      {profile.specifications.material}
+                    </p>
+                    <div className="flex gap-2 pt-4">
+                      <Link href={`/product/${profile.slug}`} className="flex-1">
+                        <button className="w-full py-3 bg-white border border-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
+                          Подробнее
+                        </button>
+                      </Link>
+                      <AddToCart 
+                        product={profile} 
+                        showIconOnly 
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

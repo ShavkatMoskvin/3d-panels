@@ -80,6 +80,26 @@ export const PRODUCTS: Product[] = [
     images: ["/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png"],
     description: "Экологичная гипсовая 3D панель с уникальным рельефом. Создает неповторимую игру света и тени.",
     specifications: { width: 500, height: 500, depth: 25, material: "Гипс" }
+  },
+  {
+    id: "9",
+    name: "Профиль алюминиевый Gold",
+    slug: "profile-gold",
+    category: "profiles",
+    price: 1200,
+    images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
+    description: "Декоративный профиль в золотом исполнении для стыковки панелей.",
+    specifications: { width: 3000, height: 15, depth: 15, material: "Алюминий" }
+  },
+  {
+    id: "10",
+    name: "Профиль теневой Black",
+    slug: "profile-shadow-black",
+    category: "profiles",
+    price: 950,
+    images: ["/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png"],
+    description: "Создает эффект парящей стены. Матовый черный цвет.",
+    specifications: { width: 2500, height: 20, depth: 40, material: "Алюминий" }
   }
 ];
 
