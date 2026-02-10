@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Category } from "@/types";
 import { AddToCart } from "@/components/AddToCart";
 import Link from "next/link";
@@ -8,6 +8,22 @@ import { PRODUCTS, CATEGORIES } from "@/lib/data";
 
 export default function CatalogPage() {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>("all");
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Проверяем, проскроллили ли мы за пределы шапки каталога
+      // Высота шапки примерно 400-500px
+      if (window.scrollY > 450) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const filteredProducts = activeCategory === "all" 
     ? PRODUCTS 
@@ -43,16 +59,22 @@ export default function CatalogPage() {
       </section>
 
       {/* Filter Bar */}
-      <div className="sticky top-[80px] bg-white/80 backdrop-blur-xl z-40 border-b border-slate-100 py-8">
+      <div className={`sticky top-[80px] bg-white/80 backdrop-blur-xl z-40 border-b border-slate-100 transition-all duration-300 ${
+        isSticky ? "py-4" : "py-8"
+      }`}>
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6">
+          <div className={`flex items-center gap-x-8 gap-y-4 transition-all duration-300 ${
+            isSticky 
+              ? "overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center" 
+              : "flex-wrap justify-center"
+          }`}>
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.value}
                 onClick={() => setActiveCategory(cat.value)}
-                className={`group relative py-2 text-[10px] font-bold uppercase tracking-[0.25em] transition-all ${
+                className={`group relative py-2 text-[10px] font-bold uppercase tracking-[0.25em] transition-all whitespace-nowrap ${
                   activeCategory === cat.value ? "text-blue-600" : "text-slate-400 hover:text-slate-900"
-                }`}
+                } ${isSticky ? "flex-shrink-0" : ""}`}
               >
                 {cat.label}
                 <span className={`absolute -bottom-1 left-0 h-[2px] bg-blue-600 transition-all duration-300 ${

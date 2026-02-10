@@ -164,14 +164,14 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-6">
-                  <Link href="/catalog">
-                    <Button className="rounded-none px-12 py-8 uppercase tracking-widest text-xs">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                  <Link href="/catalog" className="w-full sm:w-auto">
+                    <Button className="w-full rounded-none px-8 sm:px-12 py-6 sm:py-8 uppercase tracking-widest text-xs">
                       Выбрать панели
                     </Button>
                   </Link>
-                  <Link href="/installation">
-                    <Button variant="outline" className="rounded-none px-12 py-8 uppercase tracking-widest text-xs">
+                  <Link href="/installation" className="w-full sm:w-auto">
+                    <Button variant="outline" className="w-full rounded-none px-8 sm:px-12 py-6 sm:py-8 uppercase tracking-widest text-xs">
                       О монтаже
                     </Button>
                   </Link>

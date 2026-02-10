@@ -121,22 +121,22 @@ export default function InstallationPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-32 text-center">
+      <section className="py-32 text-center overflow-hidden">
         <div className="container mx-auto px-4">
-          <h3 className="text-4xl font-bold mb-12 uppercase tracking-tighter leading-tight">
+          <h3 className="text-3xl md:text-4xl font-bold mb-12 uppercase tracking-tighter leading-tight px-4">
             Нужна помощь профессионалов?
           </h3>
-          <p className="text-slate-500 max-w-xl mx-auto mb-12 text-sm uppercase tracking-widest">
+          <p className="text-slate-500 max-w-xl mx-auto mb-12 text-[11px] sm:text-sm uppercase tracking-widest px-4">
             Мы предоставляем услуги квалифицированного монтажа с гарантией на выполненные работы.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
-            <Link href="/contacts">
-              <Button size="lg" className="rounded-none px-12 py-8 uppercase tracking-widest text-xs">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 px-4">
+            <Link href="/contacts" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full rounded-none px-8 sm:px-12 py-6 sm:py-8 uppercase tracking-widest text-xs">
                 Заказать монтаж
               </Button>
             </Link>
-            <Link href="/catalog">
-              <Button variant="outline" size="lg" className="rounded-none px-12 py-8 uppercase tracking-widest text-xs">
+            <Link href="/catalog" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full rounded-none px-8 sm:px-12 py-6 sm:py-8 uppercase tracking-widest text-xs">
                 Вернуться в каталог
               </Button>
             </Link>
