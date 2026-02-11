@@ -97,7 +97,7 @@ export function AddToCart({
           images: [item.image || ""],
           category: "accessories",
           description: "",
-          specifications: { material: "", width: 0, height: 0, weight: "" },
+          specifications: { material: "", width: 0, height: 0, depth: 0 },
           colors: [],
           variations: []
         };
@@ -134,7 +134,7 @@ export function AddToCart({
           images: [item.image || ""],
           category: "accessories",
           description: "",
-          specifications: { material: "", width: 0, height: 0, weight: "" },
+          specifications: { material: "", width: 0, height: 0, depth: 0 },
           colors: [],
           variations: []
         };
