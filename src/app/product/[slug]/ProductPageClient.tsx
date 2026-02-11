@@ -2,7 +2,7 @@
 
 import { Calculator } from "@/components/Calculator";
 import { AddToCart } from "@/components/AddToCart";
-import { ArrowLeft, Check, Truck, Plus, ShoppingCart } from "lucide-react";
+import { ArrowLeft, Check, Truck, Plus } from "lucide-react";
 import Link from "next/link";
 import { Product } from "@/types";
 import { CATEGORIES, PRODUCTS } from "@/lib/data";
@@ -10,9 +10,14 @@ import { useState } from "react";
 
 export default function ProductPageClient({ product }: { product: Product }) {
   const [mainImage, setMainImage] = useState(product.images[0] || "");
+  const [calculatedQuantity, setCalculatedQuantity] = useState<number | null>(null);
 
-  // Фильтруем профили для секции "Покупают вместе"
-  const suggestedProfiles = PRODUCTS.filter(p => p.category === 'profiles').slice(0, 3);
+  // Фильтруем профили и аксессуары для секции "Покупают вместе"
+  const suggestedProducts = PRODUCTS.filter(p => 
+    (p.category === 'profiles' || p.category === 'accessories') && p.id !== product.id
+  ).slice(0, 3);
+  
+  const isPanel = ['gypsum', 'polyurethane', 'slatted', 'flexible-stone', 'hd-spc', 'travertine'].includes(product.category);
   const isProfile = product.category === 'profiles';
 
   return (
@@ -94,32 +99,39 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-10 mb-12 pb-12 border-b border-slate-100">
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Размер</span>
-                  <p className="text-sm font-bold uppercase tracking-tight">
-                    {product.specifications.width} x {product.specifications.height} мм
-                  </p>
+              {isPanel && (
+                <div className="grid grid-cols-2 gap-10 mb-12 pb-12 border-b border-slate-100">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Размер</span>
+                    <p className="text-sm font-bold uppercase tracking-tight">
+                      {product.specifications.width} x {product.specifications.height} мм
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Материал</span>
+                    <p className="text-sm font-bold uppercase tracking-tight">
+                      {product.specifications.material}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Материал</span>
-                  <p className="text-sm font-bold uppercase tracking-tight">
-                    {product.specifications.material}
-                  </p>
-                </div>
-              </div>
+              )}
 
               {/* Calculator Section */}
-              <div className="mb-12">
-                <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Расчет количества</h4>
-                <Calculator 
-                  panelWidth={product.specifications.width} 
-                  panelHeight={product.specifications.height} 
-                />
-              </div>
+              {isPanel && (
+                <div className="mb-12">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Расчет количества</h4>
+                  <Calculator 
+                    product={product} 
+                    onCalculate={(q) => setCalculatedQuantity(q)} 
+                  />
+                </div>
+              )}
 
               <div className="flex flex-col gap-6 mb-12">
-                <AddToCart product={product} />
+                <AddToCart 
+                  product={product} 
+                  initialQuantity={calculatedQuantity || undefined} 
+                />
               </div>
 
               <div className="space-y-4 pt-8 border-t border-slate-100">
@@ -137,7 +149,7 @@ export default function ProductPageClient({ product }: { product: Product }) {
         </div>
 
         {/* Bought Together Section */}
-        {!isProfile && suggestedProfiles.length > 0 && (
+        {!isProfile && suggestedProducts.length > 0 && (
           <section className="mt-32 pt-20 border-t border-slate-100">
             <div className="flex flex-col mb-12">
               <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-600 mb-4">Дополните ваш интерьер</span>
@@ -145,29 +157,29 @@ export default function ProductPageClient({ product }: { product: Product }) {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {suggestedProfiles.map((profile) => (
-                <div key={profile.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl">
+              {suggestedProducts.map((item) => (
+                <div key={item.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl">
                   <div className="aspect-square mb-6 overflow-hidden bg-white">
                     <img 
-                      src={profile.images[0]} 
-                      alt={profile.name} 
+                      src={item.images[0]} 
+                      alt={item.name} 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between items-start gap-4">
                       <h4 className="text-xs font-bold uppercase tracking-widest leading-tight flex-1">
-                        {profile.name}
+                        {item.name}
                       </h4>
                       <p className="text-xs font-bold tracking-tighter whitespace-nowrap">
-                        {profile.price} ₽
+                        {item.price} ₽
                       </p>
                     </div>
                     <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-6">
-                      {profile.specifications.material}
+                      {item.specifications.material}
                     </p>
                     <div className="pt-4">
-                      <Link href={`/product/${profile.slug}`}>
+                      <Link href={`/product/${item.slug}`}>
                         <button className="w-full py-4 bg-white border border-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
                           Подробнее
                         </button>

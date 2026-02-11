@@ -3,12 +3,62 @@
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Trash2, ArrowLeft } from "lucide-react";
+import { Trash2, ArrowLeft, Minus, Plus } from "lucide-react";
 import { CATEGORIES } from "@/lib/data";
+import { useState, useEffect } from "react";
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, totalPrice, includeInstallation, setIncludeInstallation, installationPrice } = useCart();
   const itemsPrice = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+  // Компонент для управления количеством внутри строки корзины
+  const QuantitySelector = ({ item }: { item: any }) => {
+    const [localQty, setLocalQty] = useState<string>(item.quantity.toString());
+
+    useEffect(() => {
+      setLocalQty(item.quantity.toString());
+    }, [item.quantity]);
+
+    const handleBlur = () => {
+      const val = parseInt(localQty);
+      if (!isNaN(val) && val >= 0) {
+        updateQuantity(item.id, val);
+        setLocalQty(val.toString());
+      } else {
+        setLocalQty(item.quantity.toString());
+      }
+    };
+
+    return (
+      <div className="flex items-center border border-slate-200 bg-white group hover:border-blue-600 transition-colors w-fit">
+        <button 
+          className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors"
+          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+        >
+          <Minus size={14} className="sm:hidden" />
+          <Minus size={16} className="hidden sm:block" />
+        </button>
+        <div className="flex items-center border-x border-slate-100 px-2 h-10 sm:h-12">
+          <input 
+            type="number"
+            value={localQty}
+            onChange={(e) => setLocalQty(e.target.value)}
+            onBlur={handleBlur}
+            className="w-10 sm:w-12 text-center font-bold text-sm sm:text-base outline-none bg-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            min="0"
+          />
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-400 select-none ml-1">шт.</span>
+        </div>
+        <button 
+          className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-slate-400 hover:text-blue-600 transition-colors"
+          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+        >
+          <Plus size={14} className="sm:hidden" />
+          <Plus size={16} className="hidden sm:block" />
+        </button>
+      </div>
+    );
+  };
 
   if (items.length === 0) {
     return (
@@ -39,10 +89,11 @@ export default function CartPage() {
 
       <div className="container mx-auto px-4 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-          <div className="lg:col-span-8 space-y-12">
+          <div className="lg:col-span-8 space-y-8 md:space-y-12">
             {items.map((item) => (
-              <div key={item.id} className="flex flex-col sm:flex-row gap-8 border-b border-slate-100 pb-12 items-center group">
-                <div className="w-full sm:w-48 aspect-square bg-slate-50 relative overflow-hidden border border-slate-100 group-hover:bg-slate-100 transition-colors">
+              <div key={item.id} className="flex gap-4 sm:gap-8 border-b border-slate-100 pb-8 md:pb-12 group relative">
+                {/* Image */}
+                <div className="w-24 h-24 sm:w-48 sm:h-48 flex-shrink-0 bg-slate-50 relative overflow-hidden border border-slate-100 group-hover:bg-slate-100 transition-colors">
                   {item.images && item.images.length > 0 ? (
                     <img 
                       src={item.images[0]} 
@@ -50,43 +101,52 @@ export default function CartPage() {
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-widest text-slate-400">
+                    <div className="absolute inset-0 flex items-center justify-center text-[8px] sm:text-[10px] uppercase tracking-widest text-slate-400 text-center px-2">
                       {item.name}
                     </div>
                   )}
-                  <div className="absolute inset-0 image-overlay-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
                 
-                <div className="flex-1 text-center sm:text-left">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-2 block">
-                    {CATEGORIES.find(c => c.value === item.category)?.label || item.category}
-                  </span>
-                  <h3 className="text-xl font-bold uppercase tracking-tight mb-2">{item.name}</h3>
-                  <p className="text-sm text-slate-400 uppercase tracking-widest">{item.price} ₽ / шт.</p>
+                {/* Info & Controls */}
+                <div className="flex flex-col flex-1 min-w-0 py-1">
+                  {/* Top Row: Category & Title & Delete(Mobile) */}
+                  <div className="flex justify-between items-start mb-auto">
+                    <div className="min-w-0 pr-2">
+                      <span className="text-[7px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 mb-1 sm:mb-2 block truncate">
+                        {CATEGORIES.find(c => c.value === item.category)?.label || item.category}
+                      </span>
+                      <h3 className="text-sm sm:text-xl font-bold uppercase tracking-tight mb-1 truncate leading-tight">{item.name}</h3>
+                      <p className="text-[10px] sm:text-sm text-slate-400 uppercase tracking-widest font-medium">{item.price} ₽ / шт.</p>
+                    </div>
+                    
+                    <button 
+                      className="sm:hidden text-slate-300 hover:text-red-500 transition-colors p-1 -mr-2"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  {/* Bottom: Quantity & Total */}
+                  <div className="flex items-end justify-between gap-2 mt-4">
+                    <div className="flex-shrink-0">
+                      <QuantitySelector item={item} />
+                    </div>
+                    
+                    <div className="text-right">
+                      <div className="text-lg sm:text-2xl font-bold tracking-tight text-slate-900 leading-none mb-1">
+                        {item.price * item.quantity} ₽
+                      </div>
+                      <div className="sm:hidden text-[8px] font-bold uppercase tracking-widest text-slate-300">
+                        Итого
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                
-                <div className="flex items-center gap-6 border border-slate-200 px-4 py-2">
-                  <button 
-                    className="text-slate-400 hover:text-black transition-colors px-2"
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  >
-                    —
-                  </button>
-                  <span className="w-8 text-center font-bold text-sm">{item.quantity}</span>
-                  <button 
-                    className="text-slate-400 hover:text-black transition-colors px-2"
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  >
-                    +
-                  </button>
-                </div>
-                
-                <div className="text-xl font-bold tracking-tight w-32 text-center sm:text-right">
-                  {item.price * item.quantity} ₽
-                </div>
-                
+
+                {/* Desktop Delete (hidden on mobile) */}
                 <button 
-                  className="text-slate-300 hover:text-red-500 transition-colors p-2"
+                  className="hidden sm:flex text-slate-200 hover:text-red-500 transition-colors p-2 self-start mt-2"
                   onClick={() => removeFromCart(item.id)}
                 >
                   <Trash2 className="w-5 h-5" />
@@ -96,56 +156,59 @@ export default function CartPage() {
           </div>
           
           <div className="lg:col-span-4">
-            <div className="border border-slate-900 p-10 sticky top-32">
-              <h3 className="text-2xl font-bold uppercase tracking-tight mb-10">Итого</h3>
+            <div className="border border-slate-900 p-6 md:p-10 sticky top-32 bg-white">
+              <h3 className="text-2xl font-bold uppercase tracking-tight mb-8 md:mb-10">Итого</h3>
               
               {/* Installation Upsell */}
-              <div className="mb-10 p-6 bg-slate-50 border border-slate-100 space-y-4">
+              <div className="mb-8 md:mb-10 p-5 md:p-6 bg-slate-50 border border-slate-100 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900">Монтаж панелей</span>
-                  <input 
-                    type="checkbox" 
-                    id="installation"
-                    checked={includeInstallation}
-                    onChange={(e) => setIncludeInstallation(e.target.checked)}
-                    className="w-4 h-4 accent-blue-600"
-                  />
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      id="installation"
+                      checked={includeInstallation}
+                      onChange={(e) => setIncludeInstallation(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
                 </div>
                 <p className="text-[9px] text-slate-400 uppercase tracking-widest leading-relaxed">
                   Профессиональный монтаж нашими мастерами с гарантией 2 года (+15% к стоимости)
                 </p>
               </div>
 
-              <div className="space-y-4 mb-10 pb-10 border-b border-slate-100">
-                <div className="flex justify-between text-xs uppercase tracking-widest text-slate-400">
+              <div className="space-y-4 mb-8 md:mb-10 pb-8 md:pb-10 border-b border-slate-100">
+                <div className="flex justify-between text-[10px] uppercase tracking-widest text-slate-400">
                   <span>Товары ({items.length})</span>
-                  <span>{itemsPrice} ₽</span>
+                  <span className="font-bold text-slate-900">{itemsPrice} ₽</span>
                 </div>
                 {includeInstallation && (
-                  <div className="flex justify-between text-xs uppercase tracking-widest text-blue-600 font-medium">
+                  <div className="flex justify-between text-[10px] uppercase tracking-widest text-blue-600 font-bold">
                     <span>Монтаж (15%)</span>
                     <span>{installationPrice} ₽</span>
                   </div>
                 )}
-                <div className="flex justify-between text-xs uppercase tracking-widest text-slate-400">
+                <div className="flex justify-between text-[10px] uppercase tracking-widest text-slate-400">
                   <span>Доставка</span>
                   <span className="text-green-600 font-bold">Бесплатно</span>
                 </div>
               </div>
 
-              <div className="flex justify-between font-bold text-2xl uppercase tracking-tighter mb-10">
+              <div className="flex justify-between font-bold text-3xl md:text-2xl uppercase tracking-tighter mb-8 md:mb-10">
                 <span>Всего</span>
                 <span>{totalPrice} ₽</span>
               </div>
 
-              <Link href="/checkout">
-                <Button className="w-full rounded-none py-8 uppercase tracking-widest text-xs" size="lg">
+              <Link href="/checkout" className="block">
+                <Button className="w-full rounded-none py-10 uppercase tracking-[0.3em] text-sm bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-2xl shadow-blue-200 border-none" size="lg">
                   Оформить заказ
                 </Button>
               </Link>
               
-              <p className="mt-8 text-[10px] text-slate-400 uppercase tracking-widest text-center leading-relaxed">
-                Нажимая кнопку, вы соглашаетесь с условиями <br /> обработки персональных данных.
+              <p className="mt-8 text-[9px] text-slate-400 uppercase tracking-widest text-center leading-relaxed">
+                Безопасная оплата картой или наличными <br /> при получении товара
               </p>
             </div>
           </div>

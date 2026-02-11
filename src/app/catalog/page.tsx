@@ -150,7 +150,7 @@ export default function CatalogPage() {
                     </div>
                     
                     <div className="mt-auto">
-                      <Link href={`/product/${product.slug}`}>
+                      <Link href={`/product/${product.slug}`} className="block">
                         <button className="w-full py-3.5 bg-white border border-slate-200 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-300">
                           Подробнее
                         </button>

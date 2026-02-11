@@ -100,6 +100,46 @@ export const PRODUCTS: Product[] = [
     images: ["/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png"],
     description: "Создает эффект парящей стены. Матовый черный цвет.",
     specifications: { width: 2500, height: 20, depth: 40, material: "Алюминий" }
+  },
+  {
+    id: "11",
+    name: "Монтажный комплект Professional",
+    slug: "mounting-kit-pro",
+    category: "accessories",
+    price: 2450,
+    images: ["/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png"],
+    description: "Полный набор для самостоятельного монтажа: шпатель, уровень, крепежи и инструкция.",
+    specifications: { width: 300, height: 200, depth: 100, material: "Пластик/Металл" }
+  },
+  {
+    id: "12",
+    name: "Клей для панелей UltraFix",
+    slug: "glue-ultrafix",
+    category: "accessories",
+    price: 1100,
+    images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
+    description: "Высокоадгезивный клей для всех типов 3D панелей. Расход: 1 туба на 3-4 панели.",
+    specifications: { width: 50, height: 250, depth: 50, material: "Акрил" }
+  },
+  {
+    id: "13",
+    name: "Гипсовая панель Wave",
+    slug: "gypsum-wave",
+    category: "gypsum",
+    price: 1350,
+    images: ["/images/products/{46ED9163-DE3C-4068-AC28-CA0863736AE6}.png"],
+    description: "Классическая волна. Создает бесшовное покрытие с эффектом движения.",
+    specifications: { width: 500, height: 500, depth: 30, material: "Гипс" }
+  },
+  {
+    id: "14",
+    name: "Полиуретановая панель Hexagon",
+    slug: "poly-hexagon",
+    category: "polyurethane",
+    price: 1950,
+    images: ["/images/products/{7D2B5115-6E0A-4EFB-80D5-CC21ED300691}.png"],
+    description: "Геометрический паттерн в стиле хай-тек. Легкий монтаж и возможность покраски.",
+    specifications: { width: 600, height: 600, depth: 20, material: "Полиуретан" }
   }
 ];
 
