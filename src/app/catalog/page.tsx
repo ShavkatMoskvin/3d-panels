@@ -1,27 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Category } from "@/types";
-import { AddToCart } from "@/components/AddToCart";
 import Link from "next/link";
 import { PRODUCTS, CATEGORIES } from "@/lib/data";
 
 export default function CatalogPage() {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>("all");
   const [isSticky, setIsSticky] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Проверяем, проскроллили ли мы за пределы шапки каталога
-      // Высота шапки примерно 400-500px
-      if (window.scrollY > 450) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
+      if (sentinelRef.current) {
+        const rect = sentinelRef.current.getBoundingClientRect();
+        // Прилипаем чуть раньше, чтобы переход был бесшовным (81px - это высота хедера + 1px)
+        setIsSticky(rect.top <= 81); 
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -30,7 +30,7 @@ export default function CatalogPage() {
     : PRODUCTS.filter(p => p.category === activeCategory);
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen hide-scrollbar">
       {/* Catalog Header */}
       <section className="relative py-48 overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -58,87 +58,117 @@ export default function CatalogPage() {
         </div>
       </section>
 
-      {/* Filter Bar */}
-      <div className={`sticky top-[80px] bg-white/80 backdrop-blur-xl z-40 border-b border-slate-100 transition-all duration-300 ${
-        isSticky ? "py-4" : "py-8"
-      }`}>
-        <div className="container mx-auto px-4">
-          <div className={`flex items-center gap-x-8 gap-y-4 transition-all duration-300 ${
+      {/* Основной контейнер каталога */}
+      <div className="relative">
+        {/* Сентиннель для отслеживания момента прилипания */}
+        <div ref={sentinelRef} className="absolute -top-20 left-0 w-full h-0 pointer-events-none" />
+
+        <div 
+          style={{ top: '90px' }}
+          className={`sticky z-40 transition-all duration-500 flex justify-center w-full px-4 ${
+            isSticky ? "opacity-100" : ""
+          }`}
+        >
+          <div className={`max-w-[1400px] w-full transition-all duration-500 ${
             isSticky 
-              ? "overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center" 
-              : "flex-wrap justify-center"
+              ? "bg-white/90 backdrop-blur-xl shadow-2xl shadow-slate-200/50 border border-slate-100 rounded-2xl py-3" 
+              : "py-10 border-b border-transparent"
           }`}>
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                onClick={() => setActiveCategory(cat.value)}
-                className={`group relative py-2 text-[10px] font-bold uppercase tracking-[0.25em] transition-all whitespace-nowrap ${
-                  activeCategory === cat.value ? "text-blue-600" : "text-slate-400 hover:text-slate-900"
-                } ${isSticky ? "flex-shrink-0" : ""}`}
-              >
-                {cat.label}
-                <span className={`absolute -bottom-1 left-0 h-[2px] bg-blue-600 transition-all duration-300 ${
-                  activeCategory === cat.value ? "w-full" : "w-0 group-hover:w-full"
-                }`}></span>
-              </button>
-            ))}
+            <div className="container mx-auto px-4">
+              <div className="flex flex-col items-center">
+                {/* Категории */}
+                <div className="w-full relative group">
+                  <div className="flex justify-start md:justify-center overflow-x-auto no-scrollbar scroll-smooth px-4">
+                    <div className="inline-flex items-center gap-2">
+                      {CATEGORIES.map((cat) => (
+                        <button
+                          key={cat.value}
+                          onClick={() => setActiveCategory(cat.value)}
+                          className={`relative px-6 md:px-8 py-4 transition-all duration-300 whitespace-nowrap rounded-xl ${
+                            activeCategory === cat.value 
+                              ? "text-white bg-slate-900 shadow-lg shadow-slate-900/20" 
+                              : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                          } text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em]`}
+                        >
+                          <span className="relative z-10">{cat.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Счетчик товаров */}
+                <div className={`transition-all duration-500 ${isSticky ? 'opacity-0 h-0 overflow-hidden' : 'mt-6 opacity-100'}`}>
+                  <div className="flex items-center gap-3">
+                    <div className="h-px w-4 bg-slate-200"></div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
+                      {filteredProducts.length} моделей в коллекции
+                    </p>
+                    <div className="h-px w-4 bg-slate-200"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Products Grid */}
-      <section className="py-24">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-end mb-16">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-              Показано: {filteredProducts.length} моделей
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-20">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="group flex flex-col">
-                <Link href={`/product/${product.slug}`} className="relative block aspect-[4/5] bg-slate-50 overflow-hidden mb-8 border border-slate-100 transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-slate-200">
-                  {product.images && product.images.length > 0 ? (
-                    <>
+        {/* Products Grid */}
+        <section className="py-24">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl flex flex-col">
+                  <Link href={`/product/${product.slug}`} className="relative block aspect-square bg-white overflow-hidden mb-6 border border-slate-100 transition-all duration-500">
+                    {product.images && product.images.length > 0 ? (
                       <img 
                         src={product.images[0]} 
                         alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
-                    </>
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-[10px] text-slate-300 font-light italic tracking-widest group-hover:scale-110 transition-transform duration-700 uppercase p-8 text-center">
-                      {product.name}
-                    </div>
-                  )}
-                </Link>
-                
-                <div className="flex-1 flex flex-col">
-                  <div className="mb-6">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-600">
-                        {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
-                      </span>
-                      <span className="text-sm font-bold tracking-tighter text-slate-900">
-                        {product.price} ₽
-                      </span>
-                    </div>
-                    <Link href={`/product/${product.slug}`}>
-                      <h4 className="text-sm font-bold uppercase tracking-widest group-hover:text-blue-600 transition-colors leading-tight">
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-[10px] text-slate-300 font-light italic tracking-widest uppercase p-8 text-center">
                         {product.name}
-                      </h4>
-                    </Link>
-                  </div>
-                  <div className="mt-auto pt-4 border-t border-slate-50">
-                    <AddToCart product={product} />
+                      </div>
+                    )}
+                  </Link>
+                  
+                  <div className="flex-1 flex flex-col">
+                    <div className="mb-6">
+                      <div className="flex justify-between items-start mb-3 gap-4">
+                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-600">
+                          {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
+                        </span>
+                        <span className="text-xs font-bold tracking-tighter text-slate-900 whitespace-nowrap">
+                          {product.price} ₽
+                        </span>
+                      </div>
+                      <Link href={`/product/${product.slug}`}>
+                        <h4 className="text-xs font-bold uppercase tracking-widest group-hover:text-blue-600 transition-colors leading-tight min-h-[2.5rem] line-clamp-2">
+                          {product.name}
+                        </h4>
+                      </Link>
+                    </div>
+                    
+                    <div className="mt-auto">
+                      <Link href={`/product/${product.slug}`}>
+                        <button className="w-full py-3.5 bg-white border border-slate-200 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all duration-300">
+                          Подробнее
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+            
+            {filteredProducts.length === 0 && (
+              <div className="py-40 text-center">
+                <p className="text-slate-400 uppercase text-[10px] tracking-[0.5em]">Коллекций не найдено</p>
               </div>
-            ))}
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

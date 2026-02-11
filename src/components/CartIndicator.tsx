@@ -10,7 +10,7 @@ export function CartIndicator() {
 
   return (
     <Link href="/cart">
-      <Button variant="outline" className="relative flex items-center gap-2">
+      <Button variant="outline" className="relative flex items-center gap-2 bg-white/80 backdrop-blur-md">
         <ShoppingCart className="w-5 h-5" />
         <span className="hidden sm:inline">Корзина</span>
         {totalItems > 0 && (

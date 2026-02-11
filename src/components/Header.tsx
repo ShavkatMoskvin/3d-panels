@@ -32,7 +32,7 @@ export function Header() {
 
   return (
     <>
-      <header className="py-6 sticky top-0 bg-white/80 backdrop-blur-md z-50 transition-all border-b border-slate-100">
+      <header className="h-20 sticky top-0 bg-white/80 backdrop-blur-md z-50 transition-all border-b border-slate-100 flex items-center">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <Link href="/" className="flex items-center group" onClick={closeMenu}>
             <img 

@@ -166,16 +166,12 @@ export default function ProductPageClient({ product }: { product: Product }) {
                     <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-6">
                       {profile.specifications.material}
                     </p>
-                    <div className="flex gap-2 pt-4">
-                      <Link href={`/product/${profile.slug}`} className="flex-1">
-                        <button className="w-full py-3 bg-white border border-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
+                    <div className="pt-4">
+                      <Link href={`/product/${profile.slug}`}>
+                        <button className="w-full py-4 bg-white border border-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
                           Подробнее
                         </button>
                       </Link>
-                      <AddToCart 
-                        product={profile} 
-                        showIconOnly 
-                      />
                     </div>
                   </div>
                 </div>
