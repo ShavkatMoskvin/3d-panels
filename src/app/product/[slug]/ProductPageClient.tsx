@@ -2,22 +2,109 @@
 
 import { Calculator } from "@/components/Calculator";
 import { AddToCart } from "@/components/AddToCart";
-import { ArrowLeft, Check, Truck, Plus } from "lucide-react";
+import { ArrowLeft, Check, Truck, Plus, Minus } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Product } from "@/types";
 import { CATEGORIES, PRODUCTS } from "@/lib/data";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export default function ProductPageClient({ product }: { product: Product }) {
+  const router = useRouter();
   const [mainImage, setMainImage] = useState(product.images[0] || "");
-  const [calculatedQuantity, setCalculatedQuantity] = useState<number | null>(null);
+  const [mainQuantity, setMainQuantity] = useState<number>(1);
+  const [extraCalculatedItems, setExtraCalculatedItems] = useState<{ product: Product, quantity: number }[]>([]);
+  const [selectedVariation, setSelectedVariation] = useState(product.variations?.[0] || null);
+  const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || null);
+  const [kitItems, setKitItems] = useState(product.bundleItems || []);
 
-  // Фильтруем профили и аксессуары для секции "Покупают вместе"
-  const suggestedProducts = PRODUCTS.filter(p => 
-    (p.category === 'profiles' || p.category === 'accessories') && p.id !== product.id
-  ).slice(0, 3);
+  // Находим расходники
+  const consumables = useMemo(() => ({
+    glue: PRODUCTS.find(p => p.slug === 'glue-ultrafix-5kg'),
+    grout: PRODUCTS.find(p => p.slug === 'grout-stone-finish-2kg')
+  }), []);
+
+  const handleUpdateExtra = (prod: Product, qty: number) => {
+    setExtraCalculatedItems(prev => {
+      if (qty <= 0) return prev.filter(i => i.product.id !== prod.id);
+      const existing = prev.find(i => i.product.id === prod.id);
+      if (existing) {
+        return prev.map(i => i.product.id === prod.id ? { ...i, quantity: qty } : i);
+      }
+      return [...prev, { product: prod, quantity: qty }];
+    });
+  };
+
+  // Если это монтажный комплект, разделяем его на составляющие для отображения в "Составе набора"
+  // Но по запросу пользователя "Набор почему идет как один товар а не как несколько по отдельности, отдели"
+  // Мы будем добавлять каждый товар набора отдельно в корзину.
+
+  // Синхронизация количества с AddToCart
+  const handleCalculate = (q: number, extras?: { product: Product, quantity: number }[]) => {
+    setMainQuantity(q);
+    if (extras) {
+      setExtraCalculatedItems(extras);
+    }
+  };
+
+  // Рассчитываем отображаемую цену за единицу (с учетом вариации)
+  const currentPrice = selectedVariation ? selectedVariation.price : product.price;
+
+  // Общая стоимость комплекта (если есть kitItems)
+  const bundleTotalPrice = kitItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const baseUnitPrice = currentPrice + bundleTotalPrice;
+
+  // Итоговая стоимость всего набора (панели + расходники)
+  const extrasTotal = extraCalculatedItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+  const totalOrderPrice = (baseUnitPrice * mainQuantity) + extrasTotal;
+
+  const handleVariationChange = (v: any) => {
+    setSelectedVariation(v);
+    setMainQuantity(1); // Сброс количества при смене размера
+    setExtraCalculatedItems([]); // Сброс расходников
+  };
+
+  const handleColorChange = (c: string) => {
+    setSelectedColor(c);
+    // Для цвета сброс расчета не обязателен, если размеры те же
+  };
+
+  const handleKitItemQuantityChange = (itemId: string, delta: number) => {
+    setKitItems(prev => prev.map(item => {
+      if (item.id === itemId) {
+        const newQty = Math.max(0, item.quantity + delta);
+        return { ...item, quantity: newQty };
+      }
+      return item;
+    }));
+  };
+
+  // Умная логика рекомендаций "Покупают вместе"
+  const getSuggestedProducts = () => {
+    const suggestions: Product[] = [];
+    
+    // 1. Если это панель, обязательно предлагаем монтажный комплект
+    const isMainPanel = ['gypsum', 'flexible-stone', 'travertine'].includes(product.category);
+    if (isMainPanel) {
+      const mountingKit = PRODUCTS.find(p => p.slug === 'mounting-kit-pro');
+      if (mountingKit) suggestions.push(mountingKit);
+    }
+
+    // 2. Добавляем профили и аксессуары, исключая текущий товар и уже добавленные
+    const others = PRODUCTS.filter(p => 
+      !p.isHidden &&
+      p.id !== product.id && 
+      !suggestions.find(s => s.id === p.id) &&
+      (p.category === 'profiles' || p.category === 'accessories')
+    );
+
+    // Перемешиваем и берем столько, чтобы в сумме было 3
+    return [...suggestions, ...others].slice(0, 3);
+  };
+
+  const suggestedProducts = getSuggestedProducts();
   
-  const isPanel = ['gypsum', 'polyurethane', 'slatted', 'flexible-stone', 'hd-spc', 'travertine'].includes(product.category);
+  const isPanel = ['gypsum', 'flexible-stone', 'travertine'].includes(product.category);
   const isProfile = product.category === 'profiles';
 
   return (
@@ -32,10 +119,13 @@ export default function ProductPageClient({ product }: { product: Product }) {
           />
         </div>
         <div className="container mx-auto px-4 h-full flex items-end pb-8 relative z-10">
-          <Link href="/catalog" className="inline-flex items-center text-[10px] font-bold uppercase tracking-[0.3em] text-white/80 hover:text-white transition-colors">
+          <button 
+            onClick={() => router.back()}
+            className="inline-flex items-center text-[10px] font-bold uppercase tracking-[0.3em] text-white/80 hover:text-white transition-colors"
+          >
             <ArrowLeft className="w-3 h-3 mr-2" />
-            Назад в каталог
-          </Link>
+            Назад
+          </button>
         </div>
       </div>
 
@@ -90,7 +180,7 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 {product.name}
               </h1>
               <p className="text-3xl font-bold tracking-tighter mb-10">
-                {product.price} ₽ <span className="text-sm font-normal text-slate-400 ml-2 uppercase tracking-widest">за шт.</span>
+                {totalOrderPrice.toLocaleString()} ₽ {mainQuantity > 1 && <span className="text-sm font-normal text-slate-400 ml-2 uppercase tracking-widest">итого</span>}
               </p>
 
               <div className="prose prose-slate max-w-none mb-12">
@@ -98,6 +188,48 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   {product.description}
                 </p>
               </div>
+
+              {product.variations && (
+                <div className="mb-8">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Выберите размер</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {product.variations.map((v) => (
+                      <button
+                        key={v.size}
+                        onClick={() => handleVariationChange(v)}
+                        className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border transition-all ${
+                          selectedVariation?.size === v.size
+                            ? "bg-slate-900 text-white border-slate-900"
+                            : "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
+                        }`}
+                      >
+                        {v.size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {product.colors && (
+                <div className="mb-8">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Выберите цвет</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {product.colors.map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => handleColorChange(c)}
+                        className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border transition-all ${
+                          selectedColor === c
+                            ? "bg-slate-900 text-white border-slate-900"
+                            : "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {isPanel && (
                 <div className="grid grid-cols-2 gap-10 mb-12 pb-12 border-b border-slate-100">
@@ -122,17 +254,163 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Расчет количества</h4>
                   <Calculator 
                     product={product} 
-                    onCalculate={(q) => setCalculatedQuantity(q)} 
+                    selectedVariation={selectedVariation || undefined}
+                    onCalculate={handleCalculate} 
+                    extraItems={extraCalculatedItems}
                   />
                 </div>
               )}
 
-              <div className="flex flex-col gap-6 mb-12">
-                <AddToCart 
-                  product={product} 
-                  initialQuantity={calculatedQuantity || undefined} 
-                />
+              {/* Расходники вне калькулятора */}
+              {isPanel && (consumables.glue || consumables.grout) && (
+                <div className="mb-12 p-6 bg-slate-50 border border-slate-100">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Рекомендуемые расходники</h4>
+                  <div className="space-y-4">
+                    {consumables.glue && (
+                      <div className="flex items-center justify-between gap-4 group">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-white border border-slate-100 overflow-hidden">
+                            <img src={consumables.glue.images[0]} alt="" className="w-full h-full object-cover" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-tight">{consumables.glue.name}</p>
+                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">{consumables.glue.price} ₽ / уп.</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          {extraCalculatedItems.find(i => i.product.id === consumables.glue?.id) ? (
+                            <div className="flex items-center bg-white border border-slate-200 h-8">
+                              <button 
+                                onClick={() => handleUpdateExtra(consumables.glue!, (extraCalculatedItems.find(i => i.product.id === consumables.glue?.id)?.quantity || 0) - 1)}
+                                className="px-2 h-full hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"
+                              >
+                                <Minus size={10} />
+                              </button>
+                              <span className="px-2 text-[10px] font-bold min-w-[20px] text-center">
+                                {extraCalculatedItems.find(i => i.product.id === consumables.glue?.id)?.quantity}
+                              </span>
+                              <button 
+                                onClick={() => handleUpdateExtra(consumables.glue!, (extraCalculatedItems.find(i => i.product.id === consumables.glue?.id)?.quantity || 0) + 1)}
+                                className="px-2 h-full hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"
+                              >
+                                <Plus size={10} />
+                              </button>
+                            </div>
+                          ) : (
+                            <button 
+                              onClick={() => handleUpdateExtra(consumables.glue!, 1)}
+                              className="h-8 px-4 bg-white border border-slate-200 text-[9px] font-bold uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all"
+                            >
+                              Добавить
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {consumables.grout && (
+                      <div className="flex items-center justify-between gap-4 group">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-white border border-slate-100 overflow-hidden">
+                            <img src={consumables.grout.images[0]} alt="" className="w-full h-full object-cover" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-tight">{consumables.grout.name}</p>
+                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">{consumables.grout.price} ₽ / уп.</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          {extraCalculatedItems.find(i => i.product.id === consumables.grout?.id) ? (
+                            <div className="flex items-center bg-white border border-slate-200 h-8">
+                              <button 
+                                onClick={() => handleUpdateExtra(consumables.grout!, (extraCalculatedItems.find(i => i.product.id === consumables.grout?.id)?.quantity || 0) - 1)}
+                                className="px-2 h-full hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"
+                              >
+                                <Minus size={10} />
+                              </button>
+                              <span className="px-2 text-[10px] font-bold min-w-[20px] text-center">
+                                {extraCalculatedItems.find(i => i.product.id === consumables.grout?.id)?.quantity}
+                              </span>
+                              <button 
+                                onClick={() => handleUpdateExtra(consumables.grout!, (extraCalculatedItems.find(i => i.product.id === consumables.grout?.id)?.quantity || 0) + 1)}
+                                className="px-2 h-full hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"
+                              >
+                                <Plus size={10} />
+                              </button>
+                            </div>
+                          ) : (
+                            <button 
+                              onClick={() => handleUpdateExtra(consumables.grout!, 1)}
+                              className="h-8 px-4 bg-white border border-slate-200 text-[9px] font-bold uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all"
+                            >
+                              Добавить
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Main AddToCart - Синхронизирован с калькулятором */}
+              <div className="mb-12">
+                  <AddToCart 
+                    product={product} 
+                    selectedVariation={selectedVariation || undefined}
+                    selectedColor={selectedColor || undefined}
+                    kitItems={kitItems}
+                    initialQuantity={mainQuantity}
+                    extraItems={extraCalculatedItems}
+                  />
               </div>
+              {kitItems.length > 0 && (
+                <div className="mb-12 p-8 bg-slate-50 border border-slate-100 rounded-2xl">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Состав набора</h4>
+                  <div className="space-y-6">
+                    {kitItems.map((item) => (
+                      <div key={item.id} className="flex items-center gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm group/item">
+                        <Link href={item.slug ? `/product/${item.slug}` : "#"} className={`w-16 h-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-50 ${item.slug ? 'cursor-pointer' : 'cursor-default'}`}>
+                          {item.image && (
+                            <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform group-hover/item:scale-110" />
+                          )}
+                        </Link>
+                        <div className="flex-1 min-w-0">
+                          <Link href={item.slug ? `/product/${item.slug}` : "#"}>
+                            <h5 className={`text-[11px] font-bold uppercase tracking-tight mb-1 truncate ${item.slug ? 'hover:text-blue-600 transition-colors cursor-pointer' : 'cursor-default'}`}>
+                              {item.name}
+                            </h5>
+                          </Link>
+                          <p className="text-[10px] text-slate-400 font-bold tracking-tighter">{item.price} ₽ / шт.</p>
+                        </div>
+                        <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden h-10">
+                          <button 
+                            onClick={() => handleKitItemQuantityChange(item.id, -1)}
+                            className="w-8 h-full flex items-center justify-center hover:bg-slate-50 text-slate-400 hover:text-slate-900 transition-colors"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <div className="w-10 h-full flex items-center justify-center text-[11px] font-bold border-x border-slate-200 bg-slate-50/30">
+                            {item.quantity}
+                          </div>
+                          <button 
+                            onClick={() => handleKitItemQuantityChange(item.id, 1)}
+                            className="w-8 h-full flex items-center justify-center hover:bg-slate-50 text-slate-400 hover:text-slate-900 transition-colors"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-8 pt-6 border-t border-slate-200 flex justify-between items-center">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Итого за набор:</span>
+                    <span className="text-xl font-bold tracking-tighter">{currentPrice} ₽</span>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-4 pt-8 border-t border-slate-100">
                 <div className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400">
@@ -157,9 +435,9 @@ export default function ProductPageClient({ product }: { product: Product }) {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {suggestedProducts.map((item) => (
+              {suggestedProducts.map((item, index) => (
                 <div key={item.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl">
-                  <div className="aspect-square mb-6 overflow-hidden bg-white">
+                  <div className="aspect-square mb-6 overflow-hidden bg-white relative">
                     <img 
                       src={item.images[0]} 
                       alt={item.name} 
@@ -178,12 +456,13 @@ export default function ProductPageClient({ product }: { product: Product }) {
                     <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-6">
                       {item.specifications.material}
                     </p>
-                    <div className="pt-4">
-                      <Link href={`/product/${item.slug}`}>
+                    <div className="pt-4 flex items-center justify-between gap-4">
+                      <Link href={`/product/${item.slug}`} className="flex-1">
                         <button className="w-full py-4 bg-white border border-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
                           Подробнее
                         </button>
                       </Link>
+                      <AddToCart product={item} showIconOnly={true} />
                     </div>
                   </div>
                 </div>

@@ -12,17 +12,25 @@ export interface Product {
         depth: number;
         material: string;
     };
+    variations?: {
+        size: string;
+        price: number;
+    }[];
+    colors?: string[];
+  isHidden?: boolean;
+  bundleItems?: {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    image?: string;
+    slug?: string;
+  }[];
 }
 
 export type Category = 
     | 'gypsum' 
-    | 'wood' 
-    | 'soft' 
-    | 'mdf' 
     | 'accessories' 
-    | 'polyurethane' 
-    | 'slatted' 
     | 'flexible-stone' 
-    | 'hd-spc' 
     | 'profiles' 
     | 'travertine';

@@ -115,6 +115,10 @@ export default function CheckoutPage() {
     }
   };
 
+  const getItemId = (item: any) => {
+    return `${item.id}-${item.selectedVariation?.size || 'default'}-${item.selectedColor || 'default'}-${item.kitItems ? JSON.stringify(item.kitItems) : 'default'}`;
+  };
+
   if (submitted) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 text-center">
@@ -283,7 +287,7 @@ export default function CheckoutPage() {
             <h3 className="text-xl font-bold uppercase tracking-tight mb-8">Ваш заказ</h3>
             <div className="space-y-6 mb-8">
               {items.map((item) => (
-                <div key={item.id} className="flex justify-between items-start gap-4">
+                <div key={getItemId(item)} className="flex justify-between items-start gap-4">
                   <div className="flex-1">
                     <p className="text-[10px] font-bold uppercase tracking-widest mb-1">{item.name}</p>
                     <p className="text-[10px] text-slate-400 uppercase tracking-widest">{item.quantity} шт. x {item.price} ₽</p>

@@ -11,23 +11,29 @@ export default function CatalogPage() {
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (sentinelRef.current) {
-        const rect = sentinelRef.current.getBoundingClientRect();
-        // Прилипаем чуть раньше, чтобы переход был бесшовным (81px - это высота хедера + 1px)
-        setIsSticky(rect.top <= 81); 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Если сентиннель не пересекается с областью (ушел вверх за предел), значит мы в режиме sticky
+        setIsSticky(!entry.isIntersecting);
+      },
+      {
+        // Отступ сверху соответствует высоте хедера (80px) + небольшой запас
+        rootMargin: "-90px 0px 0px 0px",
+        threshold: 0,
       }
-    };
+    );
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    
-    return () => window.removeEventListener("scroll", handleScroll);
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
-  const filteredProducts = activeCategory === "all" 
-    ? PRODUCTS 
-    : PRODUCTS.filter(p => p.category === activeCategory);
+  const filteredProducts = PRODUCTS.filter(product => {
+    const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
+    return matchesCategory && !product.isHidden;
+  });
 
   return (
     <div className="bg-white min-h-screen hide-scrollbar">
@@ -59,52 +65,54 @@ export default function CatalogPage() {
       </section>
 
       {/* Основной контейнер каталога */}
-      <div className="relative">
-        {/* Сентиннель для отслеживания момента прилипания */}
-        <div ref={sentinelRef} className="absolute -top-20 left-0 w-full h-0 pointer-events-none" />
+      <div className="relative pb-20">
+        {/* Сентиннель для отслеживания момента прилипания - теперь в самом начале контента */}
+        <div ref={sentinelRef} className="absolute top-0 left-0 w-full h-px pointer-events-none" />
 
         <div 
-          style={{ top: '90px' }}
-          className={`sticky z-40 transition-all duration-500 flex justify-center w-full px-4 ${
-            isSticky ? "opacity-100" : ""
-          }`}
+          style={{ top: '80px' }}
+          className="sticky z-40 w-full transition-all duration-500"
         >
-          <div className={`max-w-[1400px] w-full transition-all duration-500 ${
-            isSticky 
-              ? "bg-white/90 backdrop-blur-xl shadow-2xl shadow-slate-200/50 border border-slate-100 rounded-2xl py-3" 
-              : "py-10 border-b border-transparent"
+          <div className={`flex justify-center w-full px-4 transition-all duration-500 ${
+            isSticky ? "py-2" : "py-10"
           }`}>
-            <div className="container mx-auto px-4">
-              <div className="flex flex-col items-center">
-                {/* Категории */}
-                <div className="w-full relative group">
-                  <div className="flex justify-start md:justify-center overflow-x-auto no-scrollbar scroll-smooth px-4">
-                    <div className="inline-flex items-center gap-2">
-                      {CATEGORIES.map((cat) => (
-                        <button
-                          key={cat.value}
-                          onClick={() => setActiveCategory(cat.value)}
-                          className={`relative px-6 md:px-8 py-4 transition-all duration-300 whitespace-nowrap rounded-xl ${
-                            activeCategory === cat.value 
-                              ? "text-white bg-slate-900 shadow-lg shadow-slate-900/20" 
-                              : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                          } text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em]`}
-                        >
-                          <span className="relative z-10">{cat.label}</span>
-                        </button>
-                      ))}
+            <div className={`max-w-[1400px] w-full transition-all duration-500 ${
+              isSticky 
+                ? "bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-200/50 border border-slate-100 rounded-2xl py-3" 
+                : "bg-white/50 backdrop-blur-sm border-b border-slate-100/50 py-2"
+            }`}>
+              <div className="container mx-auto px-4">
+                <div className="flex flex-col items-center">
+                  {/* Категории */}
+                  <div className="w-full relative group">
+                    <div className="flex justify-start md:justify-center overflow-x-auto no-scrollbar scroll-smooth px-4">
+                      <div className="inline-flex items-center gap-2">
+                        {CATEGORIES.map((cat) => (
+                          <button
+                            key={cat.value}
+                            onClick={() => setActiveCategory(cat.value)}
+                            className={`relative px-6 md:px-8 py-4 transition-all duration-300 whitespace-nowrap rounded-xl ${
+                              activeCategory === cat.value 
+                                ? "text-white bg-slate-900 shadow-lg shadow-slate-900/20" 
+                                : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                            } text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em]`}
+                          >
+                            <span className="relative z-10">{cat.label}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Счетчик товаров */}
-                <div className={`transition-all duration-500 ${isSticky ? 'opacity-0 h-0 overflow-hidden' : 'mt-6 opacity-100'}`}>
-                  <div className="flex items-center gap-3">
-                    <div className="h-px w-4 bg-slate-200"></div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
-                      {filteredProducts.length} моделей в коллекции
-                    </p>
-                    <div className="h-px w-4 bg-slate-200"></div>
+                  {/* Счетчик товаров */}
+                  <div className={`transition-all duration-500 ${isSticky ? 'opacity-0 h-0 overflow-hidden' : 'mt-6 opacity-100'}`}>
+                    <div className="flex items-center gap-3">
+                      <div className="h-px w-4 bg-slate-200"></div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
+                        {filteredProducts.length} моделей в коллекции
+                      </p>
+                      <div className="h-px w-4 bg-slate-200"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -139,7 +147,9 @@ export default function CatalogPage() {
                           {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
                         </span>
                         <span className="text-xs font-bold tracking-tighter text-slate-900 whitespace-nowrap">
-                          {product.price} ₽
+                          {product.variations && product.variations.length > 0 
+                            ? `от ${Math.min(...product.variations.map(v => v.price))} ₽` 
+                            : `${product.price} ₽`}
                         </span>
                       </div>
                       <Link href={`/product/${product.slug}`}>
