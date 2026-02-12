@@ -16,8 +16,13 @@ export interface Product {
         size: string;
         price: number;
     }[];
-    colors?: string[];
+    colors?: {
+        name: string;
+        inStock: boolean;
+        image?: string;
+    }[];
   isHidden?: boolean;
+  isOutOfStock?: boolean;
   bundleItems?: {
     id: string;
     name: string;

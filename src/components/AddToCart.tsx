@@ -26,6 +26,7 @@ export function AddToCart({
   extraItems?: { product: Product, quantity: number }[]
 }) {
   const { items, addToCart, updateQuantity } = useCart();
+  const isOutOfStock = product.isOutOfStock;
   const isPanel = ['gypsum', 'flexible-stone', 'travertine'].includes(product.category);
   const [isAdded, setIsAdded] = useState(false);
   // Блок рекомендаций теперь виден всегда для панелей
@@ -279,32 +280,62 @@ export function AddToCart({
 
   if (showIconOnly) {
     return (
-      <Button 
-        size="icon"
-        className={`w-12 h-12 rounded-none border border-slate-900 transition-all ${
-          isAdded ? "bg-green-600 border-green-600 text-white" : "bg-slate-900 text-white hover:bg-blue-600 hover:border-blue-600"
-        }`}
-        onClick={handleAdd}
-      >
-        {isAdded ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
-      </Button>
+      <div className="relative group/tooltip">
+        <Button
+          onClick={isOutOfStock ? undefined : handleAdd}
+          size="icon"
+          variant={isOutOfStock ? "ghost" : "outline"}
+          className={`rounded-full w-10 h-10 transition-all duration-300 ${
+            isOutOfStock 
+              ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200" 
+              : "border-slate-200 hover:border-blue-600 hover:text-blue-600 bg-white"
+          }`}
+          disabled={isOutOfStock}
+        >
+          {isOutOfStock ? (
+            <ShoppingCart className="w-4 h-4 opacity-50" />
+          ) : isAdded ? (
+            <Check className="w-4 h-4 text-blue-600" />
+          ) : (
+            <ShoppingCart className="w-4 h-4" />
+          )}
+        </Button>
+        {isOutOfStock && (
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none z-50">
+            Нет в наличии
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900"></div>
+          </div>
+        )}
+      </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <Button 
-        size="lg" 
-        className={`w-full md:w-[280px] rounded-none py-8 uppercase tracking-widest text-xs transition-all ${
-          isAdded ? "bg-green-600 hover:bg-green-700" : "bg-slate-900 hover:bg-blue-600"
-        }`}
-        onClick={handleAdd}
-      >
-        {isAdded ? "Добавлено!" : initialQuantity ? `Добавить ${initialQuantity} шт. в корзину` : "Добавить в корзину"}
-      </Button>
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <div className="relative group/tooltip flex-1">
+          <Button 
+            onClick={handleAdd}
+            disabled={isOutOfStock}
+            className={`h-14 px-8 text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-500 flex-1 w-full ${
+              isOutOfStock
+                ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
+                : "bg-slate-900 hover:bg-blue-600 text-white border-transparent shadow-xl shadow-slate-200 hover:shadow-blue-200 hover:-translate-y-0.5"
+            }`}
+          >
+            <ShoppingCart className={`w-4 h-4 mr-3 ${isOutOfStock ? "opacity-50" : ""}`} />
+            {isOutOfStock ? "Нет в наличии" : isAdded ? "Добавлено!" : initialQuantity ? `Добавить ${initialQuantity} шт.` : "Добавить в корзину"}
+          </Button>
+          {isOutOfStock && (
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none z-50">
+              Товар временно отсутствует
+              <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900"></div>
+            </div>
+          )}
+        </div>
+      </div>
 
-      {/* Встроенный блок рекомендации для полноразмерной кнопки */}
-      {showUpsell && mountingKit && (
+      {isPanel && !isOutOfStock && showUpsell && mountingKit && (
         <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 max-w-sm">
           <div className="flex items-start gap-4">
             <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors">

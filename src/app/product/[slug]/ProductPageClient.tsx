@@ -18,6 +18,12 @@ export default function ProductPageClient({ product }: { product: Product }) {
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || null);
   const [kitItems, setKitItems] = useState(product.bundleItems || []);
 
+  // Проверка наличия выбранного цвета
+  const isSelectedColorInStock = useMemo(() => {
+    if (!selectedColor) return !product.isOutOfStock;
+    return selectedColor.inStock;
+  }, [selectedColor, product]);
+
   // Находим расходники
   const consumables = useMemo(() => ({
     glue: PRODUCTS.find(p => p.slug === 'glue-ultrafix-5kg'),
@@ -64,9 +70,12 @@ export default function ProductPageClient({ product }: { product: Product }) {
     setExtraCalculatedItems([]); // Сброс расходников
   };
 
-  const handleColorChange = (c: string) => {
+  const handleColorChange = (c: any) => {
     setSelectedColor(c);
-    // Для цвета сброс расчета не обязателен, если размеры те же
+    // При смене цвета обновляем главное изображение, если оно есть у цвета
+    if (c.image) {
+      setMainImage(c.image);
+    }
   };
 
   const handleKitItemQuantityChange = (itemId: string, delta: number) => {
@@ -179,9 +188,16 @@ export default function ProductPageClient({ product }: { product: Product }) {
               <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-tighter mb-6">
                 {product.name}
               </h1>
-              <p className="text-3xl font-bold tracking-tighter mb-10">
-                {totalOrderPrice.toLocaleString()} ₽ {mainQuantity > 1 && <span className="text-sm font-normal text-slate-400 ml-2 uppercase tracking-widest">итого</span>}
-              </p>
+              <div className="flex items-center gap-4 mb-10">
+                <p className="text-3xl font-bold tracking-tighter">
+                  {totalOrderPrice.toLocaleString()} ₽ {mainQuantity > 1 && <span className="text-sm font-normal text-slate-400 ml-2 uppercase tracking-widest">итого</span>}
+                </p>
+                {(!isSelectedColorInStock) && (
+                  <span className="px-3 py-1 bg-red-50 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full border border-red-100">
+                    Нет в наличии
+                  </span>
+                )}
+              </div>
 
               <div className="prose prose-slate max-w-none mb-12">
                 <p className="text-slate-500 uppercase text-[11px] tracking-widest leading-loose">
@@ -214,19 +230,30 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 <div className="mb-8">
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Выберите цвет</h4>
                   <div className="flex flex-wrap gap-2">
-                    {product.colors.map((c) => (
-                      <button
-                        key={c}
-                        onClick={() => handleColorChange(c)}
-                        className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border transition-all ${
-                          selectedColor === c
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
-                        }`}
-                      >
-                        {c}
-                      </button>
-                    ))}
+                    {product.colors.map((c) => {
+                      const isColorInStock = c.inStock;
+                      
+                      return (
+                        <button
+                          key={c.name}
+                          onClick={() => handleColorChange(c)}
+                          className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border transition-all relative ${
+                            selectedColor?.name === c.name
+                              ? "bg-slate-900 text-white border-slate-900"
+                              : isColorInStock
+                                ? "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
+                                : "bg-slate-50 text-slate-400 border-slate-100 cursor-not-allowed"
+                          }`}
+                        >
+                          {c.name}
+                          {!isColorInStock && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-full h-[1px] bg-slate-300 rotate-[15deg]"></div>
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -249,7 +276,17 @@ export default function ProductPageClient({ product }: { product: Product }) {
               )}
 
               {/* Calculator Section */}
-              {isPanel && (
+              {isPanel && !isSelectedColorInStock && (
+                <div className="mb-12">
+                  <div className="p-6 bg-red-50/50 border border-red-100 rounded-xl">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-red-600 leading-relaxed">
+                      Этот цвет временно недоступен для заказа. Пожалуйста, выберите другой вариант из списка доступных.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {isPanel && isSelectedColorInStock && (
                 <div className="mb-12">
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Расчет количества</h4>
                   <Calculator 
@@ -262,7 +299,7 @@ export default function ProductPageClient({ product }: { product: Product }) {
               )}
 
               {/* Расходники вне калькулятора */}
-              {isPanel && (consumables.glue || consumables.grout) && (
+              {isPanel && isSelectedColorInStock && (consumables.glue || consumables.grout) && (
                 <div className="mb-12 p-6 bg-slate-50 border border-slate-100">
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Рекомендуемые расходники</h4>
                   <div className="space-y-4">
@@ -358,7 +395,10 @@ export default function ProductPageClient({ product }: { product: Product }) {
               {/* Main AddToCart - Синхронизирован с калькулятором */}
               <div className="mb-12">
                   <AddToCart 
-                    product={product} 
+                    product={{
+                      ...product,
+                      isOutOfStock: !isSelectedColorInStock
+                    }} 
                     selectedVariation={selectedVariation || undefined}
                     selectedColor={selectedColor || undefined}
                     kitItems={kitItems}
