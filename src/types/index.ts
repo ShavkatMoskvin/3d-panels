@@ -12,6 +12,8 @@ export interface Product {
         depth: number;
         material: string;
     };
+    stockCount: number;
+    inStock: boolean;
     variations?: {
         size: string;
         price: number;
@@ -19,10 +21,10 @@ export interface Product {
     colors?: {
         name: string;
         inStock: boolean;
+        stockCount: number;
         image?: string;
     }[];
   isHidden?: boolean;
-  isOutOfStock?: boolean;
   bundleItems?: {
     id: string;
     name: string;
@@ -30,6 +32,8 @@ export interface Product {
     quantity: number;
     image?: string;
     slug?: string;
+    inStock: boolean;
+    stockCount: number;
   }[];
 }
 

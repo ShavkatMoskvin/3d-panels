@@ -26,7 +26,12 @@ export function AddToCart({
   extraItems?: { product: Product, quantity: number }[]
 }) {
   const { items, addToCart, updateQuantity } = useCart();
-  const isOutOfStock = product.isOutOfStock;
+  
+  // Определяем наличие товара с учетом выбранного цвета
+  const inStock = selectedColor 
+    ? product.colors?.find(c => c.name === selectedColor)?.inStock ?? product.inStock
+    : product.inStock;
+
   const isPanel = ['gypsum', 'flexible-stone', 'travertine'].includes(product.category);
   const [isAdded, setIsAdded] = useState(false);
   // Блок рекомендаций теперь виден всегда для панелей
@@ -200,15 +205,15 @@ export function AddToCart({
   if (quantity > 0) {
     return (
       <div className="space-y-4">
-        <div className={`flex items-center border border-slate-900 overflow-hidden bg-white shadow-sm transition-all hover:border-blue-600 ${showIconOnly ? 'w-24 h-12' : 'w-full md:w-[280px] py-3 md:py-4'}`}>
+        <div className={`flex items-center border border-slate-900 overflow-hidden bg-white shadow-sm transition-all hover:border-blue-600 ${showIconOnly ? 'w-24 h-12' : 'w-full h-14'}`}>
           <button 
             onClick={handleDecrement}
-            className="w-12 h-full flex items-center justify-center hover:bg-slate-50 transition-colors group"
+            className="w-12 h-full flex items-center justify-center hover:bg-slate-50 transition-colors group border-r border-slate-100"
             aria-label="Уменьшить количество"
           >
             <Minus className="w-4 h-4 text-slate-900 group-hover:text-blue-600 transition-colors" />
           </button>
-          <div className="flex-1 min-w-[70px] h-full flex items-center justify-center border-x border-slate-100 px-2">
+          <div className="flex-1 h-full flex items-center justify-center px-2">
             <input 
               type="number"
               value={localQuantity}
@@ -221,7 +226,7 @@ export function AddToCart({
           </div>
           <button 
             onClick={handleIncrement}
-            className="w-12 h-full flex items-center justify-center hover:bg-slate-50 transition-colors group"
+            className="w-12 h-full flex items-center justify-center hover:bg-slate-50 transition-colors group border-l border-slate-100"
             aria-label="Увеличить количество"
           >
             <Plus className="w-4 h-4 text-slate-900 group-hover:text-blue-600 transition-colors" />
@@ -230,9 +235,9 @@ export function AddToCart({
         
         {/* Встроенный блок рекомендации */}
         {showUpsell && mountingKit && !showIconOnly && (
-          <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 max-w-sm">
+          <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 max-w-sm rounded-none">
             <div className="flex items-start gap-4">
-              <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors">
+              <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors rounded-none">
                 <img src={mountingKit.images[0]} alt="" className="w-full h-full object-cover" />
               </Link>
               <div className="flex-1 min-w-0">
@@ -243,7 +248,7 @@ export function AddToCart({
                 
                 {kitQuantity > 0 ? (
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center border border-blue-200 bg-white">
+                    <div className="flex items-center border border-blue-200 bg-white rounded-none">
                       <button 
                         onClick={() => handleUpdateKitQty(kitQuantity - 1)}
                         className="w-7 h-7 flex items-center justify-center hover:bg-blue-50 text-blue-600 transition-colors"
@@ -282,17 +287,17 @@ export function AddToCart({
     return (
       <div className="relative group/tooltip">
         <Button
-          onClick={isOutOfStock ? undefined : handleAdd}
+          onClick={!inStock ? undefined : handleAdd}
           size="icon"
-          variant={isOutOfStock ? "ghost" : "outline"}
-          className={`rounded-full w-10 h-10 transition-all duration-300 ${
-            isOutOfStock 
+          variant={!inStock ? "ghost" : "outline"}
+          className={`rounded-none w-10 h-10 transition-all duration-300 ${
+            !inStock 
               ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200" 
               : "border-slate-200 hover:border-blue-600 hover:text-blue-600 bg-white"
           }`}
-          disabled={isOutOfStock}
+          disabled={!inStock}
         >
-          {isOutOfStock ? (
+          {!inStock ? (
             <ShoppingCart className="w-4 h-4 opacity-50" />
           ) : isAdded ? (
             <Check className="w-4 h-4 text-blue-600" />
@@ -300,8 +305,8 @@ export function AddToCart({
             <ShoppingCart className="w-4 h-4" />
           )}
         </Button>
-        {isOutOfStock && (
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none z-50">
+        {!inStock && (
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-none whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none z-50">
             Нет в наличии
             <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900"></div>
           </div>
@@ -316,18 +321,18 @@ export function AddToCart({
         <div className="relative group/tooltip flex-1">
           <Button 
             onClick={handleAdd}
-            disabled={isOutOfStock}
-            className={`h-14 px-8 text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-500 flex-1 w-full ${
-              isOutOfStock
+            disabled={!inStock}
+            className={`h-14 px-8 text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-500 flex-1 w-full rounded-none ${
+              !inStock
                 ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
                 : "bg-slate-900 hover:bg-blue-600 text-white border-transparent shadow-xl shadow-slate-200 hover:shadow-blue-200 hover:-translate-y-0.5"
             }`}
           >
-            <ShoppingCart className={`w-4 h-4 mr-3 ${isOutOfStock ? "opacity-50" : ""}`} />
-            {isOutOfStock ? "Нет в наличии" : isAdded ? "Добавлено!" : initialQuantity ? `Добавить ${initialQuantity} шт.` : "Добавить в корзину"}
+            <ShoppingCart className={`w-4 h-4 mr-3 ${!inStock ? "opacity-50" : ""}`} />
+            {!inStock ? "Нет в наличии" : isAdded ? "Добавлено!" : initialQuantity ? `Добавить ${initialQuantity} шт.` : "Добавить в корзину"}
           </Button>
-          {isOutOfStock && (
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none z-50">
+          {!inStock && (
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-none whitespace-nowrap opacity-0 group-hover/tooltip:opacity-100 transition-opacity pointer-events-none z-50">
               Товар временно отсутствует
               <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900"></div>
             </div>
@@ -335,10 +340,10 @@ export function AddToCart({
         </div>
       </div>
 
-      {isPanel && !isOutOfStock && showUpsell && mountingKit && (
-        <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 max-w-sm">
+      {isPanel && inStock && showUpsell && mountingKit && mountingKit.inStock && (
+        <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 max-w-sm rounded-none">
           <div className="flex items-start gap-4">
-            <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors">
+            <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors rounded-none">
               <img src={mountingKit.images[0]} alt="" className="w-full h-full object-cover" />
             </Link>
             <div className="flex-1 min-w-0">
@@ -349,7 +354,7 @@ export function AddToCart({
               
               {kitQuantity > 0 ? (
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center border border-blue-200 bg-white">
+                  <div className="flex items-center border border-blue-200 bg-white rounded-none">
                     <button 
                       onClick={() => handleUpdateKitQty(kitQuantity - 1)}
                       className="w-7 h-7 flex items-center justify-center hover:bg-blue-50 text-blue-600 transition-colors"

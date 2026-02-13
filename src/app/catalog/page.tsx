@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Category } from "@/types";
 import Link from "next/link";
 import { PRODUCTS, CATEGORIES } from "@/lib/data";
+import { AddToCart } from "@/components/AddToCart";
 
 export default function CatalogPage() {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>("all");
@@ -126,7 +127,7 @@ export default function CatalogPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
               {filteredProducts.map((product) => (
                 <div key={product.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl flex flex-col">
-                  <Link href={`/product/${product.slug}`} className="relative block aspect-square bg-white overflow-hidden mb-6 border border-slate-100 transition-all duration-500">
+                  <Link href={`/product/${product.slug}`} className={`relative block aspect-square bg-white overflow-hidden mb-6 border border-slate-100 transition-all duration-500 ${!product.inStock ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     {product.images && product.images.length > 0 ? (
                       <img 
                         src={product.images[0]} 
@@ -136,6 +137,13 @@ export default function CatalogPage() {
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center text-[10px] text-slate-300 font-light italic tracking-widest uppercase p-8 text-center">
                         {product.name}
+                      </div>
+                    )}
+                    {!product.inStock && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/5">
+                        <span className="bg-slate-900/90 text-white text-[9px] font-bold uppercase tracking-[0.3em] px-4 py-2 backdrop-blur-sm">
+                          Нет в наличии
+                        </span>
                       </div>
                     )}
                   </Link>

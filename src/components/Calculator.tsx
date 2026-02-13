@@ -219,7 +219,9 @@ export function Calculator({
                         className={`group relative flex items-center gap-5 p-4 transition-all duration-300 ${
                           cartQty > 0 
                             ? "bg-white border-slate-900 shadow-md" 
-                            : "bg-slate-50/50 border-transparent hover:bg-white hover:border-slate-200"
+                            : !prod.inStock
+                              ? "bg-slate-50/30 border-slate-100 opacity-60 grayscale"
+                              : "bg-slate-50/50 border-transparent hover:bg-white hover:border-slate-200"
                         } border`}
                       >
                         <div className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-slate-100 group-hover:border-slate-200 transition-colors">
@@ -230,12 +232,16 @@ export function Calculator({
                           <p className="text-[11px] font-bold uppercase tracking-tight mb-1 text-slate-900">{prod.name}</p>
                           <div className="flex items-center gap-3">
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                              Рекомендуем: {qty} {label}
+                              {!prod.inStock ? "Нет в наличии" : `Рекомендуем: ${qty} ${label}`}
                             </span>
-                            <span className="w-1 h-1 rounded-full bg-slate-200"></span>
-                            <span className="text-[10px] font-bold text-slate-900">
-                              {(prod.price * (cartQty || qty)).toLocaleString()} ₽
-                            </span>
+                            {prod.inStock && (
+                              <>
+                                <span className="w-1 h-1 rounded-full bg-slate-200"></span>
+                                <span className="text-[10px] font-bold text-slate-900">
+                                  {(prod.price * (cartQty || qty)).toLocaleString()} ₽
+                                </span>
+                              </>
+                            )}
                           </div>
                         </div>
 
@@ -258,11 +264,18 @@ export function Calculator({
                             </div>
                           ) : (
                             <button 
-                              onClick={() => handleToggleConsumable(prod, qty)}
-                              className="group/btn relative overflow-hidden bg-white border border-slate-900 px-6 h-10 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900 hover:text-white transition-colors duration-300"
+                              onClick={!prod.inStock ? undefined : () => handleToggleConsumable(prod, qty)}
+                              disabled={!prod.inStock}
+                              className={`group/btn relative overflow-hidden px-6 h-10 text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 ${
+                                !prod.inStock
+                                  ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
+                                  : "bg-white border-slate-900 text-slate-900 hover:text-white"
+                              } border`}
                             >
-                              <span className="relative z-10">Добавить</span>
-                              <div className="absolute inset-0 bg-slate-900 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+                              <span className="relative z-10">{!prod.inStock ? "Отсутствует" : "Добавить"}</span>
+                              {prod.inStock && (
+                                <div className="absolute inset-0 bg-slate-900 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+                              )}
                             </button>
                           )}
                         </div>

@@ -39,7 +39,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const savedInstallation = localStorage.getItem('includeInstallation');
     if (savedCart) {
       try {
-        setItems(JSON.parse(savedCart));
+        const parsedCart = JSON.parse(savedCart);
+        // Санитарная проверка: если в selectedColor попал объект (из-за старых данных в localStorage), 
+        // конвертируем его в строку (название цвета), чтобы не было ошибок React.
+        const sanitizedCart = parsedCart.map((item: any) => {
+          if (item.selectedColor && typeof item.selectedColor === 'object') {
+            return {
+              ...item,
+              selectedColor: item.selectedColor.name || 'Стандартный'
+            };
+          }
+          return item;
+        });
+        setItems(sanitizedCart);
       } catch (e) {
         console.error("Failed to parse cart from local storage", e);
       }

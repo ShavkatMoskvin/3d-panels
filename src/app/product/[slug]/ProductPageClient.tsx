@@ -20,7 +20,7 @@ export default function ProductPageClient({ product }: { product: Product }) {
 
   // Проверка наличия выбранного цвета
   const isSelectedColorInStock = useMemo(() => {
-    if (!selectedColor) return !product.isOutOfStock;
+    if (!selectedColor) return product.inStock;
     return selectedColor.inStock;
   }, [selectedColor, product]);
 
@@ -279,9 +279,20 @@ export default function ProductPageClient({ product }: { product: Product }) {
               {isPanel && !isSelectedColorInStock && (
                 <div className="mb-12">
                   <div className="p-6 bg-red-50/50 border border-red-100 rounded-xl">
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-red-600 leading-relaxed">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-red-600 leading-relaxed mb-6">
                       Этот цвет временно недоступен для заказа. Пожалуйста, выберите другой вариант из списка доступных.
                     </p>
+                    <AddToCart 
+                      product={{
+                        ...product,
+                        inStock: false
+                      }} 
+                      selectedVariation={selectedVariation || undefined}
+                      selectedColor={selectedColor?.name || undefined}
+                      kitItems={kitItems}
+                      initialQuantity={mainQuantity}
+                      extraItems={extraCalculatedItems}
+                    />
                   </div>
                 </div>
               )}
@@ -295,6 +306,20 @@ export default function ProductPageClient({ product }: { product: Product }) {
                     onCalculate={handleCalculate} 
                     extraItems={extraCalculatedItems}
                   />
+                  
+                  <div className="mt-8">
+                    <AddToCart 
+                      product={{
+                        ...product,
+                        inStock: isSelectedColorInStock
+                      }} 
+                      selectedVariation={selectedVariation || undefined}
+                      selectedColor={selectedColor?.name || undefined}
+                      kitItems={kitItems}
+                      initialQuantity={mainQuantity}
+                      extraItems={extraCalculatedItems}
+                    />
+                  </div>
                 </div>
               )}
 
@@ -304,14 +329,16 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Рекомендуемые расходники</h4>
                   <div className="space-y-4">
                     {consumables.glue && (
-                      <div className="flex items-center justify-between gap-4 group">
+                      <div className={`flex items-center justify-between gap-4 group ${!consumables.glue.inStock ? 'opacity-60 grayscale' : ''}`}>
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-white border border-slate-100 overflow-hidden">
                             <img src={consumables.glue.images[0]} alt="" className="w-full h-full object-cover" />
                           </div>
                           <div>
                             <p className="text-[10px] font-bold uppercase tracking-tight">{consumables.glue.name}</p>
-                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">{consumables.glue.price} ₽ / уп.</p>
+                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                              {consumables.glue.inStock ? `${consumables.glue.price} ₽ / уп.` : "Нет в наличии"}
+                            </p>
                           </div>
                         </div>
                         
@@ -336,10 +363,15 @@ export default function ProductPageClient({ product }: { product: Product }) {
                             </div>
                           ) : (
                             <button 
-                              onClick={() => handleUpdateExtra(consumables.glue!, 1)}
-                              className="h-8 px-4 bg-white border border-slate-200 text-[9px] font-bold uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all"
+                              onClick={!consumables.glue.inStock ? undefined : () => handleUpdateExtra(consumables.glue!, 1)}
+                              disabled={!consumables.glue.inStock}
+                              className={`h-8 px-4 border text-[9px] font-bold uppercase tracking-widest transition-all ${
+                                !consumables.glue.inStock
+                                  ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
+                                  : "bg-white border-slate-200 hover:border-blue-600 hover:text-blue-600"
+                              }`}
                             >
-                              Добавить
+                              {!consumables.glue.inStock ? "Отсутствует" : "Добавить"}
                             </button>
                           )}
                         </div>
@@ -347,14 +379,16 @@ export default function ProductPageClient({ product }: { product: Product }) {
                     )}
 
                     {consumables.grout && (
-                      <div className="flex items-center justify-between gap-4 group">
+                      <div className={`flex items-center justify-between gap-4 group ${!consumables.grout.inStock ? 'opacity-60 grayscale' : ''}`}>
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-white border border-slate-100 overflow-hidden">
                             <img src={consumables.grout.images[0]} alt="" className="w-full h-full object-cover" />
                           </div>
                           <div>
                             <p className="text-[10px] font-bold uppercase tracking-tight">{consumables.grout.name}</p>
-                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">{consumables.grout.price} ₽ / уп.</p>
+                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
+                              {consumables.grout.inStock ? `${consumables.grout.price} ₽ / уп.` : "Нет в наличии"}
+                            </p>
                           </div>
                         </div>
                         
@@ -379,10 +413,15 @@ export default function ProductPageClient({ product }: { product: Product }) {
                             </div>
                           ) : (
                             <button 
-                              onClick={() => handleUpdateExtra(consumables.grout!, 1)}
-                              className="h-8 px-4 bg-white border border-slate-200 text-[9px] font-bold uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all"
+                              onClick={!consumables.grout.inStock ? undefined : () => handleUpdateExtra(consumables.grout!, 1)}
+                              disabled={!consumables.grout.inStock}
+                              className={`h-8 px-4 border text-[9px] font-bold uppercase tracking-widest transition-all ${
+                                !consumables.grout.inStock
+                                  ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
+                                  : "bg-white border-slate-200 hover:border-blue-600 hover:text-blue-600"
+                              }`}
                             >
-                              Добавить
+                              {!consumables.grout.inStock ? "Отсутствует" : "Добавить"}
                             </button>
                           )}
                         </div>
@@ -393,19 +432,21 @@ export default function ProductPageClient({ product }: { product: Product }) {
               )}
 
               {/* Main AddToCart - Синхронизирован с калькулятором */}
-              <div className="mb-12">
+              {!isPanel && (
+                <div className="mb-12">
                   <AddToCart 
                     product={{
                       ...product,
-                      isOutOfStock: !isSelectedColorInStock
+                      inStock: isSelectedColorInStock
                     }} 
                     selectedVariation={selectedVariation || undefined}
-                    selectedColor={selectedColor || undefined}
+                    selectedColor={selectedColor?.name || undefined}
                     kitItems={kitItems}
                     initialQuantity={mainQuantity}
                     extraItems={extraCalculatedItems}
                   />
-              </div>
+                </div>
+              )}
               {kitItems.length > 0 && (
                 <div className="mb-12 p-8 bg-slate-50 border border-slate-100 rounded-2xl">
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Состав набора</h4>
@@ -453,13 +494,15 @@ export default function ProductPageClient({ product }: { product: Product }) {
               )}
 
               <div className="space-y-4 pt-8 border-t border-slate-100">
-                <div className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                  <Check className="w-3 h-3 text-green-500 mr-3" />
-                  В наличии в Пензе
-                </div>
+                {isSelectedColorInStock && (
+                  <div className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                    <Check className="w-3 h-3 text-green-500 mr-3" />
+                    В наличии в Пензе
+                  </div>
+                )}
                 <div className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400">
                   <Truck className="w-3 h-3 text-blue-600 mr-3" />
-                  Доставка по области 1-3 дня
+                  {isSelectedColorInStock ? "Доставка по области 1-3 дня" : "Доставка под заказ 7-14 дней"}
                 </div>
               </div>
             </div>

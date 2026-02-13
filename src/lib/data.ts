@@ -23,6 +23,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Dolomitic Travertine-Dark grey.png",
       "/images/products/Dolomitic Travertine-Andean red.png"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -32,10 +34,10 @@ export const PRODUCTS: Product[] = [
       { size: "2900*1200", price: 6700 }
     ],
     colors: [
-      { name: "Claybank", inStock: true, image: "/images/products/Dolomitic Travertine-Claybank.jpg" },
-      { name: "Andean white", inStock: false, image: "/images/products/Dolomitic Travertine-Andean white.png" },
-      { name: "Dark grey", inStock: false, image: "/images/products/Dolomitic Travertine-Dark grey.png" },
-      { name: "Andean red", inStock: false, image: "/images/products/Dolomitic Travertine-Andean red.png" }
+      { name: "Claybank", inStock: true, stockCount: 100, image: "/images/products/Dolomitic Travertine-Claybank.jpg" },
+      { name: "Andean white", inStock: false, stockCount: 0, image: "/images/products/Dolomitic Travertine-Andean white.png" },
+      { name: "Dark grey", inStock: false, stockCount: 0, image: "/images/products/Dolomitic Travertine-Dark grey.png" },
+      { name: "Andean red", inStock: false, stockCount: 0, image: "/images/products/Dolomitic Travertine-Andean red.png" }
     ]
   },
   {
@@ -52,7 +54,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Linear Travertine-Roman yellow.png",
       "/images/products/Linear Travertine-Red.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -62,11 +65,11 @@ export const PRODUCTS: Product[] = [
       { size: "2900*1200", price: 6700 }
     ],
     colors: [
-      { name: "Roman white", inStock: false, image: "/images/products/Linear Travertine-Roman white.png" },
-      { name: "Claybank", inStock: false, image: "/images/products/Linear Travertine-Claybank.png" },
-      { name: "Light grey", inStock: false, image: "/images/products/Linear Travertine-Light grey.png" },
-      { name: "Roman yellow", inStock: false, image: "/images/products/Linear Travertine-Roman yellow.png" },
-      { name: "Red", inStock: false, image: "/images/products/Linear Travertine-Red.png" }
+      { name: "Roman white", inStock: false, stockCount: 0, image: "/images/products/Linear Travertine-Roman white.png" },
+      { name: "Claybank", inStock: false, stockCount: 0, image: "/images/products/Linear Travertine-Claybank.png" },
+      { name: "Light grey", inStock: false, stockCount: 0, image: "/images/products/Linear Travertine-Light grey.png" },
+      { name: "Roman yellow", inStock: false, stockCount: 0, image: "/images/products/Linear Travertine-Roman yellow.png" },
+      { name: "Red", inStock: false, stockCount: 0, image: "/images/products/Linear Travertine-Red.png" }
     ]
   },
   {
@@ -81,6 +84,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Romanite-Cloudy white.png",
       "/images/products/Romanite-Cloudy grey.png"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -90,9 +95,9 @@ export const PRODUCTS: Product[] = [
       { size: "2900*1200", price: 6700 }
     ],
     colors: [
-      { name: "Cloudy White", inStock: true, image: "/images/products/Romantine-Cloudy White.jpg" },
-      { name: "Cloudy white", inStock: false, image: "/images/products/Romanite-Cloudy white.png" },
-      { name: "Cloudy grey", inStock: false, image: "/images/products/Romanite-Cloudy grey.png" }
+      { name: "Cloudy White", inStock: true, stockCount: 100, image: "/images/products/Romantine-Cloudy White.jpg" },
+      { name: "Cloudy white", inStock: false, stockCount: 0, image: "/images/products/Romanite-Cloudy white.png" },
+      { name: "Cloudy grey", inStock: false, stockCount: 0, image: "/images/products/Romanite-Cloudy grey.png" }
     ]
   },
   {
@@ -107,7 +112,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Milan Travertine-Yellow.png",
       "/images/products/Milan Travertine-Grey.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -117,9 +123,9 @@ export const PRODUCTS: Product[] = [
       { size: "2900*1200", price: 6700 }
     ],
     colors: [
-      { name: "White", inStock: false, image: "/images/products/Milan Travertine-White.png" },
-      { name: "Yellow", inStock: false, image: "/images/products/Milan Travertine-Yellow.png" },
-      { name: "Grey", inStock: false, image: "/images/products/Milan Travertine-Grey.png" }
+      { name: "White", inStock: false, stockCount: 0, image: "/images/products/Milan Travertine-White.png" },
+      { name: "Yellow", inStock: false, stockCount: 0, image: "/images/products/Milan Travertine-Yellow.png" },
+      { name: "Grey", inStock: false, stockCount: 0, image: "/images/products/Milan Travertine-Grey.png" }
     ]
   },
   {
@@ -136,6 +142,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Rowena Travertine-Grey.png",
       "/images/products/Rowena Travertine-Light brown.png"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -145,11 +153,11 @@ export const PRODUCTS: Product[] = [
       { size: "2900*1200", price: 6700 }
     ],
     colors: [
-      { name: "Taupe", inStock: true, image: "/images/products/Rowena Travertine-Taupe.jpg" },
-      { name: "Beige", inStock: false, image: "/images/products/Rowena Travertine-Beige.png" },
-      { name: "Creamy Yellow", inStock: false, image: "/images/products/Rowena Travertine-Creamy Yellow.png" },
-      { name: "Grey", inStock: false, image: "/images/products/Rowena Travertine-Grey.png" },
-      { name: "Light brown", inStock: false, image: "/images/products/Rowena Travertine-Light brown.png" }
+      { name: "Taupe", inStock: true, stockCount: 100, image: "/images/products/Rowena Travertine-Taupe.jpg" },
+      { name: "Beige", inStock: false, stockCount: 0, image: "/images/products/Rowena Travertine-Beige.png" },
+      { name: "Creamy Yellow", inStock: false, stockCount: 0, image: "/images/products/Rowena Travertine-Creamy Yellow.png" },
+      { name: "Grey", inStock: false, stockCount: 0, image: "/images/products/Rowena Travertine-Grey.png" },
+      { name: "Light brown", inStock: false, stockCount: 0, image: "/images/products/Rowena Travertine-Light brown.png" }
     ]
   },
   {
@@ -164,6 +172,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Ando Cement-Cement grey.png",
       "/images/products/Ando Cement-Sunset Glow.png"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -173,68 +183,102 @@ export const PRODUCTS: Product[] = [
       { size: "2900*1200", price: 6900 }
     ],
     colors: [
-      { name: "Warm grey", inStock: true, image: "/images/products/Ando Cement-Warm grey.jpg" },
-      { name: "Cement grey", inStock: false, image: "/images/products/Ando Cement-Cement grey.png" },
-      { name: "Sunset Glow", inStock: false, image: "/images/products/Ando Cement-Sunset Glow.png" }
+      { name: "Warm grey", inStock: true, stockCount: 100, image: "/images/products/Ando Cement-Warm grey.jpg" },
+      { name: "Cement grey", inStock: false, stockCount: 0, image: "/images/products/Ando Cement-Cement grey.png" },
+      { name: "Sunset Glow", inStock: false, stockCount: 0, image: "/images/products/Ando Cement-Sunset Glow.png" }
     ]
   },
   {
-    id: "8",
-    name: "Italian Travertine",
-    slug: "italian-travertine",
-    category: "flexible-stone",
-    price: 4800,
-    images: [
-      "/images/products/Italian Travertine-Yellow Wood.jpg",
-      "/images/products/Italian Travertine.png"
-    ],
-    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
-    specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
-    variations: [
-      { size: "1200*600", price: 4800 },
-      { size: "2900*1200", price: 6900 }
-    ],
-    colors: [
-      { name: "Yellow Wood", inStock: true, image: "/images/products/Italian Travertine-Yellow Wood.jpg" }
-    ]
-  },
-  {
-    id: "9",
-    name: "Golden Sunset Marble",
-    slug: "golden-sunset-marble",
-    category: "flexible-stone",
-    price: 4600,
-    images: [
-      "/images/products/Golden Sunset Marble-Red.jpg",
-      "/images/products/Golden Sunset Marble.png"
-    ],
-    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
-    specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
-    variations: [
-      { size: "1200*600", price: 4600 }
-    ],
-    colors: [
-      { name: "Red", inStock: true, image: "/images/products/Golden Sunset Marble-Red.jpg" }
-    ]
-  },
-  {
-    id: "10",
+    id: "7",
     name: "Slate",
     slug: "slate",
     category: "flexible-stone",
     price: 4800,
     images: [
-      "/images/products/Slate-Veil Dark Grey.jpg",
-      "/images/products/Slate.png"
+      "/images/products/Slate.png",
+      "/images/products/Slate-Veil Dark Grey.jpg"
     ],
-    description: "Гибкий камень NEO с UV-печатью. Толщина 2.5-3.5 мм.",
+    stockCount: 100,
+    inStock: true,
+    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
       { size: "1200*600", price: 4800 },
-      { size: "2400*1200", price: 5900 }
+      { size: "2400*600", price: 5500 },
+      { size: "2400*1200", price: 6700 },
+      { size: "2900*1200", price: 6900 }
     ],
     colors: [
-      { name: "Veil Dark Grey", inStock: true, image: "/images/products/Slate-Veil Dark Grey.jpg" }
+      { name: "Veil Dark Grey", inStock: true, stockCount: 100, image: "/images/products/Slate-Veil Dark Grey.jpg" }
+    ]
+  },
+  {
+    id: "8",
+    name: "Calacatta Gold",
+    slug: "calacatta-gold",
+    category: "flexible-stone",
+    price: 4800,
+    images: [
+      "/images/products/Classic Marble.png"
+    ],
+    stockCount: 100,
+    inStock: true,
+    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
+    variations: [
+      { size: "1200*600", price: 4800 },
+      { size: "2400*600", price: 5500 },
+      { size: "2400*1200", price: 6700 },
+      { size: "2900*1200", price: 6900 }
+    ],
+    colors: [
+      { name: "White", inStock: true, stockCount: 100, image: "/images/products/Classic Marble.png" }
+    ]
+  },
+  {
+    id: "9",
+    name: "Volakas",
+    slug: "volakas",
+    category: "flexible-stone",
+    price: 4800,
+    images: [
+      "/images/products/Classic Marble.png"
+    ],
+    stockCount: 100,
+    inStock: true,
+    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
+    variations: [
+      { size: "1200*600", price: 4800 },
+      { size: "2400*600", price: 5500 },
+      { size: "2400*1200", price: 6700 },
+      { size: "2900*1200", price: 6900 }
+    ],
+    colors: [
+      { name: "White", inStock: true, stockCount: 100, image: "/images/products/Classic Marble.png" }
+    ]
+  },
+  {
+    id: "10",
+    name: "Nero Marquina",
+    slug: "nero-marquina",
+    category: "flexible-stone",
+    price: 4800,
+    images: [
+      "/images/products/Classic Marble.png"
+    ],
+    stockCount: 100,
+    inStock: true,
+    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
+    variations: [
+      { size: "1200*600", price: 4800 },
+      { size: "2400*600", price: 5500 },
+      { size: "2400*1200", price: 6700 },
+      { size: "2900*1200", price: 6900 }
+    ],
+    colors: [
+      { name: "Black", inStock: true, stockCount: 100, image: "/images/products/Classic Marble.png" }
     ]
   },
   {
@@ -246,7 +290,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Terrazzo Rough Stone.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -264,7 +309,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Classic Marble.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 2-3 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -282,7 +328,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Rockcut Dolomitic Stone.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 2800, height: 600, depth: 4, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -299,7 +346,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Skyline stone.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -317,6 +365,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Marble Pillar-Bulgari.jpg",
       "/images/products/Marble Pillar.png"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 3000, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -324,7 +374,7 @@ export const PRODUCTS: Product[] = [
       { size: "3000*1200", price: 7900 }
     ],
     colors: [
-      { name: "Bulgari", inStock: true, image: "/images/products/Marble Pillar-Bulgari.jpg" }
+      { name: "Bulgari", inStock: true, stockCount: 100, image: "/images/products/Marble Pillar-Bulgari.jpg" }
     ]
   },
   {
@@ -337,6 +387,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Crude Wood Ripple-Light Yellow.jpg",
       "/images/products/Crude Wood Ripple Board.png"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 3000, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -344,7 +396,7 @@ export const PRODUCTS: Product[] = [
       { size: "3000*1200", price: 7900 }
     ],
     colors: [
-      { name: "Light Yellow", inStock: true, image: "/images/products/Crude Wood Ripple-Light Yellow.jpg" }
+      { name: "Light Yellow", inStock: true, stockCount: 100, image: "/images/products/Crude Wood Ripple-Light Yellow.jpg" }
     ]
   },
   {
@@ -357,6 +409,8 @@ export const PRODUCTS: Product[] = [
       "/images/products/Ancient Wood-Dark Brown.jpg",
       "/images/products/Ancient Wood.png"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 2400, height: 590, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -364,7 +418,7 @@ export const PRODUCTS: Product[] = [
       { size: "2400*1190", price: 6900 }
     ],
     colors: [
-      { name: "Dark Brown", inStock: true, image: "/images/products/Ancient Wood-Dark Brown.jpg" }
+      { name: "Dark Brown", inStock: true, stockCount: 100, image: "/images/products/Ancient Wood-Dark Brown.jpg" }
     ]
   },
   {
@@ -376,7 +430,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Poly wood Board.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 3000, height: 590, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -394,7 +449,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Wood Grain.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 1.5-2 мм.",
     specifications: { width: 3000, height: 1050, depth: 2, material: "Кварцевый sand, кальциевый порошок, эмульсия" },
     variations: [
@@ -411,7 +467,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Roman Pillar.png"
     ],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-9 мм.",
     specifications: { width: 2980, height: 598, depth: 6, material: "Кварцевый sand, кальциевый порошок, эмульсия" },
     variations: [
@@ -427,7 +484,8 @@ export const PRODUCTS: Product[] = [
     category: "gypsum",
     price: 1200,
     images: ["/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png"],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Экологичная гипсовая 3D панель с уникальным рельефом. Создает неповторимую игру света и тени.",
     specifications: { width: 500, height: 500, depth: 25, material: "Гипс" }
   },
@@ -438,7 +496,8 @@ export const PRODUCTS: Product[] = [
     category: "profiles",
     price: 1200,
     images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
-    isOutOfStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Декоративный профиль в золотом исполнении для стыковки панелей.",
     specifications: { width: 3000, height: 15, depth: 15, material: "Алюминий" }
   },
@@ -449,9 +508,10 @@ export const PRODUCTS: Product[] = [
     category: "profiles",
     price: 950,
     images: ["/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png"],
-    isOutOfStock: true,
-    description: "Создает эффект парящей стены. Матовый черный цвет.",
-    specifications: { width: 2500, height: 20, depth: 40, material: "Алюминий" }
+    stockCount: 0,
+    inStock: false,
+    description: "Теневой профиль черного цвета для создания эффекта парящих стен.",
+    specifications: { width: 3000, height: 20, depth: 20, material: "Алюминий" }
   },
   {
     id: "28",
@@ -460,13 +520,15 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 2450,
     images: ["/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png"],
+    stockCount: 0,
+    inStock: false,
     description: "Полный набор для монтажа: шпатель, уровень, крепежи и инструкция.",
     specifications: { width: 300, height: 200, depth: 100, material: "Пластик/Металл" },
     bundleItems: [
-      { id: "b1", name: "Шпатель зубчатый", price: 450, quantity: 1, image: "/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png", slug: "notched-trowel" },
-      { id: "b2", name: "Уровень строительный", price: 850, quantity: 1, image: "/images/products/uroven.jpg", slug: "spirit-level" },
-      { id: "b3", name: "Клей UltraFix (пробник)", price: 650, quantity: 2, image: "/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png", slug: "ultrafix-sample" },
-      { id: "b4", name: "Набор крепежей", price: 500, quantity: 1, image: "/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png", slug: "mounting-hardware" }
+      { id: "b1", name: "Шпатель зубчатый", price: 450, quantity: 1, image: "/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png", slug: "notched-trowel", inStock: false, stockCount: 0 },
+      { id: "b2", name: "Уровень строительный", price: 850, quantity: 1, image: "/images/products/uroven.jpg", slug: "spirit-level", inStock: true, stockCount: 100 },
+      { id: "b3", name: "Клей UltraFix (пробник)", price: 650, quantity: 2, image: "/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png", slug: "ultrafix-sample", inStock: false, stockCount: 0 },
+      { id: "b4", name: "Набор крепежей", price: 500, quantity: 1, image: "/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png", slug: "mounting-hardware", inStock: false, stockCount: 0 }
     ]
   },
   // Товары для наборов (скрытые из общего каталога)
@@ -477,6 +539,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 450,
     images: ["/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png"],
+    stockCount: 0,
+    inStock: false,
     description: "Профессиональный шпатель с зубьями для равномерного нанесения клея на поверхность панелей.",
     specifications: { width: 200, height: 100, depth: 2, material: "Сталь/Пластик" },
     isHidden: true
@@ -488,6 +552,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 850,
     images: ["/images/products/uroven.jpg"],
+    stockCount: 100,
+    inStock: true,
     description: "Профессиональный строительный уровень для точного монтажа панелей.",
     specifications: { width: 600, height: 50, depth: 25, material: "Алюминий/Пластик" },
     isHidden: true
@@ -499,6 +565,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 650,
     images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
+    stockCount: 0,
+    inStock: false,
     description: "Высокоадгезивный клей UltraFix в удобной фасовке. Идеально подходит для монтажа 2-3 кв.м. панелей.",
     specifications: { width: 100, height: 150, depth: 50, material: "Клеевой состав" },
     isHidden: true
@@ -510,6 +578,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 500,
     images: ["/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png"],
+    stockCount: 0,
+    inStock: false,
     description: "Комплект скрытых крепежей для надежной фиксации панелей на различных типах поверхностей.",
     specifications: { width: 50, height: 50, depth: 10, material: "Металл" },
     isHidden: true
@@ -521,6 +591,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 1100,
     images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
+    stockCount: 0,
+    inStock: false,
     description: "Высокоадгезивный клей для всех типов 3D панелей. Расход: 1 туба на 3-4 панели.",
     specifications: { width: 50, height: 250, depth: 50, material: "Акрил" }
   },
@@ -531,6 +603,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 3200,
     images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
+    stockCount: 0,
+    inStock: false,
     description: "Специализированный клей для тяжелых панелей. Расход: 5кг на 4-6 м2.",
     specifications: { width: 250, height: 250, depth: 250, material: "Акриловый состав" }
   },
@@ -541,6 +615,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 1800,
     images: ["/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png"],
+    stockCount: 0,
+    inStock: false,
     description: "Декоративная затирка для швов. Влагостойкая, устойчивая к выцветанию.",
     specifications: { width: 150, height: 150, depth: 150, material: "Цементный состав" }
   },
@@ -551,11 +627,20 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 5900,
     images: [
-      "/images/products/Big Weaving-Jacinth.jpg"
+      "/images/products/Big Weaving-Jacinth.jpg",
+      "/images/products/Big Weaving.png"
     ],
-    description: "Гибкий камень NEO с текстурой крупного плетения.",
-    specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок" },
-    colors: ["Jacinth"]
+    stockCount: 100,
+    inStock: true,
+    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    specifications: { width: 3000, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
+    variations: [
+      { size: "3000*600", price: 5900 },
+      { size: "3000*1200", price: 6900 }
+    ],
+    colors: [
+      { name: "Jacinth", inStock: true, stockCount: 100, image: "/images/products/Big Weaving-Jacinth.jpg" }
+    ]
   },
   {
     id: "33",
@@ -566,9 +651,13 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Cut Stone-Red.jpg"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с текстурой колотого камня.",
     specifications: { width: 1200, height: 600, depth: 4, material: "Кварцевый песок" },
-    colors: ["Red"]
+    colors: [
+      { name: "Red", inStock: true, stockCount: 100, image: "/images/products/Cut Stone-Red.jpg" }
+    ]
   },
   {
     id: "34",
@@ -579,9 +668,13 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Gobi Rammed-Gradient B.jpg"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с текстурой утрамбованной земли пустыни Гоби.",
     specifications: { width: 2400, height: 1200, depth: 3, material: "Кварцевый песок" },
-    colors: ["Gradient B"]
+    colors: [
+      { name: "Gradient B", inStock: true, stockCount: 100, image: "/images/products/Gobi Rammed-Gradient B.jpg" }
+    ]
   },
   {
     id: "35",
@@ -592,9 +685,13 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Ridged Stone-Pire White.jpg"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с текстурой гребнистого камня.",
     specifications: { width: 1200, height: 600, depth: 5, material: "Кварцевый песок" },
-    colors: ["Pire White"]
+    colors: [
+      { name: "Pire White", inStock: true, stockCount: 100, image: "/images/products/Ridged Stone-Pire White.jpg" }
+    ]
   },
   {
     id: "36",
@@ -605,9 +702,13 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Starmoon Stone-Dark Grey.jpg"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с текстурой 'Звездная луна'.",
     specifications: { width: 1200, height: 600, depth: 4, material: "Кварцевый песок" },
-    colors: ["Dark Grey"]
+    colors: [
+      { name: "Dark Grey", inStock: true, stockCount: 100, image: "/images/products/Starmoon Stone-Dark Grey.jpg" }
+    ]
   },
   {
     id: "37",
@@ -618,8 +719,12 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Round Line Stone-Dark Grey.jpg"
     ],
+    stockCount: 100,
+    inStock: true,
     description: "Гибкий камень NEO с текстурой округлых линий.",
     specifications: { width: 1200, height: 600, depth: 4, material: "Кварцевый песок" },
-    colors: ["Dark Grey"]
+    colors: [
+      { name: "Dark Grey", inStock: true, stockCount: 100, image: "/images/products/Round Line Stone-Dark Grey.jpg" }
+    ]
   }
 ];

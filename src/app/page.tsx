@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS, CATEGORIES } from "@/lib/data";
+import { AddToCart } from "@/components/AddToCart";
 
 export default function Home() {
   const featuredProducts = PRODUCTS.slice(0, 3);
@@ -75,7 +76,7 @@ export default function Home() {
                           href={`/product/${product.slug}`} 
                           className={`group block transition-all duration-700 ${index === 1 ? 'md:mt-12' : ''}`}
                         >
-                            <div className="aspect-[4/5] bg-slate-50 relative overflow-hidden mb-8 border border-slate-100">
+                            <div className={`aspect-[4/5] bg-slate-50 relative overflow-hidden mb-8 border border-slate-100 ${!product.inStock ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                                 {product.images && product.images.length > 0 ? (
                                     <>
                                         <img 
@@ -89,6 +90,13 @@ export default function Home() {
                                     <div className="absolute inset-0 flex items-center justify-center text-slate-200 font-light italic tracking-[0.5em] uppercase p-12 text-center text-[10px]">
                                         {product.name}
                                     </div>
+                                )}
+                                {!product.inStock && (
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/5">
+                                    <span className="bg-slate-900/90 text-white text-[9px] font-bold uppercase tracking-[0.3em] px-4 py-2 backdrop-blur-sm">
+                                      Нет в наличии
+                                    </span>
+                                  </div>
                                 )}
                                 <div className="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
                                   <div className="bg-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest">
@@ -105,10 +113,14 @@ export default function Home() {
                                     0{index + 1}
                                   </span>
                                 </div>
-                                <h4 className="text-xl font-bold uppercase tracking-tight mb-2 group-hover:text-blue-600 transition-colors">
-                                    {product.name}
-                                </h4>
-                                <p className="text-slate-400 text-sm font-medium">От {product.price} ₽</p>
+                                <div className="flex justify-between items-start gap-4">
+                                  <div className="flex-1">
+                                    <h4 className="text-xl font-bold uppercase tracking-tight mb-2 group-hover:text-blue-600 transition-colors">
+                                        {product.name}
+                                    </h4>
+                                    <p className="text-slate-400 text-sm font-medium">От {product.price} ₽</p>
+                                  </div>
+                                </div>
                             </div>
                         </Link>
                     ))}

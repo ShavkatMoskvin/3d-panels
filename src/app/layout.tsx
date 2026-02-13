@@ -9,6 +9,7 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://3d-panels-penza.ru"),
   title: {
     default: "MoskWin | Премиальные 3D панели в Пензе",
     template: "%s | MoskWin"
