@@ -1,4 +1,4 @@
-import { PRODUCTS } from './src/lib/data';
+import { PRODUCTS } from '@/lib/data';
 
 export default function sitemap() {
   const baseUrl = 'https://3d-panels-penza.ru';
