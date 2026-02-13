@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types";
 import { Check, Plus, Minus } from "lucide-react";
@@ -48,7 +48,7 @@ export function Calculator({
     currentPrice = selectedVariation.price;
   }
 
-  const handleCalculate = () => {
+  const handleCalculate = useCallback(() => {
     setError(null);
     const w = parseFloat(width.replace(",", "."));
     const h = parseFloat(height.replace(",", "."));
@@ -64,10 +64,32 @@ export function Calculator({
     const panelsCount = Math.ceil(wallArea / panelArea);
     const panelsWithReserve = Math.ceil(panelsCount * 1.1);
     
-    // Клей: ~5кг на 1м2. Упаковка 5кг. Значит 1 упаковка на 1м2.
-    const glueQty = Math.ceil(wallArea); 
-    // Затирка: ~1.5кг на 1м2. Упаковка 2кг.
-    const groutQty = Math.ceil(wallArea * 1.5 / 2);
+    // Новая логика расчета на основе consumableDetails из data.ts
+    let glueQty = 0;
+    let groutQty = 0;
+
+    if (consumables.glue?.consumableDetails) {
+      const { coveragePerUnit, unit } = consumables.glue.consumableDetails;
+      if (unit === 'm2') {
+        glueQty = Math.ceil(wallArea / coveragePerUnit);
+      } else if (unit === 'pcs') {
+        glueQty = Math.ceil(panelsWithReserve / coveragePerUnit);
+      }
+    } else {
+      // Fallback на старую (но подправленную) логику, если данных нет
+      glueQty = Math.ceil(wallArea / 5); // Допустим 1 упаковка 5кг на 5м2
+    }
+
+    if (consumables.grout?.consumableDetails) {
+      const { coveragePerUnit } = consumables.grout.consumableDetails;
+      groutQty = Math.ceil(wallArea / coveragePerUnit);
+    } else {
+      groutQty = Math.ceil(wallArea / 10); // Допустим 1 упаковка 2кг на 10м2
+    }
+
+    const calculatedExtras = [];
+    if (consumables.glue) calculatedExtras.push({ product: consumables.glue, quantity: glueQty });
+    if (consumables.grout) calculatedExtras.push({ product: consumables.grout, quantity: groutQty });
 
     setResult({
       panels: panelsWithReserve,
@@ -76,11 +98,8 @@ export function Calculator({
       area: wallArea,
     });
 
-    // Больше не добавляем расходники автоматически при расчете
-    if (onCalculate) {
-      onCalculate(panelsWithReserve, extraItems);
-    }
-  };
+    onCalculate?.(panelsWithReserve, calculatedExtras);
+  }, [width, height, consumables, onCalculate, currentWidth, currentHeight]);
 
   const handleAddConsumable = (prod: Product, qty: number) => {
     const newExtra = [...extraItems, { product: prod, quantity: qty }];
@@ -192,12 +211,13 @@ export function Calculator({
                 
                 <div className="grid grid-cols-1 gap-4">
                   {[
-                    { key: 'glue', prod: consumables.glue, qty: result.glueQty, label: 'уп. по 5кг' },
-                    { key: 'grout', prod: consumables.grout, qty: result.groutQty, label: 'уп. по 2кг' }
-                  ].map(({ key, prod, qty, label }) => {
+                    { key: 'glue', prod: consumables.glue, qty: result.glueQty },
+                    { key: 'grout', prod: consumables.grout, qty: result.groutQty }
+                  ].map(({ key, prod, qty }) => {
                     if (!prod) return null;
                     const inCart = extraItems.find(i => i.product.id === prod.id);
                     const cartQty = inCart?.quantity || 0;
+                    const detail = prod.consumableDetails;
 
                     return (
                       <div 
@@ -221,17 +241,22 @@ export function Calculator({
                         
                         <div className="flex-1 min-w-0">
                           <p className="text-[11px] font-bold uppercase tracking-tight mb-1 text-slate-900">{prod.name}</p>
-                          <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                              {!prod.inStock ? "Нет в наличии" : `Рекомендуем: ${qty} ${label}`}
-                            </span>
-                            {prod.inStock && (
-                              <>
-                                <span className="w-1 h-1 rounded-full bg-slate-200"></span>
-                                <span className="text-[10px] font-bold text-slate-900">
-                                  {(prod.price * (cartQty || qty)).toLocaleString()} ₽
-                                </span>
-                              </>
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                                {!prod.inStock ? "Нет в наличии" : `Рекомендуем: ${qty} шт.`}
+                              </span>
+                              {prod.inStock && (
+                                <>
+                                  <span className="w-1 h-1 rounded-full bg-slate-200"></span>
+                                  <span className="text-[10px] font-bold text-slate-900">
+                                    {(prod.price * (cartQty || qty)).toLocaleString()} ₽
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                            {detail?.description && (
+                              <p className="text-[9px] text-blue-600 font-bold uppercase tracking-widest">{detail.description}</p>
                             )}
                           </div>
                         </div>

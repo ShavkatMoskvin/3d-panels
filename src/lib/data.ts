@@ -483,10 +483,26 @@ export const PRODUCTS: Product[] = [
     category: "gypsum",
     price: 1200,
     images: ["/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png"],
-    stockCount: 0,
-    inStock: false,
+    stockCount: 15,
+    inStock: true,
     description: "Экологичная гипсовая 3D панель с уникальным рельефом. Создает неповторимую игру света и тени.",
-    specifications: { width: 500, height: 500, depth: 25, material: "Гипс" }
+    specifications: { width: 500, height: 500, depth: 25, material: "Гипс" },
+    reviews: [
+      { 
+        id: 'r1',
+        userName: "Артем Г.",
+        date: "15.01.2024",
+        rating: 5,
+        text: "Панели огонь! Очень глубокая фактура, в интерьере смотрятся объемно. Приехали целые, упакованы в жесткую обрешетку."
+      },
+      { 
+        id: 'r2',
+        userName: "Юлия С.",
+        date: "20.01.2024",
+        rating: 5,
+        text: "Идеально подошли для спальни. Красили матовой краской, легло отлично. Спасибо за консультацию по клею!"
+      }
+    ]
   },
   {
     id: "24",
@@ -568,6 +584,12 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     description: "Высокоадгезивный клей UltraFix в удобной фасовке. Идеально подходит для монтажа 2-3 кв.м. панелей.",
     specifications: { width: 100, height: 150, depth: 50, material: "Клеевой состав" },
+    consumableDetails: {
+      coveragePerUnit: 2.5, // 1 упаковка на 2.5 м2 в среднем
+      unit: 'm2',
+      weightKg: 1,
+      description: "Расход: 1кг на 2-3 м²"
+    },
     isHidden: true
   },
   {
@@ -593,7 +615,13 @@ export const PRODUCTS: Product[] = [
     stockCount: 100,
     inStock: true,
     description: "Высокоадгезивный клей для всех типов 3D панелей. Расход: 1 туба на 3-4 панели.",
-    specifications: { width: 50, height: 250, depth: 50, material: "Акрил" }
+    specifications: { width: 50, height: 250, depth: 50, material: "Акрил" },
+    consumableDetails: {
+      coveragePerUnit: 3.5, // 1 туба на 3-4 панели
+      unit: 'pcs',
+      weightKg: 0.45,
+      description: "Расход: 1 туба на 3-4 панели"
+    }
   },
   {
     id: "30",
@@ -605,7 +633,13 @@ export const PRODUCTS: Product[] = [
     stockCount: 100,
     inStock: true,
     description: "Специализированный клей для тяжелых панелей. Расход: 5кг на 4-6 м2.",
-    specifications: { width: 250, height: 250, depth: 250, material: "Акриловый состав" }
+    specifications: { width: 250, height: 250, depth: 250, material: "Акриловый состав" },
+    consumableDetails: {
+      coveragePerUnit: 5, // 1 ведро на 5 м2 в среднем
+      unit: 'm2',
+      weightKg: 5,
+      description: "Расход: 5кг на 4-6 м²"
+    }
   },
   {
     id: "31",
@@ -617,7 +651,13 @@ export const PRODUCTS: Product[] = [
     stockCount: 100,
     inStock: true,
     description: "Декоративная затирка для швов. Влагостойкая, устойчивая к выцветанию.",
-    specifications: { width: 150, height: 150, depth: 150, material: "Цементный состав" }
+    specifications: { width: 150, height: 150, depth: 150, material: "Цементный состав" },
+    consumableDetails: {
+      coveragePerUnit: 10, // 2кг на 10 м2 (примерно)
+      unit: 'm2',
+      weightKg: 2,
+      description: "Расход: 2кг на ~10 м²"
+    }
   },
   {
     id: "32",

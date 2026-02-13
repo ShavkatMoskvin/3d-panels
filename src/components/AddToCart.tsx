@@ -119,7 +119,17 @@ export function AddToCart({
     // Добавляем дополнительные товары из калькулятора, если они есть
     if (extraItems && extraItems.length > 0) {
       extraItems.forEach(item => {
-        addToCart(item.product, item.quantity);
+        // Проверяем, есть ли уже этот товар в корзине
+        const cartId = `${item.product.id}-default-default`;
+        const existing = items.find(i => `${i.id}-${i.selectedVariation?.size || 'default'}-${i.selectedColor || 'default'}` === cartId);
+        
+        if (existing) {
+          // Если есть, обновляем количество (прибавляем новое)
+          updateQuantity(cartId, existing.quantity + item.quantity);
+        } else {
+          // Если нет, добавляем как новый
+          addToCart(item.product, item.quantity);
+        }
       });
     }
 

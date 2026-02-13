@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "next lint --fix --file"
+    ]
   },
   "dependencies": {
     "clsx": "^2.1.0",
@@ -24,6 +30,8 @@
     "autoprefixer": "^10.4.19",
     "eslint": "^8",
     "eslint-config-next": "latest",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

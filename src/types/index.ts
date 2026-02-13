@@ -35,6 +35,20 @@ export interface Product {
     inStock: boolean;
     stockCount: number;
   }[];
+  consumableDetails?: {
+    coveragePerUnit: number; // Расход на единицу площади (м2) или количество штук
+    unit: 'm2' | 'pcs';      // Единица измерения для расхода
+    weightKg?: number;       // Вес упаковки
+    description?: string;    // Подсказка для калькулятора
+  };
+  reviews?: {
+    id: string;
+    userName: string;
+    date: string;
+    rating: number;
+    text: string;
+    images?: string[];
+  }[];
 }
 
 export type Category = 
