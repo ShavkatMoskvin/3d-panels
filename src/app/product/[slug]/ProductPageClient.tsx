@@ -95,13 +95,14 @@ export default function ProductPageClient({ product }: { product: Product }) {
     // 1. Если это панель, обязательно предлагаем монтажный комплект
     const isMainPanel = ['gypsum', 'flexible-stone', 'travertine'].includes(product.category);
     if (isMainPanel) {
-      const mountingKit = PRODUCTS.find(p => p.slug === 'mounting-kit-pro');
+      const mountingKit = PRODUCTS.find(p => p.slug === 'mounting-kit-pro' && p.inStock);
       if (mountingKit) suggestions.push(mountingKit);
     }
 
     // 2. Добавляем профили и аксессуары, исключая текущий товар и уже добавленные
     const others = PRODUCTS.filter(p => 
       !p.isHidden &&
+      p.inStock &&
       p.id !== product.id && 
       !suggestions.find(s => s.id === p.id) &&
       (p.category === 'profiles' || p.category === 'accessories')
@@ -323,114 +324,8 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 </div>
               )}
 
-              {/* Расходники вне калькулятора */}
-              {isPanel && isSelectedColorInStock && (consumables.glue || consumables.grout) && (
-                <div className="mb-12 p-6 bg-slate-50 border border-slate-100">
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Рекомендуемые расходники</h4>
-                  <div className="space-y-4">
-                    {consumables.glue && (
-                      <div className={`flex items-center justify-between gap-4 group ${!consumables.glue.inStock ? 'opacity-60 grayscale' : ''}`}>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-white border border-slate-100 overflow-hidden">
-                            <img src={consumables.glue.images[0]} alt="" className="w-full h-full object-cover" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold uppercase tracking-tight">{consumables.glue.name}</p>
-                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
-                              {consumables.glue.inStock ? `${consumables.glue.price} ₽ / уп.` : "Нет в наличии"}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          {extraCalculatedItems.find(i => i.product.id === consumables.glue?.id) ? (
-                            <div className="flex items-center bg-white border border-slate-200 h-8">
-                              <button 
-                                onClick={() => handleUpdateExtra(consumables.glue!, (extraCalculatedItems.find(i => i.product.id === consumables.glue?.id)?.quantity || 0) - 1)}
-                                className="px-2 h-full hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"
-                              >
-                                <Minus size={10} />
-                              </button>
-                              <span className="px-2 text-[10px] font-bold min-w-[20px] text-center">
-                                {extraCalculatedItems.find(i => i.product.id === consumables.glue?.id)?.quantity}
-                              </span>
-                              <button 
-                                onClick={() => handleUpdateExtra(consumables.glue!, (extraCalculatedItems.find(i => i.product.id === consumables.glue?.id)?.quantity || 0) + 1)}
-                                className="px-2 h-full hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"
-                              >
-                                <Plus size={10} />
-                              </button>
-                            </div>
-                          ) : (
-                            <button 
-                              onClick={!consumables.glue.inStock ? undefined : () => handleUpdateExtra(consumables.glue!, 1)}
-                              disabled={!consumables.glue.inStock}
-                              className={`h-8 px-4 border text-[9px] font-bold uppercase tracking-widest transition-all ${
-                                !consumables.glue.inStock
-                                  ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
-                                  : "bg-white border-slate-200 hover:border-blue-600 hover:text-blue-600"
-                              }`}
-                            >
-                              {!consumables.glue.inStock ? "Отсутствует" : "Добавить"}
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    {consumables.grout && (
-                      <div className={`flex items-center justify-between gap-4 group ${!consumables.grout.inStock ? 'opacity-60 grayscale' : ''}`}>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-white border border-slate-100 overflow-hidden">
-                            <img src={consumables.grout.images[0]} alt="" className="w-full h-full object-cover" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold uppercase tracking-tight">{consumables.grout.name}</p>
-                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">
-                              {consumables.grout.inStock ? `${consumables.grout.price} ₽ / уп.` : "Нет в наличии"}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          {extraCalculatedItems.find(i => i.product.id === consumables.grout?.id) ? (
-                            <div className="flex items-center bg-white border border-slate-200 h-8">
-                              <button 
-                                onClick={() => handleUpdateExtra(consumables.grout!, (extraCalculatedItems.find(i => i.product.id === consumables.grout?.id)?.quantity || 0) - 1)}
-                                className="px-2 h-full hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"
-                              >
-                                <Minus size={10} />
-                              </button>
-                              <span className="px-2 text-[10px] font-bold min-w-[20px] text-center">
-                                {extraCalculatedItems.find(i => i.product.id === consumables.grout?.id)?.quantity}
-                              </span>
-                              <button 
-                                onClick={() => handleUpdateExtra(consumables.grout!, (extraCalculatedItems.find(i => i.product.id === consumables.grout?.id)?.quantity || 0) + 1)}
-                                className="px-2 h-full hover:bg-slate-50 text-slate-400 hover:text-blue-600 transition-colors"
-                              >
-                                <Plus size={10} />
-                              </button>
-                            </div>
-                          ) : (
-                            <button 
-                              onClick={!consumables.grout.inStock ? undefined : () => handleUpdateExtra(consumables.grout!, 1)}
-                              disabled={!consumables.grout.inStock}
-                              className={`h-8 px-4 border text-[9px] font-bold uppercase tracking-widest transition-all ${
-                                !consumables.grout.inStock
-                                  ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
-                                  : "bg-white border-slate-200 hover:border-blue-600 hover:text-blue-600"
-                              }`}
-                            >
-                              {!consumables.grout.inStock ? "Отсутствует" : "Добавить"}
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
+              {/* Расходники вне калькулятора - Убрано по требованию */}
+              
               {/* Main AddToCart - Синхронизирован с калькулятором */}
               {!isPanel && (
                 <div className="mb-12">

@@ -2,11 +2,10 @@ import { Product } from "@/types";
 
 export const CATEGORIES = [
   { value: 'all', label: 'Все товары' },
-  { value: 'gypsum', label: 'Гипсовые панели' },
+  { value: 'gypsum', label: 'Панели' },
   { value: 'flexible-stone', label: 'Гибкий камень' },
-  { value: 'travertine', label: 'Травертин' },
   { value: 'profiles', label: 'Профили' },
-  { value: 'accessories', label: 'Аксессуары' },
+  { value: 'accessories', label: 'Другое' },
 ] as const;
 
 export const PRODUCTS: Product[] = [
@@ -195,7 +194,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 4800,
     images: [
-      "/images/products/Slate.png",
+      //"/images/products/Slate.png",
       "/images/products/Slate-Veil Dark Grey.jpg"
     ],
     stockCount: 100,
@@ -221,8 +220,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Classic Marble.png"
     ],
-    stockCount: 100,
-    inStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -244,8 +243,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Classic Marble.png"
     ],
-    stockCount: 100,
-    inStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -267,8 +266,8 @@ export const PRODUCTS: Product[] = [
     images: [
       "/images/products/Classic Marble.png"
     ],
-    stockCount: 100,
-    inStock: true,
+    stockCount: 0,
+    inStock: false,
     description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
@@ -520,15 +519,15 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 2450,
     images: ["/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png"],
-    stockCount: 0,
-    inStock: false,
+    stockCount: 100,
+    inStock: true,
     description: "Полный набор для монтажа: шпатель, уровень, крепежи и инструкция.",
     specifications: { width: 300, height: 200, depth: 100, material: "Пластик/Металл" },
     bundleItems: [
-      { id: "b1", name: "Шпатель зубчатый", price: 450, quantity: 1, image: "/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png", slug: "notched-trowel", inStock: false, stockCount: 0 },
+      { id: "b1", name: "Шпатель зубчатый", price: 450, quantity: 1, image: "/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png", slug: "notched-trowel", inStock: true, stockCount: 100 },
       { id: "b2", name: "Уровень строительный", price: 850, quantity: 1, image: "/images/products/uroven.jpg", slug: "spirit-level", inStock: true, stockCount: 100 },
-      { id: "b3", name: "Клей UltraFix (пробник)", price: 650, quantity: 2, image: "/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png", slug: "ultrafix-sample", inStock: false, stockCount: 0 },
-      { id: "b4", name: "Набор крепежей", price: 500, quantity: 1, image: "/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png", slug: "mounting-hardware", inStock: false, stockCount: 0 }
+      { id: "b3", name: "Клей UltraFix (пробник)", price: 650, quantity: 2, image: "/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png", slug: "ultrafix-sample", inStock: true, stockCount: 100 },
+      { id: "b4", name: "Набор крепежей", price: 500, quantity: 1, image: "/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png", slug: "mounting-hardware", inStock: true, stockCount: 100 }
     ]
   },
   // Товары для наборов (скрытые из общего каталога)
@@ -539,8 +538,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 450,
     images: ["/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png"],
-    stockCount: 0,
-    inStock: false,
+    stockCount: 100,
+    inStock: true,
     description: "Профессиональный шпатель с зубьями для равномерного нанесения клея на поверхность панелей.",
     specifications: { width: 200, height: 100, depth: 2, material: "Сталь/Пластик" },
     isHidden: true
@@ -565,8 +564,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 650,
     images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
-    stockCount: 0,
-    inStock: false,
+    stockCount: 100,
+    inStock: true,
     description: "Высокоадгезивный клей UltraFix в удобной фасовке. Идеально подходит для монтажа 2-3 кв.м. панелей.",
     specifications: { width: 100, height: 150, depth: 50, material: "Клеевой состав" },
     isHidden: true
@@ -578,8 +577,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 500,
     images: ["/images/products/{13C86AC8-07B5-40EE-A2AA-ECC9BA4E4621}.png"],
-    stockCount: 0,
-    inStock: false,
+    stockCount: 100,
+    inStock: true,
     description: "Комплект скрытых крепежей для надежной фиксации панелей на различных типах поверхностей.",
     specifications: { width: 50, height: 50, depth: 10, material: "Металл" },
     isHidden: true
@@ -591,8 +590,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 1100,
     images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
-    stockCount: 0,
-    inStock: false,
+    stockCount: 100,
+    inStock: true,
     description: "Высокоадгезивный клей для всех типов 3D панелей. Расход: 1 туба на 3-4 панели.",
     specifications: { width: 50, height: 250, depth: 50, material: "Акрил" }
   },
@@ -603,8 +602,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 3200,
     images: ["/images/products/{91D6B128-7DCF-4DEA-9E2D-A1886ADA4044}.png"],
-    stockCount: 0,
-    inStock: false,
+    stockCount: 100,
+    inStock: true,
     description: "Специализированный клей для тяжелых панелей. Расход: 5кг на 4-6 м2.",
     specifications: { width: 250, height: 250, depth: 250, material: "Акриловый состав" }
   },
@@ -615,8 +614,8 @@ export const PRODUCTS: Product[] = [
     category: "accessories",
     price: 1800,
     images: ["/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png"],
-    stockCount: 0,
-    inStock: false,
+    stockCount: 100,
+    inStock: true,
     description: "Декоративная затирка для швов. Влагостойкая, устойчивая к выцветанию.",
     specifications: { width: 150, height: 150, depth: 150, material: "Цементный состав" }
   },

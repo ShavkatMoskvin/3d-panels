@@ -124,7 +124,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems([]);
   };
 
-  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
+  const totalItems = items.length;
   const itemsPrice = items.reduce((total, item) => total + (item.price * item.quantity), 0);
   const installationPrice = includeInstallation ? Math.round(itemsPrice * 0.15) : 0;
   const totalPrice = itemsPrice + installationPrice;

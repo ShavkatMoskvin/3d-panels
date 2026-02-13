@@ -5,7 +5,7 @@ import { PRODUCTS, CATEGORIES } from "@/lib/data";
 import { AddToCart } from "@/components/AddToCart";
 
 export default function Home() {
-  const featuredProducts = PRODUCTS.slice(0, 3);
+  const featuredProducts = PRODUCTS.filter(p => p.inStock && !p.isHidden).slice(0, 3);
 
   return (
     <div className="flex flex-col">

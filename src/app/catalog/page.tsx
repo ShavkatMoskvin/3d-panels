@@ -33,7 +33,7 @@ export default function CatalogPage() {
 
   const filteredProducts = PRODUCTS.filter(product => {
     const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
-    return matchesCategory && !product.isHidden;
+    return matchesCategory && !product.isHidden && product.inStock;
   });
 
   return (
