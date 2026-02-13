@@ -54,7 +54,7 @@ export default function ProductPageClient({ product }: { product: Product }) {
     setExtraCalculatedItems([]); // Сброс расходников
   };
 
-  const handleColorChange = (c: { name: string; inStock: boolean; image?: string }) => {
+  const handleColorChange = (c: NonNullable<Product['colors']>[number]) => {
     setSelectedColor(c);
     // При смене цвета обновляем главное изображение, если оно есть у цвета
     if (c.image) {
