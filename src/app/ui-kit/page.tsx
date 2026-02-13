@@ -6,7 +6,7 @@ import { AddToCart } from "@/components/AddToCart";
 import Link from "next/link";
 
 export default function UIKitPage() {
-  const [activeCategory, setActiveCategory] = useState(CATEGORIES[0].value);
+  const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]['value']>(CATEGORIES[0].value);
   const demoProduct = PRODUCTS[0];
 
   return (

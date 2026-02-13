@@ -105,7 +105,9 @@ export function AddToCart({
           description: "",
           specifications: { material: "", width: 0, height: 0, depth: 0 },
           colors: [],
-          variations: []
+          variations: [],
+          stockCount: 100,
+          inStock: true
         };
         addToCart(fakeProduct, item.quantity * q);
       });
@@ -142,7 +144,9 @@ export function AddToCart({
           description: "",
           specifications: { material: "", width: 0, height: 0, depth: 0 },
           colors: [],
-          variations: []
+          variations: [],
+          stockCount: 100,
+          inStock: true
         };
         addToCart(fakeProduct, item.quantity);
       });
