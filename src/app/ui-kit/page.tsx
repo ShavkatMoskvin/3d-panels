@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CATEGORIES, PRODUCTS } from "@/lib/data";
 import { AddToCart } from "@/components/AddToCart";
-import Link from "next/link";
+import Image from "next/image";
 
 export default function UIKitPage() {
   const [activeCategory, setActiveCategory] = useState<(typeof CATEGORIES)[number]['value']>(CATEGORIES[0].value);
@@ -125,10 +125,11 @@ export default function UIKitPage() {
           <div className="max-w-sm mx-auto">
             <div className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl flex flex-col">
               <div className="relative block aspect-square bg-white overflow-hidden mb-6 border border-slate-100 transition-all duration-500">
-                <img 
-                  src={demoProduct.images?.[0]} 
+                <Image 
+                  src={demoProduct.images?.[0] || ""} 
                   alt={demoProduct.name}
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                  fill
+                  className="object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
               </div>
               

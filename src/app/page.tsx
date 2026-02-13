@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS, CATEGORIES } from "@/lib/data";
-import { AddToCart } from "@/components/AddToCart";
 
 export default function Home() {
   const featuredProducts = PRODUCTS.filter(p => p.inStock && !p.isHidden).slice(0, 3);
@@ -79,10 +78,11 @@ export default function Home() {
                             <div className={`aspect-[4/5] bg-slate-50 relative overflow-hidden mb-8 border border-slate-100 ${!product.inStock ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                                 {product.images && product.images.length > 0 ? (
                                     <>
-                                        <img 
+                                        <Image 
                                             src={product.images[0]} 
                                             alt={product.name}
-                                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                            fill
+                                            className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                         />
                                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
                                     </>
@@ -133,7 +133,7 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-3xl mx-auto">
               <h3 className="text-3xl md:text-4xl font-light italic mb-8">
-                "Дизайн — это не только то, как это выглядит и ощущается. Дизайн — это то, как это работает."
+                &quot;Дизайн — это не только то, как это выглядит и ощущается. Дизайн — это то, как это работает.&quot;
               </h3>
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400">
                 — Создаем совершенство с 2024 года

@@ -1,14 +1,37 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
+import { useCart, CartItem } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
 
+interface PaymentInitConfig {
+  terminalKey?: string;
+  product: string;
+  features: {
+    payment: {
+      orderId: string;
+      amount: number;
+      customerEmail: string;
+      customerPhone: string;
+      items: Array<{
+        name: string;
+        price: number;
+        quantity: number;
+        amount: number;
+      }>;
+    };
+    iframe: {
+      enabled: boolean;
+    };
+  };
+}
 
 declare global {
   interface Window {
-    PaymentIntegration?: any;
+    PaymentIntegration?: {
+      init: (config: PaymentInitConfig) => Promise<void>;
+    };
   }
 }
 
@@ -64,7 +87,7 @@ export default function CheckoutPage() {
           // После успешной инициализации вызываем оплату
           handleSubmit();
         })
-        .catch((err: any) => {
+        .catch((err: unknown) => {
           console.error("Payment init error:", err);
           alert("Ошибка при инициализации оплаты");
         });
@@ -115,7 +138,7 @@ export default function CheckoutPage() {
     }
   };
 
-  const getItemId = (item: any) => {
+  const getItemId = (item: CartItem) => {
     return `${item.id}-${item.selectedVariation?.size || 'default'}-${item.selectedColor || 'default'}-${item.kitItems ? JSON.stringify(item.kitItems) : 'default'}`;
   };
 

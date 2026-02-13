@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { ShoppingCart, Check, Minus, Plus, ArrowRight } from "lucide-react";
 import { PRODUCTS } from "@/lib/data";
 import Link from "next/link";
+import Image from "next/image";
 
 export function AddToCart({ 
   product, 
@@ -75,13 +76,15 @@ export function AddToCart({
 
   useEffect(() => {
     if (initialQuantity && initialQuantity !== quantity) {
-      setLocalQuantity(initialQuantity.toString());
-      // Если товар уже в корзине, обновляем его количество автоматически при расчете
-      if (quantity > 0) {
-        updateQuantity(itemId, initialQuantity);
+      // Если это панель и есть initialQuantity (от калькулятора), синхронизируем
+      if (isPanel) {
+        setLocalQuantity(initialQuantity.toString());
+        if (quantity > 0) {
+          updateQuantity(itemId, initialQuantity);
+        }
       }
     }
-  }, [initialQuantity, itemId]);
+  }, [initialQuantity, itemId, quantity, updateQuantity, isPanel]);
 
   const handleAdd = () => {
     const q = initialQuantity || 1;
@@ -241,8 +244,8 @@ export function AddToCart({
         {showUpsell && mountingKit && !showIconOnly && (
           <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 max-w-sm rounded-none">
             <div className="flex items-start gap-4">
-              <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors rounded-none">
-                <img src={mountingKit.images[0]} alt="" className="w-full h-full object-cover" />
+              <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors rounded-none relative">
+                <Image src={mountingKit.images[0]} alt="" fill className="object-cover" />
               </Link>
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-1">Рекомендуем</p>
@@ -347,8 +350,8 @@ export function AddToCart({
       {isPanel && inStock && showUpsell && mountingKit && mountingKit.inStock && (
         <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 max-w-sm rounded-none">
           <div className="flex items-start gap-4">
-            <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors rounded-none">
-              <img src={mountingKit.images[0]} alt="" className="w-full h-full object-cover" />
+            <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors rounded-none relative">
+              <Image src={mountingKit.images[0]} alt="" fill className="object-cover" />
             </Link>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-1">Рекомендуем</p>

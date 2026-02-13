@@ -4,6 +4,7 @@ import { Calculator } from "@/components/Calculator";
 import { AddToCart } from "@/components/AddToCart";
 import { ArrowLeft, Check, Truck, Plus, Minus } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Product } from "@/types";
 import { CATEGORIES, PRODUCTS } from "@/lib/data";
@@ -23,23 +24,6 @@ export default function ProductPageClient({ product }: { product: Product }) {
     if (!selectedColor) return product.inStock;
     return selectedColor.inStock;
   }, [selectedColor, product]);
-
-  // Находим расходники
-  const consumables = useMemo(() => ({
-    glue: PRODUCTS.find(p => p.slug === 'glue-ultrafix-5kg'),
-    grout: PRODUCTS.find(p => p.slug === 'grout-stone-finish-2kg')
-  }), []);
-
-  const handleUpdateExtra = (prod: Product, qty: number) => {
-    setExtraCalculatedItems(prev => {
-      if (qty <= 0) return prev.filter(i => i.product.id !== prod.id);
-      const existing = prev.find(i => i.product.id === prod.id);
-      if (existing) {
-        return prev.map(i => i.product.id === prod.id ? { ...i, quantity: qty } : i);
-      }
-      return [...prev, { product: prod, quantity: qty }];
-    });
-  };
 
   // Если это монтажный комплект, разделяем его на составляющие для отображения в "Составе набора"
   // Но по запросу пользователя "Набор почему идет как один товар а не как несколько по отдельности, отдели"
@@ -64,13 +48,13 @@ export default function ProductPageClient({ product }: { product: Product }) {
   const extrasTotal = extraCalculatedItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const totalOrderPrice = (baseUnitPrice * mainQuantity) + extrasTotal;
 
-  const handleVariationChange = (v: any) => {
+  const handleVariationChange = (v: { size: string; price: number }) => {
     setSelectedVariation(v);
     setMainQuantity(1); // Сброс количества при смене размера
     setExtraCalculatedItems([]); // Сброс расходников
   };
 
-  const handleColorChange = (c: any) => {
+  const handleColorChange = (c: { name: string; inStock: boolean; image?: string }) => {
     setSelectedColor(c);
     // При смене цвета обновляем главное изображение, если оно есть у цвета
     if (c.image) {
@@ -122,10 +106,11 @@ export default function ProductPageClient({ product }: { product: Product }) {
       {/* Product Hero Background */}
       <div className="relative h-64 overflow-hidden mb-12">
         <div className="absolute inset-0 z-0">
-          <img 
+          <Image 
             src="/images/{7D2B5115-6E0A-4EFB-80D5-CC21ED300691}.png" 
             alt="Product Background" 
-            className="w-full h-full object-cover brightness-[0.6]" 
+            fill
+            className="object-cover brightness-[0.6]" 
           />
         </div>
         <div className="container mx-auto px-4 h-full flex items-end pb-8 relative z-10">
@@ -146,10 +131,11 @@ export default function ProductPageClient({ product }: { product: Product }) {
             <div className="aspect-[4/5] bg-slate-50 border border-slate-100 flex items-center justify-center relative overflow-hidden group">
               {mainImage ? (
                 <>
-                  <img 
+                  <Image 
                     src={mainImage} 
                     alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 image-overlay-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </>
@@ -168,13 +154,16 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   }`}
                   onClick={() => setMainImage(img)}
                 >
-                  <img 
-                    src={img} 
-                    alt={`${product.name} view ${i + 1}`}
-                    className={`w-full h-full object-cover transition-opacity ${
-                      mainImage === img ? "opacity-100" : "opacity-50 hover:opacity-100"
-                    }`}
-                  />
+                  <div className="relative w-full h-full">
+                    <Image 
+                      src={img} 
+                      alt={`${product.name} view ${i + 1}`}
+                      fill
+                      className={`object-cover transition-opacity ${
+                        mainImage === img ? "opacity-100" : "opacity-50 hover:opacity-100"
+                      }`}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -348,9 +337,9 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   <div className="space-y-6">
                     {kitItems.map((item) => (
                       <div key={item.id} className="flex items-center gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm group/item">
-                        <Link href={item.slug ? `/product/${item.slug}` : "#"} className={`w-16 h-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-50 ${item.slug ? 'cursor-pointer' : 'cursor-default'}`}>
+                        <Link href={item.slug ? `/product/${item.slug}` : "#"} className={`w-16 h-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-50 relative ${item.slug ? 'cursor-pointer' : 'cursor-default'}`}>
                           {item.image && (
-                            <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform group-hover/item:scale-110" />
+                            <Image src={item.image} alt={item.name} fill className="object-cover transition-transform group-hover/item:scale-110" />
                           )}
                         </Link>
                         <div className="flex-1 min-w-0">
@@ -413,13 +402,14 @@ export default function ProductPageClient({ product }: { product: Product }) {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {suggestedProducts.map((item, index) => (
+              {suggestedProducts.map((item) => (
                 <div key={item.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl">
                   <div className="aspect-square mb-6 overflow-hidden bg-white relative">
-                    <img 
+                    <Image 
                       src={item.images[0]} 
                       alt={item.name} 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   </div>
                   <div className="space-y-2">
@@ -435,12 +425,11 @@ export default function ProductPageClient({ product }: { product: Product }) {
                       {item.specifications.material}
                     </p>
                     <div className="pt-4 flex items-center justify-between gap-4">
-                      <Link href={`/product/${item.slug}`} className="flex-1">
+                      <Link href={`/product/${item.slug}`} className="w-full">
                         <button className="w-full py-4 bg-white border border-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">
                           Подробнее
                         </button>
                       </Link>
-                      <AddToCart product={item} showIconOnly={true} />
                     </div>
                   </div>
                 </div>

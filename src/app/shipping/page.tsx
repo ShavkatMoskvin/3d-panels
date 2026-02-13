@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Truck, Clock, ShieldCheck, MapPin } from "lucide-react";
+import { Truck, ShieldCheck, MapPin } from "lucide-react";
 
 export default function ShippingPage() {
   const deliveryMethods = [

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Category } from "@/types";
 import Link from "next/link";
 import { PRODUCTS, CATEGORIES } from "@/lib/data";
-import { AddToCart } from "@/components/AddToCart";
+import Image from "next/image";
 
 export default function CatalogPage() {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>("all");
@@ -41,10 +41,12 @@ export default function CatalogPage() {
       {/* Catalog Header */}
       <section className="relative py-48 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
+          <Image 
             src="/images/{46ED9163-DE3C-4068-AC28-CA0863736AE6}.png" 
             alt="Catalog Background" 
-            className="w-full h-full object-cover brightness-[0.4] scale-105" 
+            fill
+            className="object-cover brightness-[0.4] scale-105" 
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-white"></div>
         </div>
@@ -129,10 +131,11 @@ export default function CatalogPage() {
                 <div key={product.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl flex flex-col">
                   <Link href={`/product/${product.slug}`} className={`relative block aspect-square bg-white overflow-hidden mb-6 border border-slate-100 transition-all duration-500 ${!product.inStock ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     {product.images && product.images.length > 0 ? (
-                      <img 
+                      <Image 
                         src={product.images[0]} 
                         alt={product.name}
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                        fill
+                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
                       />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center text-[10px] text-slate-300 font-light italic tracking-widest uppercase p-8 text-center">

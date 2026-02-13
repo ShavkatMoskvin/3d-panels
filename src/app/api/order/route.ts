@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 
+interface OrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -7,7 +13,7 @@ export async function POST(req: Request) {
 
     // 1. Формируем сообщение для Telegram
     const itemsList = items
-      .map((item: any) => `- ${item.name} (${item.quantity} шт.) — ${item.price * item.quantity} ₽`)
+      .map((item: OrderItem) => `- ${item.name} (${item.quantity} шт.) — ${item.price * item.quantity} ₽`)
       .join("\n");
 
     const installationInfo = installation?.included 

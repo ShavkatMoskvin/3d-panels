@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -7,9 +8,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center mb-6 group">
-              <img 
+              <Image 
                 src="/images/logo_white.svg" 
                 alt="MoskWin" 
+                width={120}
+                height={32}
                 className="h-8 w-auto transition-transform group-hover:scale-105" 
               />
             </Link>

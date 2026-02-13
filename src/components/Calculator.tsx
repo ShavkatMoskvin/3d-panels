@@ -2,17 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/context/CartContext";
 import { Product } from "@/types";
-import { Check, ShoppingCart, Plus, Minus, ArrowRight } from "lucide-react";
+import { Check, Plus, Minus } from "lucide-react";
 import { PRODUCTS } from "@/lib/data";
-import Link from "next/link";
-
-interface CalculatorProps {
-  product: Product;
-  selectedVariation?: { size: string; price: number };
-  onCalculate?: (quantity: number, extraItems?: { product: Product; quantity: number }[]) => void;
-}
+import Image from "next/image";
 
 export function Calculator({ 
   product, 
@@ -25,10 +18,8 @@ export function Calculator({
   onCalculate?: (quantity: number, extraItems?: { product: Product; quantity: number }[]) => void,
   extraItems?: { product: Product; quantity: number }[]
 }) {
-  const { addToCart, updateQuantity } = useCart();
   const [width, setWidth] = useState<string>("");
   const [height, setHeight] = useState<string>("");
-  const [isAdded, setIsAdded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<{
     panels: number;
@@ -42,9 +33,6 @@ export function Calculator({
     glue: PRODUCTS.find(p => p.slug === 'glue-ultrafix-5kg'),
     grout: PRODUCTS.find(p => p.slug === 'grout-stone-finish-2kg')
   }), []);
-
-  const glueInCartQty = extraItems.find(i => i.product.id === consumables.glue?.id)?.quantity || 0;
-  const groutInCartQty = extraItems.find(i => i.product.id === consumables.grout?.id)?.quantity || 0;
 
   // Parse dimensions from variation size (e.g., "1200*600") or fallback to product specifications
   let currentWidth = product.specifications.width;
@@ -73,7 +61,7 @@ export function Calculator({
 
     const wallArea = w * h;
     const panelArea = (currentWidth / 1000) * (currentHeight / 1000);
-    let panelsCount = Math.ceil(wallArea / panelArea);
+    const panelsCount = Math.ceil(wallArea / panelArea);
     const panelsWithReserve = Math.ceil(panelsCount * 1.1);
     
     // Клей: ~5кг на 1м2. Упаковка 5кг. Значит 1 упаковка на 1м2.
@@ -121,8 +109,6 @@ export function Calculator({
   const totalPanelsPrice = (result?.panels || 0) * currentPrice;
   const extraTotal = extraItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   const totalWithExtras = totalPanelsPrice + extraTotal;
-
-  const panelsInCart = result?.panels || 0;
 
   return (
     <div className="bg-white p-6 sm:p-10 border border-slate-200 shadow-sm">
@@ -224,8 +210,13 @@ export function Calculator({
                               : "bg-slate-50/50 border-transparent hover:bg-white hover:border-slate-200"
                         } border`}
                       >
-                        <div className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-slate-100 group-hover:border-slate-200 transition-colors">
-                          <img src={prod.images[0]} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                        <div className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-slate-100 group-hover:border-slate-200 transition-colors relative">
+                          <Image 
+                            src={prod.images[0]} 
+                            alt={prod.name} 
+                            fill
+                            className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                          />
                         </div>
                         
                         <div className="flex-1 min-w-0">

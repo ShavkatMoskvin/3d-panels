@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, ArrowLeft } from "lucide-react";
 import { CartIndicator } from "./CartIndicator";
 
@@ -35,9 +36,11 @@ export function Header() {
       <header className="h-20 sticky top-0 bg-white/80 backdrop-blur-md z-50 transition-all border-b border-slate-100 flex items-center">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <Link href="/" className="flex items-center group" onClick={closeMenu}>
-            <img 
+            <Image 
               src="/images/logo-black.svg" 
               alt="MoskWin" 
+              width={120}
+              height={32}
               className="h-8 w-auto transition-transform group-hover:scale-105" 
             />
           </Link>

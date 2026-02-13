@@ -42,11 +42,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const parsedCart = JSON.parse(savedCart);
         // Санитарная проверка: если в selectedColor попал объект (из-за старых данных в localStorage), 
         // конвертируем его в строку (название цвета), чтобы не было ошибок React.
-        const sanitizedCart = parsedCart.map((item: any) => {
-          if (item.selectedColor && typeof item.selectedColor === 'object') {
+        const sanitizedCart = parsedCart.map((item: CartItem) => {
+          const colorValue = (item as unknown as { selectedColor?: string | { name?: string } }).selectedColor;
+          if (colorValue && typeof colorValue === 'object') {
             return {
               ...item,
-              selectedColor: item.selectedColor.name || 'Стандартный'
+              selectedColor: colorValue.name || 'Стандартный'
             };
           }
           return item;
@@ -87,7 +88,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return newItems;
       }
 
-      let finalPrice = variation ? variation.price : product.price;
+      const finalPrice = variation ? variation.price : product.price;
 
       return [...currentItems, { 
         ...product, 

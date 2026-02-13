@@ -1,18 +1,19 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
+import { useCart, CartItem } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Trash2, ArrowLeft, Minus, Plus } from "lucide-react";
+import { Trash2, Minus, Plus } from "lucide-react";
 import { CATEGORIES } from "@/lib/data";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, clearCart, totalPrice, includeInstallation, setIncludeInstallation, installationPrice } = useCart();
   const [isConfirmingClear, setIsConfirmingClear] = useState(false);
   const itemsPrice = items.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-  const getItemId = (item: any) => {
+  const getItemId = (item: CartItem) => {
     return `${item.id}-${item.selectedVariation?.size || 'default'}-${item.selectedColor || 'default'}`;
   };
 
@@ -27,7 +28,7 @@ export default function CartPage() {
   };
 
   // Компонент для управления количеством внутри строки корзины
-  const QuantitySelector = ({ item, itemId }: { item: any, itemId: string }) => {
+  const QuantitySelector = ({ item, itemId }: { item: CartItem, itemId: string }) => {
     const [localQty, setLocalQty] = useState<string>(item.quantity.toString());
 
     useEffect(() => {
@@ -126,10 +127,11 @@ export default function CartPage() {
                     className="w-24 h-24 sm:w-48 sm:h-48 flex-shrink-0 bg-slate-50 relative overflow-hidden border border-slate-100 group-hover:bg-slate-100 transition-colors"
                   >
                     {item.images && item.images.length > 0 ? (
-                      <img 
+                      <Image 
                         src={item.images[0]} 
                         alt={item.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center text-[8px] sm:text-[10px] uppercase tracking-widest text-slate-400 text-center px-2">
@@ -163,7 +165,7 @@ export default function CartPage() {
                           <div className="mt-2 mb-2">
                             <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">Состав набора:</p>
                             <div className="space-y-1">
-                              {item.kitItems.map((ki: any) => ki.quantity > 0 && (
+                              {item.kitItems.map((ki) => ki.quantity > 0 && (
                                 <div key={ki.id} className="text-[9px] sm:text-[10px] text-slate-500 flex justify-between gap-4">
                                   <Link href={ki.slug ? `/product/${ki.slug}` : "#"} className={`truncate ${ki.slug ? 'hover:text-blue-600 transition-colors' : ''}`}>
                                     {ki.name}
