@@ -103,29 +103,40 @@ export default function ProductPageClient({ product }: { product: Product }) {
 
   return (
     <div className="bg-white min-h-screen">
-      {/* Product Hero Background */}
-      <div className="relative h-64 overflow-hidden mb-12">
-        <div className="absolute inset-0 z-0">
+      {/* Product Hero Section */}
+      <section className="relative min-h-[400px] md:min-h-[500px] flex items-center overflow-hidden bg-slate-900">
+        <div className="absolute inset-0">
           <Image 
-            src="/images/{7D2B5115-6E0A-4EFB-80D5-CC21ED300691}.png" 
-            alt="Product Background" 
+            src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000" 
+            alt="Product Interior Background" 
             fill
-            className="object-cover brightness-[0.6]" 
+            className="object-cover opacity-30"
+            priority
           />
         </div>
-        <div className="container mx-auto px-4 h-full flex items-end pb-8 relative z-10">
+        <div className="container mx-auto px-4 relative z-10 py-20">
           <button 
             onClick={() => router.back()}
-            className="inline-flex items-center text-[10px] font-bold uppercase tracking-[0.3em] text-white/80 hover:text-white transition-colors"
+            className="inline-flex items-center text-[10px] font-bold uppercase tracking-[0.3em] text-white/60 hover:text-blue-400 transition-colors mb-8 group"
           >
-            <ArrowLeft className="w-3 h-3 mr-2" />
-            Назад
+            <ArrowLeft className="w-3 h-3 mr-2 group-hover:-translate-x-1 transition-transform" />
+            Назад в каталог
           </button>
+          
+          <div className="max-w-3xl">
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-400 mb-4 block">
+              {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
+            </span>
+            <h1 className="text-5xl md:text-7xl font-bold text-white uppercase tracking-tighter leading-none mb-6">
+              {product.name}
+            </h1>
+            <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em]">Premium Quality Wall Panels</p>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="container mx-auto px-4 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
+      <div className="container mx-auto px-4 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
           {/* Left Column: Images */}
           <div className="lg:col-span-7">
             <div className="aspect-[4/5] bg-slate-50 border border-slate-100 flex items-center justify-center relative overflow-hidden group">
@@ -135,7 +146,7 @@ export default function ProductPageClient({ product }: { product: Product }) {
                     src={mainImage} 
                     alt={product.name}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 image-overlay-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </>
@@ -145,12 +156,12 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-4 gap-4 mt-4">
+            <div className="grid grid-cols-4 gap-4 mt-6">
               {product.images.map((img, i) => (
-                <div 
+                <button 
                   key={i} 
-                  className={`aspect-square bg-slate-50 border cursor-pointer hover:bg-slate-100 transition-all overflow-hidden ${
-                    mainImage === img ? "border-blue-600 ring-1 ring-blue-600" : "border-slate-100"
+                  className={`aspect-square bg-slate-50 border cursor-pointer hover:bg-slate-100 transition-all overflow-hidden group/thumb ${
+                    mainImage === img ? "border-blue-600 ring-2 ring-blue-600/20" : "border-slate-100"
                   }`}
                   onClick={() => setMainImage(img)}
                 >
@@ -159,28 +170,48 @@ export default function ProductPageClient({ product }: { product: Product }) {
                       src={img} 
                       alt={`${product.name} view ${i + 1}`}
                       fill
-                      className={`object-cover transition-opacity ${
-                        mainImage === img ? "opacity-100" : "opacity-50 hover:opacity-100"
+                      className={`object-cover transition-all duration-500 ${
+                        mainImage === img ? "scale-110 opacity-100" : "opacity-40 group-hover/thumb:opacity-100"
                       }`}
                     />
                   </div>
-                </div>
+                </button>
               ))}
+            </div>
+
+            {/* Product Features Section */}
+            <div className="mt-20 pt-20 border-t border-slate-100">
+              <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-12">Характеристики и преимущества</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center flex-shrink-0 text-blue-600">
+                    <Check className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 mb-2">Экологичность</h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed uppercase tracking-widest">Безопасные материалы высшего качества, подходящие для жилых помещений.</p>
+                  </div>
+                </div>
+                <div className="flex gap-6">
+                  <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center flex-shrink-0 text-blue-600">
+                    <Truck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 mb-2">Быстрая доставка</h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed uppercase tracking-widest">Доставим ваш заказ в кратчайшие сроки по Пензе и области.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Right Column: Info & Actions */}
           <div className="lg:col-span-5">
             <div className="sticky top-32">
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-600 mb-4 block">
-                {CATEGORIES.find(c => c.value === product.category)?.label || product.category}
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-tighter mb-6">
-                {product.name}
-              </h1>
-              <div className="flex items-center gap-4 mb-10">
-                <p className="text-3xl font-bold tracking-tighter">
-                  {totalOrderPrice.toLocaleString()} ₽ {mainQuantity > 1 && <span className="text-sm font-normal text-slate-400 ml-2 uppercase tracking-widest">итого</span>}
+              <div className="flex items-center gap-4 mb-8">
+                <p className="text-4xl font-bold tracking-tighter text-slate-900">
+                  {totalOrderPrice.toLocaleString()} ₽ 
+                  {mainQuantity > 1 && <span className="text-[10px] font-bold text-slate-400 ml-4 uppercase tracking-[0.2em]">итого</span>}
                 </p>
                 {(!isSelectedColorInStock) && (
                   <span className="px-3 py-1 bg-red-50 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full border border-red-100">
@@ -190,63 +221,65 @@ export default function ProductPageClient({ product }: { product: Product }) {
               </div>
 
               <div className="prose prose-slate max-w-none mb-12">
-                <p className="text-slate-500 uppercase text-[11px] tracking-widest leading-loose">
+                <p className="text-slate-500 uppercase text-[11px] font-medium tracking-widest leading-loose">
                   {product.description}
                 </p>
               </div>
 
-              {product.variations && (
-                <div className="mb-8">
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Выберите размер</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {product.variations.map((v) => (
-                      <button
-                        key={v.size}
-                        onClick={() => handleVariationChange(v)}
-                        className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border transition-all ${
-                          selectedVariation?.size === v.size
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
-                        }`}
-                      >
-                        {v.size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {product.colors && (
-                <div className="mb-8">
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Выберите цвет</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {product.colors.map((c) => {
-                      const isColorInStock = c.inStock;
-                      
-                      return (
+              <div className="space-y-10">
+                {product.variations && (
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Выберите размер</h4>
+                    <div className="flex flex-wrap gap-3">
+                      {product.variations.map((v) => (
                         <button
-                          key={c.name}
-                          onClick={() => handleColorChange(c)}
-                          className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest border transition-all relative ${
-                            selectedColor?.name === c.name
-                              ? "bg-slate-900 text-white border-slate-900"
-                              : isColorInStock
-                                ? "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
-                                : "bg-slate-50 text-slate-400 border-slate-100 cursor-not-allowed"
+                          key={v.size}
+                          onClick={() => handleVariationChange(v)}
+                          className={`px-6 py-3 text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 ${
+                            selectedVariation?.size === v.size
+                              ? "bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10"
+                              : "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
                           }`}
                         >
-                          {c.name}
-                          {!isColorInStock && (
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-full h-[1px] bg-slate-300 rotate-[15deg]"></div>
-                            </div>
-                          )}
+                          {v.size}
                         </button>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+
+                {product.colors && (
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Выберите цвет</h4>
+                    <div className="flex flex-wrap gap-3">
+                      {product.colors.map((c) => {
+                        const isColorInStock = c.inStock;
+                        
+                        return (
+                          <button
+                            key={c.name}
+                            onClick={() => handleColorChange(c)}
+                            className={`px-6 py-3 text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 relative ${
+                              selectedColor?.name === c.name
+                                ? "bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10"
+                                : isColorInStock
+                                  ? "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
+                                  : "bg-slate-50 text-slate-400 border-slate-100 cursor-not-allowed"
+                            }`}
+                          >
+                            <span className="relative z-10">{c.name}</span>
+                            {!isColorInStock && (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-full h-[1px] bg-slate-200 rotate-[15deg]"></div>
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {isPanel && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10 mb-12 pb-12 border-b border-slate-100">
@@ -313,8 +346,6 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 </div>
               )}
 
-              {/* Расходники вне калькулятора - Убрано по требованию */}
-              
               {/* Main AddToCart - Синхронизирован с калькулятором */}
               {!isPanel && (
                 <div className="mb-12">

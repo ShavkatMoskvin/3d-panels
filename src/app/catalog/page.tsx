@@ -1,38 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Category } from "@/types";
 import Link from "next/link";
 import { PRODUCTS, CATEGORIES } from "@/lib/data";
 import Image from "next/image";
 
 export default function CatalogPage() {
-  const [activeCategory, setActiveCategory] = useState<Category | 'all'>("all");
-  const [isSticky, setIsSticky] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Если сентиннель не пересекается с областью (ушел вверх за предел), значит мы в режиме sticky
-        setIsSticky(!entry.isIntersecting);
-      },
-      {
-        // Отступ сверху соответствует высоте хедера (80px) + небольшой запас
-        rootMargin: "-90px 0px 0px 0px",
-        threshold: 0,
-      }
-    );
-
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+  const [activeCategory, setActiveCategory] = useState<Category>(CATEGORIES[0].value);
 
   const filteredProducts = PRODUCTS.filter(product => {
-    const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
+    const matchesCategory = product.category === activeCategory;
     return matchesCategory && !product.isHidden && product.inStock;
   });
 
@@ -69,53 +47,37 @@ export default function CatalogPage() {
 
       {/* Основной контейнер каталога */}
       <div className="relative pb-20">
-        {/* Сентиннель для отслеживания момента прилипания - теперь в самом начале контента */}
-        <div ref={sentinelRef} className="absolute top-0 left-0 w-full h-px pointer-events-none" />
-
-        <div 
-          style={{ top: '80px' }}
-          className="sticky z-40 w-full transition-all duration-500"
-        >
-          <div className={`flex justify-center w-full px-4 transition-all duration-500 ${
-            isSticky ? "py-2" : "py-10"
-          }`}>
-            <div className={`max-w-[1400px] w-full transition-all duration-500 ${
-              isSticky 
-                ? "bg-white/95 backdrop-blur-xl shadow-2xl shadow-slate-200/50 border border-slate-100 rounded-2xl py-3" 
-                : "bg-white/50 backdrop-blur-sm border-b border-slate-100/50 py-2"
-            }`}>
-              <div className="container mx-auto px-4">
-                <div className="flex flex-col items-center">
-                  {/* Категории */}
-                  <div className="w-full relative group">
-                    <div className="flex justify-start md:justify-center overflow-x-auto no-scrollbar scroll-smooth px-4">
-                      <div className="inline-flex items-center gap-2">
-                        {CATEGORIES.map((cat) => (
-                          <button
-                            key={cat.value}
-                            onClick={() => setActiveCategory(cat.value)}
-                            className={`relative px-6 md:px-8 py-4 transition-all duration-300 whitespace-nowrap rounded-xl ${
-                              activeCategory === cat.value 
-                                ? "text-white bg-slate-900 shadow-lg shadow-slate-900/20" 
-                                : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                            } text-[10px] md:text-[11px] font-bold uppercase tracking-[0.2em]`}
-                          >
-                            <span className="relative z-10">{cat.label}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+        <div className="w-full py-6 md:py-10">
+          <div className="max-w-[1400px] w-full mx-auto bg-white/50 backdrop-blur-sm border-b border-slate-100/50 py-2">
+            <div className="container mx-auto px-2 md:px-4">
+              <div className="flex flex-col items-center">
+                {/* Категории - Адаптивная сетка для мобильных */}
+                <div className="w-full">
+                  <div className="grid grid-cols-2 md:flex md:justify-center gap-2 md:gap-2">
+                    {CATEGORIES.map((cat) => (
+                      <button
+                        key={cat.value}
+                        onClick={() => setActiveCategory(cat.value)}
+                        className={`relative px-4 md:px-8 py-3 md:py-4 transition-all duration-300 rounded-xl flex items-center justify-center text-center ${
+                          activeCategory === cat.value 
+                            ? "text-white bg-slate-900 shadow-lg shadow-slate-900/20" 
+                            : "text-slate-500 hover:text-slate-900 hover:bg-slate-100 bg-slate-50 md:bg-transparent"
+                        } text-[9px] md:text-[11px] font-bold uppercase tracking-[0.15em] md:tracking-[0.2em]`}
+                      >
+                        <span className="relative z-10">{cat.label}</span>
+                      </button>
+                    ))}
                   </div>
+                </div>
 
-                  {/* Счетчик товаров */}
-                  <div className={`transition-all duration-500 ${isSticky ? 'opacity-0 h-0 overflow-hidden' : 'mt-6 opacity-100'}`}>
-                    <div className="flex items-center gap-3">
-                      <div className="h-px w-4 bg-slate-200"></div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
-                        {filteredProducts.length} моделей в коллекции
-                      </p>
-                      <div className="h-px w-4 bg-slate-200"></div>
-                    </div>
+                {/* Счетчик товаров */}
+                <div className="mt-4 md:mt-6 opacity-100">
+                  <div className="flex items-center gap-3">
+                    <div className="h-px w-4 bg-slate-200"></div>
+                    <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400">
+                      {filteredProducts.length} моделей в коллекции
+                    </p>
+                    <div className="h-px w-4 bg-slate-200"></div>
                   </div>
                 </div>
               </div>

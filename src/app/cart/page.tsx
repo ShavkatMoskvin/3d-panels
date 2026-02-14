@@ -3,7 +3,7 @@
 import { useCart, CartItem } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Trash2, Minus, Plus } from "lucide-react";
+import { Trash2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { CATEGORIES } from "@/lib/data";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -78,35 +78,72 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center p-4">
-        <h1 className="text-4xl md:text-6xl font-bold mb-8 uppercase tracking-tighter">Корзина пуста</h1>
-        <p className="text-slate-400 uppercase text-xs tracking-[0.3em] mb-12">Ваш выбор пока пуст. Начните с каталога.</p>
-        <Link href="/catalog">
-          <Button size="lg" className="rounded-none px-12 py-8 uppercase tracking-widest text-xs">
-            Перейти в каталог
-          </Button>
-        </Link>
+      <div className="bg-white min-h-screen">
+        {/* Empty Cart Hero */}
+        <section className="relative min-h-[400px] md:min-h-[500px] flex items-center overflow-hidden bg-slate-900">
+          <div className="absolute inset-0 opacity-20">
+            <Image 
+              src="/images/{46ED9163-DE3C-4068-AC28-CA0863736AE6}.png" 
+              alt="Cart Background" 
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+          <div className="container mx-auto px-4 relative z-10 text-center py-20">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full mb-8">
+              <ShoppingCart className="w-4 h-4 text-blue-400" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/80">
+                Your Selection
+              </span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold text-white uppercase tracking-tighter mb-6 leading-none">
+              Корзина <br /> <span className="text-blue-500 italic font-light text-4xl md:text-6xl">пуста</span>
+            </h1>
+            <p className="text-white/50 max-w-2xl mx-auto text-sm uppercase tracking-widest leading-relaxed mb-12">
+              Ваш выбор пока пуст. Начните с каталога, чтобы найти идеальное решение для вашего интерьера.
+            </p>
+            <Link href="/catalog">
+              <Button size="lg" className="rounded-none px-12 py-8 uppercase tracking-widest text-xs bg-blue-600 hover:bg-blue-700">
+                Перейти в каталог
+              </Button>
+            </Link>
+          </div>
+        </section>
       </div>
     );
   }
 
   return (
     <div className="bg-white min-h-screen">
-      <section className="py-24 bg-slate-50 border-b border-slate-100">
-        <div className="container mx-auto px-4 text-center">
-          <span className="text-xs font-bold uppercase tracking-[0.4em] text-blue-600 mb-6 block">
-            Your Selection
-          </span>
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 uppercase tracking-tighter">
-            Корзина <span className="font-light italic text-slate-300">товаров</span>
+      {/* Cart Hero Section */}
+      <section className="relative min-h-[400px] md:min-h-[500px] flex items-center overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 opacity-20">
+          <Image 
+            src="/images/{46ED9163-DE3C-4068-AC28-CA0863736AE6}.png" 
+            alt="Cart Background" 
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+        <div className="container mx-auto px-4 relative z-10 text-center py-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full mb-8">
+            <ShoppingCart className="w-4 h-4 text-blue-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/80">
+              Your Selection
+            </span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold text-white uppercase tracking-tighter mb-6 leading-none">
+            Корзина <br /> <span className="text-blue-500 italic font-light text-4xl md:text-6xl">товаров</span>
           </h1>
           
           <button 
             onClick={handleClearCart}
-            className={`mt-4 px-6 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 border ${
+            className={`mt-8 px-8 py-3 text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-300 border ${
               isConfirmingClear 
                 ? "bg-red-600 border-red-600 text-white" 
-                : "bg-transparent border-slate-200 text-slate-400 hover:border-red-500 hover:text-red-500"
+                : "bg-white/10 border-white/20 text-white/60 hover:border-red-500 hover:text-red-500 hover:bg-red-500/10"
             }`}
           >
             {isConfirmingClear ? "Вы уверены? (Нажмите еще раз)" : "Очистить корзину"}

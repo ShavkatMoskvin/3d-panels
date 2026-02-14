@@ -27,6 +27,7 @@ export function Header() {
   const navLinks = [
     { href: "/catalog", label: "Каталог" },
     { href: "/installation", label: "Монтаж" },
+    { href: "/partners", label: "Партнеры" },
     { href: "/about", label: "О нас" },
     { href: "/contacts", label: "Контакты" },
   ];
@@ -116,8 +117,9 @@ export function Header() {
                   <span className="text-xs text-slate-400 mt-1">
                     {index === 0 && "Всё для вашего интерьера"}
                     {index === 1 && "Профессиональные решения"}
-                    {index === 2 && "История и ценности"}
-                    {index === 3 && "Наши координаты"}
+                    {index === 2 && "Дизайнерам и прорабам"}
+                    {index === 3 && "История и ценности"}
+                    {index === 4 && "Наши координаты"}
                   </span>
                 </Link>
               ))}

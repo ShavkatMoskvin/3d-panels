@@ -1,7 +1,6 @@
 import { Product } from "@/types";
 
 export const CATEGORIES = [
-  { value: 'all', label: 'Все товары' },
   { value: 'gypsum', label: 'Панели' },
   { value: 'flexible-stone', label: 'Гибкий камень' },
   { value: 'profiles', label: 'Профили' },
@@ -477,34 +476,6 @@ export const PRODUCTS: Product[] = [
     colors: []
   },
   {
-    id: "21",
-    name: "Гипсовая панель Relief",
-    slug: "gypsum-relief",
-    category: "gypsum",
-    price: 1200,
-    images: ["/images/products/{B36328B4-8840-4A18-9166-DCD42EC55FD8}.png"],
-    stockCount: 15,
-    inStock: true,
-    description: "Экологичная гипсовая 3D панель с уникальным рельефом. Создает неповторимую игру света и тени.",
-    specifications: { width: 500, height: 500, depth: 25, material: "Гипс" },
-    reviews: [
-      { 
-        id: 'r1',
-        userName: "Артем Г.",
-        date: "15.01.2024",
-        rating: 5,
-        text: "Панели огонь! Очень глубокая фактура, в интерьере смотрятся объемно. Приехали целые, упакованы в жесткую обрешетку."
-      },
-      { 
-        id: 'r2',
-        userName: "Юлия С.",
-        date: "20.01.2024",
-        rating: 5,
-        text: "Идеально подошли для спальни. Красили матовой краской, легло отлично. Спасибо за консультацию по клею!"
-      }
-    ]
-  },
-  {
     id: "24",
     name: "Профиль алюминиевый Gold",
     slug: "profile-gold",
@@ -765,5 +736,300 @@ export const PRODUCTS: Product[] = [
     colors: [
       { name: "Dark Grey", inStock: true, stockCount: 100, image: "/images/products/Round Line Stone-Dark Grey.jpg" }
     ]
+  },
+  // --- НОВЫЕ ПАНЕЛИ (Solid Color) ---
+  {
+    id: "38",
+    name: "Панель 3017 Solid Color",
+    slug: "panel-3017-solid-color",
+    category: "gypsum",
+    price: 4200,
+    images: ["/images/products/panels/3017-solid-color.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Однотонная интерьерная панель. Обладает высокой прочностью и влагостойкостью. Идеально подходит для современного минималистичного интерьера.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "39",
+    name: "Панель 3060 Solid Color",
+    slug: "panel-3060-solid-color",
+    category: "gypsum",
+    price: 4200,
+    images: ["/images/products/panels/3060-solid-color.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Однотонная интерьерная панель. Обладает высокой прочностью и влагостойкостью.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "40",
+    name: "Панель 31032 Solid Color",
+    slug: "panel-31032-solid-color",
+    category: "gypsum",
+    price: 4200,
+    images: ["/images/products/panels/31032-solid-color.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Однотонная интерьерная панель. Обладает высокой прочностью и влагостойкостью.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  // --- НОВЫЕ ПАНЕЛИ (Stone Grain) ---
+  {
+    id: "41",
+    name: "Панель 51003 Stone Grain",
+    slug: "panel-51003-stone-grain",
+    category: "gypsum",
+    price: 4500,
+    images: ["/images/products/panels/51003-stone-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой камня. Точная имитация натурального материала с глубоким рельефом.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "42",
+    name: "Панель FT258512 Stone Grain",
+    slug: "panel-ft258512-stone-grain",
+    category: "gypsum",
+    price: 4500,
+    images: ["/images/products/panels/FT258512-stone-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой камня. Элегантный дизайн для создания статусных интерьеров.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "43",
+    name: "Панель KA59506 Stone Grain",
+    slug: "panel-ka59506-stone-grain",
+    category: "gypsum",
+    price: 4500,
+    images: ["/images/products/panels/KA59506-stone-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой камня. Влагостойкая и долговечная.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "44",
+    name: "Панель YW1501 Stone Grain",
+    slug: "panel-yw1501-stone-grain",
+    category: "gypsum",
+    price: 4500,
+    images: ["/images/products/panels/YW1501-stone-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой камня.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  // --- НОВЫЕ ПАНЕЛИ (Cloth Grain) ---
+  {
+    id: "45",
+    name: "Панель 6001 Cloth Grain",
+    slug: "panel-6001-cloth-grain",
+    category: "gypsum",
+    price: 4200,
+    images: ["/images/products/panels/6001-cloth-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой ткани. Создает уютную и мягкую атмосферу в помещении.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "46",
+    name: "Панель FT25604 Cloth Grain",
+    slug: "panel-ft25604-cloth-grain",
+    category: "gypsum",
+    price: 4200,
+    images: ["/images/products/panels/FT25604-cloth-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой ткани.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  // --- НОВЫЕ ПАНЕЛИ (Metal Series) ---
+  {
+    id: "47",
+    name: "Панель 703 Metal Series",
+    slug: "panel-703-metal-series",
+    category: "gypsum",
+    price: 4800,
+    images: ["/images/products/panels/703-metal-series.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель из коллекции Металл. Стильное решение для интерьеров в стиле лофт или хай-тек.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "48",
+    name: "Панель Metal Series",
+    slug: "panel-metal-series",
+    category: "gypsum",
+    price: 4800,
+    images: ["/images/products/panels/metal-series.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель из коллекции Металл.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  // --- НОВЫЕ ПАНЕЛИ (Wood Grain) ---
+  {
+    id: "49",
+    name: "Панель 8006 Wood Grain",
+    slug: "panel-8006-wood-grain",
+    category: "gypsum",
+    price: 4300,
+    images: ["/images/products/panels/8006-wood-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой дерева. Природная красота в сочетании с долговечностью современных материалов.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "50",
+    name: "Панель 8041 Wood Grain",
+    slug: "panel-8041-wood-grain",
+    category: "gypsum",
+    price: 4300,
+    images: ["/images/products/panels/8041-wood-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой дерева.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "51",
+    name: "Панель 81043 Wood Grain",
+    slug: "panel-81043-wood-grain",
+    category: "gypsum",
+    price: 4300,
+    images: ["/images/products/panels/81043-wood-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой дерева.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "52",
+    name: "Панель KA81101 Wood Grain",
+    slug: "panel-ka81101-wood-grain",
+    category: "gypsum",
+    price: 4300,
+    images: ["/images/products/panels/KA81101-wood-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой дерева.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "53",
+    name: "Панель KA86001 Wood Grain",
+    slug: "panel-ka86001-wood-grain",
+    category: "gypsum",
+    price: 4300,
+    images: ["/images/products/panels/KA86001-wood-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой дерева.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "54",
+    name: "Панель KA88502 Wood Grain",
+    slug: "panel-ka88502-wood-grain",
+    category: "gypsum",
+    price: 4300,
+    images: ["/images/products/panels/KA88502-wood-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой дерева.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "55",
+    name: "Панель YW1808 Wood Grain",
+    slug: "panel-yw1808-wood-grain",
+    category: "gypsum",
+    price: 4300,
+    images: ["/images/products/panels/YW1808-wood-grain.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с текстурой дерева.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  // --- НОВЫЕ ПАНЕЛИ (SPC Background) ---
+  {
+    id: "56",
+    name: "Панель 9001 SPC Background",
+    slug: "panel-9001-spc-background",
+    category: "gypsum",
+    price: 3900,
+    images: ["/images/products/panels/9001-spc-background.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "SPC панель для фоновой отделки. Прочный и долговечный материал с отличными эксплуатационными характеристиками.",
+    specifications: { width: 1220, height: 2800, depth: 4, material: "SPC (Stone Plastic Composite)" }
+  },
+  {
+    id: "57",
+    name: "Панель 9085 SPC Background",
+    slug: "panel-9085-spc-background",
+    category: "gypsum",
+    price: 3900,
+    images: ["/images/products/panels/9085-spc-background.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "SPC панель для фоновой отделки.",
+    specifications: { width: 1220, height: 2800, depth: 4, material: "SPC (Stone Plastic Composite)" }
+  },
+  // --- НОВЫЕ ПАНЕЛИ (HD Printing) ---
+  {
+    id: "58",
+    name: "Панель 9016 HD Printing",
+    slug: "panel-9016-hd-printing",
+    category: "gypsum",
+    price: 4900,
+    images: ["/images/products/panels/9016-hd-printing.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с HD печатью. Высокая четкость изображения и реалистичные цвета.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "59",
+    name: "Панель 9104 HD Printing",
+    slug: "panel-9104-hd-printing",
+    category: "gypsum",
+    price: 4900,
+    images: ["/images/products/panels/9104-hd-printing.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с HD печатью.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "60",
+    name: "Панель NP24013 HD Printing",
+    slug: "panel-np24013-hd-printing",
+    category: "gypsum",
+    price: 4900,
+    images: ["/images/products/panels/NP24013-hd-printing.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с HD печатью.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
+  },
+  {
+    id: "61",
+    name: "Панель NP25010 HD Printing",
+    slug: "panel-np25010-hd-printing",
+    category: "gypsum",
+    price: 4900,
+    images: ["/images/products/panels/NP25010-hd-printing.jpg"],
+    stockCount: 100,
+    inStock: true,
+    description: "Интерьерная панель с HD печатью.",
+    specifications: { width: 1220, height: 2800, depth: 5, material: "Бамбуковый уголь, ПВХ" }
   }
 ];

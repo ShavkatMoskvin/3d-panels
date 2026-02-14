@@ -1,7 +1,8 @@
 "use client";
 
-import { Mail, Send, MessageSquare, Clock, ShieldCheck, Sparkles } from "lucide-react";
+import { Mail, Send, MessageSquare, Clock, ShieldCheck, Sparkles, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function ContactsPage() {
   const contactInfo = [
@@ -42,15 +43,27 @@ export default function ContactsPage() {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
-      <section className="py-24 bg-slate-50 border-b border-slate-100">
-        <div className="container mx-auto px-4 text-center">
-          <span className="text-xs font-bold uppercase tracking-[0.4em] text-blue-600 mb-6 block">
-            Get in Touch
-          </span>
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 uppercase tracking-tighter">
-            Наши <span className="font-light italic text-slate-300">контакты</span>
+      <section className="relative min-h-[400px] md:min-h-[500px] flex items-center overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 opacity-20">
+          <Image 
+            src="/images/{46ED9163-DE3C-4068-AC28-CA0863736AE6}.png" 
+            alt="Contacts Background" 
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+        <div className="container mx-auto px-4 relative z-10 text-center py-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full mb-8">
+            <Phone className="w-4 h-4 text-blue-400" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/80">
+              Get in Touch
+            </span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold text-white uppercase tracking-tighter mb-6 leading-none">
+            Наши <br /> <span className="text-blue-500 italic font-light text-4xl md:text-6xl">контакты</span>
           </h1>
-          <p className="text-slate-500 max-w-2xl mx-auto uppercase text-xs tracking-widest leading-loose">
+          <p className="text-white/50 max-w-2xl mx-auto text-sm uppercase tracking-widest leading-relaxed">
             Мы перешли на полностью цифровой формат общения для вашего удобства. 
             Пишите нам в любое время.
           </p>
