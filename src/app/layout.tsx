@@ -5,6 +5,7 @@ import { CartProvider } from "@/context/CartContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { YandexMetrika } from "@/components/YandexMetrika";
+import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
@@ -58,6 +59,7 @@ export default function RootLayout({
           <Footer />
         </CartProvider>
         <YandexMetrika />
+        <Analytics />
         <Script 
           src="https://integrationjs.tbank.ru/integration.js"
           strategy="lazyOnload"
