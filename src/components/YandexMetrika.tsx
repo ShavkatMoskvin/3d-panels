@@ -33,6 +33,8 @@ export function YandexMetrika() {
           k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
           })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
+          console.log('Yandex Metrika initialized:', ${YM_ID});
+
           ym(${YM_ID}, "init", {
                ssr: true,
                webvisor: true,
