@@ -2,12 +2,12 @@
 
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
 // ЗАМЕНИТЕ XXXXXXXX НА ВАШ РЕАЛЬНЫЙ ID СЧЕТЧИКА ЯНДЕКС.МЕТРИКИ
 const YM_ID = 106837657; 
 
-export function YandexMetrika() {
+function MetrikaLogic() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -19,6 +19,10 @@ export function YandexMetrika() {
     }
   }, [pathname, searchParams]);
 
+  return null;
+}
+
+export function YandexMetrika() {
   return (
     <>
       <Script id="yandex-metrika" strategy="afterInteractive">
@@ -45,6 +49,9 @@ export function YandexMetrika() {
           <img src={`https://mc.yandex.ru/watch/${YM_ID}`} style={{ position: 'absolute', left: '-9999px' }} alt="" />
         </div>
       </noscript>
+      <Suspense fallback={null}>
+        <MetrikaLogic />
+      </Suspense>
     </>
   );
 }
