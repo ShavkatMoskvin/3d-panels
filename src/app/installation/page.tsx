@@ -148,6 +148,11 @@ export default function InstallationPage() {
                 Заказать монтаж
               </Button>
             </Link>
+            <Link href="/faq" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full rounded-none px-8 sm:px-12 py-6 sm:py-8 uppercase tracking-widest text-xs">
+                Посмотреть FAQ
+              </Button>
+            </Link>
             <Link href="/catalog" className="w-full sm:w-auto">
               <Button variant="outline" size="lg" className="w-full rounded-none px-8 sm:px-12 py-6 sm:py-8 uppercase tracking-widest text-xs">
                 Вернуться в каталог

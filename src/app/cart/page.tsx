@@ -309,6 +309,12 @@ export default function CartPage() {
                   Оформить заказ
                 </Button>
               </Link>
+
+              <Link href="/catalog" className="block mt-4">
+                <Button variant="outline" className="w-full rounded-none py-8 uppercase tracking-[0.2em] text-[10px] border-slate-200 hover:bg-slate-50 transition-all" size="lg">
+                  Назад к покупкам
+                </Button>
+              </Link>
               
               <p className="mt-8 text-[9px] text-slate-400 uppercase tracking-widest text-center leading-relaxed">
                 Безопасная оплата картой или наличными <br /> при получении товара

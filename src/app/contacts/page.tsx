@@ -1,10 +1,39 @@
 "use client";
 
-import { Mail, Send, MessageSquare, Clock, ShieldCheck, Sparkles, Phone } from "lucide-react";
+import { Mail, Send, MessageSquare, Clock, ShieldCheck, Sparkles, Phone, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function ContactsPage() {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({ name: "", contact: "", message: "" });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormData({ name: "", contact: "", message: "" });
+        setTimeout(() => {
+          setIsSubmitted(false);
+        }, 5000);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const contactInfo = [
     {
       title: "Email",
@@ -137,35 +166,59 @@ export default function ContactsPage() {
                   Оставьте заявку, и мы подготовим для вас индивидуальное предложение с расчетом доставки.
                 </p>
 
-                <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваше Имя</label>
-                    <input 
-                      type="text" 
-                      className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest" 
-                      placeholder="ИВАН ИВАНОВ"
-                    />
+                {isSubmitted ? (
+                  <div className="py-20 text-center animate-in fade-in zoom-in duration-500">
+                    <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                      <CheckCircle2 className="w-10 h-10" />
+                    </div>
+                    <h4 className="text-3xl font-bold uppercase tracking-tighter mb-4">Сообщение отправлено!</h4>
+                    <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
+                      Мы свяжемся с вами в течение 15 минут.
+                    </p>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Telegram или Телефон</label>
-                    <input 
-                      type="text" 
-                      className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest" 
-                      placeholder="@USERNAME ИЛИ +7..."
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваш вопрос</label>
-                    <textarea 
-                      className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest min-h-[100px] resize-none" 
-                      placeholder="ОПИШИТЕ ВАШ ПРОЕКТ..."
-                    ></textarea>
-                  </div>
-                  <Button className="w-full py-8 rounded-none bg-slate-900 hover:bg-blue-600 text-white transition-all uppercase text-xs font-bold tracking-[0.2em] group">
-                    Отправить сообщение
-                    <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  </Button>
-                </form>
+                ) : (
+                  <form className="space-y-8" onSubmit={handleSubmit}>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваше Имя</label>
+                      <input 
+                        required
+                        type="text" 
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest" 
+                        placeholder="ИВАН ИВАНОВ"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Telegram или Телефон</label>
+                      <input 
+                        required
+                        type="text" 
+                        value={formData.contact}
+                        onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest" 
+                        placeholder="@USERNAME ИЛИ +7..."
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваш вопрос</label>
+                      <textarea 
+                        required
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest min-h-[100px] resize-none" 
+                        placeholder="ОПИШИТЕ ВАШ ПРОЕКТ..."
+                      ></textarea>
+                    </div>
+                    <Button 
+                      disabled={isLoading}
+                      className="w-full py-8 rounded-none bg-slate-900 hover:bg-blue-600 text-white transition-all uppercase text-xs font-bold tracking-[0.2em] group"
+                    >
+                      {isLoading ? "Отправка..." : "Отправить сообщение"}
+                      {!isLoading && <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
+                    </Button>
+                  </form>
+                )}
               </div>
             </div>
           </div>

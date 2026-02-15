@@ -1,10 +1,28 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PRODUCTS, CATEGORIES } from "@/lib/data";
+import { useState } from "react";
+import { X, Star } from "lucide-react";
 
 export default function Home() {
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ name: "", text: "", rating: 5 });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const featuredProducts = PRODUCTS.filter(p => p.inStock && !p.isHidden).slice(0, 3);
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+    setTimeout(() => {
+      setIsReviewModalOpen(false);
+      setIsSubmitted(false);
+      setReviewForm({ name: "", text: "", rating: 5 });
+    }, 2000);
+  };
 
   return (
     <div className="flex flex-col">
@@ -200,6 +218,160 @@ export default function Home() {
           </div>
         </section>
       </main>
+    
+      {/* Reviews Section */}
+      <section className="py-40 bg-white border-t border-slate-100">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-24 gap-8">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="h-[1px] w-12 bg-blue-600"></div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-600">
+                  Отзывы клиентов
+                </span>
+              </div>
+              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase leading-none">
+                Мнения <br /> <span className="font-light italic text-slate-300">и опыт</span>
+              </h2>
+            </div>
+            <button 
+              onClick={() => setIsReviewModalOpen(true)}
+              className="group flex items-center gap-4 text-xs font-bold uppercase tracking-widest pb-1"
+            >
+              <span className="border-b-2 border-slate-900 pb-1 group-hover:text-blue-600 group-hover:border-blue-600 transition-all">Оставить отзыв</span>
+              <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-all">
+                +
+              </div>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                id: "r1",
+                userName: "Александр В.",
+                text: "Заказывал панели под бетон для гостиной. Качество на высоте, швов практически не видно после покраски. Доставили в Пензу за 2 дня.",
+                rating: 5,
+                date: "12.02.2024"
+              },
+              {
+                id: "r2",
+                userName: "Мария С.",
+                text: "Очень довольна работой мастеров. Установили всё чисто и быстро. Панели смотрятся очень дорого и стильно. Рекомендую!",
+                rating: 5,
+                date: "05.02.2024"
+              },
+              {
+                id: "r3",
+                userName: "Дмитрий П.",
+                text: "Отличный сервис. Помогли с выбором, сделали расчет расходников. Все приехало целое, упаковано надежно.",
+                rating: 5,
+                date: "28.01.2024"
+              }
+            ].map((review) => (
+              <div key={review.id} className="p-10 bg-slate-50 border border-slate-100 flex flex-col hover:bg-white hover:shadow-2xl transition-all duration-500 group">
+                <div className="flex gap-1 mb-8">
+                  {[...Array(5)].map((_, star) => (
+                    <div key={star} className={`w-2 h-2 rounded-full ${star < review.rating ? 'bg-blue-600' : 'bg-slate-200'}`}></div>
+                  ))}
+                </div>
+                <p className="text-sm leading-relaxed text-slate-600 mb-10 flex-1 italic group-hover:text-slate-900 transition-colors">&quot;{review.text}&quot;</p>
+                <div className="flex justify-between items-center pt-8 border-t border-slate-200/50">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900">{review.userName}</span>
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{review.date}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Review Modal */}
+      {isReviewModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" 
+            onClick={() => setIsReviewModalOpen(false)}
+          />
+          <div className="relative bg-white w-full max-w-xl p-8 md:p-12 shadow-2xl animate-in zoom-in-95 fade-in duration-300">
+            <button 
+              onClick={() => setIsReviewModalOpen(false)}
+              className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {isSubmitted ? (
+              <div className="py-12 text-center animate-in fade-in zoom-in duration-500">
+                <div className="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                  <Star className="w-10 h-10 fill-current" />
+                </div>
+                <h3 className="text-3xl font-bold uppercase tracking-tighter mb-4">Спасибо за отзыв!</h3>
+                <p className="text-slate-500 uppercase text-[10px] font-bold tracking-widest">
+                  Ваше мнение очень важно для нас.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-10">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-600 mb-4 block">
+                    Обратная связь
+                  </span>
+                  <h3 className="text-4xl font-bold uppercase tracking-tighter">Ваш <span className="font-light italic text-slate-300">опыт</span></h3>
+                </div>
+
+                <form onSubmit={handleReviewSubmit} className="space-y-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ваше имя</label>
+                    <input 
+                      required
+                      type="text"
+                      value={reviewForm.name}
+                      onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
+                      className="w-full border-b-2 border-slate-100 py-4 focus:border-blue-600 outline-none transition-colors uppercase text-sm font-bold tracking-widest"
+                      placeholder="ИВАН ИВАНОВ"
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Оценка</label>
+                    <div className="flex gap-4">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                          className="transition-transform hover:scale-110"
+                        >
+                          <Star 
+                            className={`w-8 h-8 ${star <= reviewForm.rating ? 'fill-blue-600 text-blue-600' : 'text-slate-200'}`} 
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Ваш отзыв</label>
+                    <textarea 
+                      required
+                      rows={4}
+                      value={reviewForm.text}
+                      onChange={(e) => setReviewForm({ ...reviewForm, text: e.target.value })}
+                      className="w-full border-2 border-slate-100 p-6 focus:border-blue-600 outline-none transition-colors text-sm leading-relaxed"
+                      placeholder="Расскажите о ваших впечатлениях..."
+                    />
+                  </div>
+
+                  <Button type="submit" className="w-full py-8 rounded-none uppercase tracking-[0.3em] text-xs bg-slate-900 hover:bg-blue-600">
+                    Отправить отзыв
+                  </Button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

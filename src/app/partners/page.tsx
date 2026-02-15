@@ -1,5 +1,7 @@
-import { Users, Palette } from "lucide-react";
+import { Users, Palette, HelpCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function PartnersPage() {
   return (
@@ -124,10 +126,16 @@ export default function PartnersPage() {
             <h3 className="text-2xl font-bold uppercase tracking-tight mb-6">Остались вопросы?</h3>
             <p className="text-slate-500 text-sm mb-10">Если вы хотите узнать больше о наших материалах или обсудить проект, мы всегда на связи.</p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a href="https://t.me/moskvinsh" className="px-10 py-5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 transition-all">
+              <Link href="/faq">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-none px-10 py-7 uppercase tracking-widest text-[10px]">
+                  Посмотреть FAQ
+                  <HelpCircle className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <a href="https://t.me/moskvinsh" className="w-full sm:w-auto px-10 py-5 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 transition-all flex items-center justify-center">
                 Telegram
               </a>
-              <a href="mailto:shavkatmoskvin@gmail.com" className="px-10 py-5 bg-white border border-slate-200 text-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all">
+              <a href="mailto:shavkatmoskvin@gmail.com" className="w-full sm:w-auto px-10 py-5 bg-white border border-slate-200 text-slate-900 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center justify-center">
                 Email
               </a>
             </div>

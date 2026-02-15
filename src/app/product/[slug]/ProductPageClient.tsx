@@ -469,57 +469,6 @@ export default function ProductPageClient({ product }: { product: Product }) {
           </section>
         )}
 
-        {/* Reviews Section */}
-        <section className="mt-32 pt-20 border-t border-slate-100">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-[1px] w-8 bg-slate-900"></div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-slate-900">Отзывы клиентов</span>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tighter">Мнения <span className="font-light italic text-slate-300">и опыт</span></h2>
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="text-right">
-                <p className="text-3xl font-bold tracking-tighter">
-                  {product.reviews?.length 
-                    ? (product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length).toFixed(1)
-                    : "5.0"}
-                </p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Средний рейтинг</p>
-              </div>
-              <div className="h-12 w-[1px] bg-slate-100"></div>
-              <button className="px-8 py-4 bg-slate-900 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all">
-                Оставить отзыв
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {product.reviews && product.reviews.length > 0 ? (
-              product.reviews.map((review) => (
-                <div key={review.id} className="p-8 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col">
-                  <div className="flex gap-1 mb-6">
-                    {[...Array(5)].map((_, star) => (
-                      <div key={star} className={`w-3 h-3 rounded-full ${star < review.rating ? 'bg-slate-900' : 'bg-slate-200'}`}></div>
-                    ))}
-                  </div>
-                  <p className="text-sm leading-relaxed text-slate-600 mb-8 flex-1 italic">&quot;{review.text}&quot;</p>
-                  <div className="flex justify-between items-center pt-6 border-t border-slate-200/50">
-                    <span className="text-[10px] font-bold uppercase tracking-widest">{review.userName}</span>
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{review.date}</span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full py-20 text-center bg-slate-50 border border-dashed border-slate-200 rounded-3xl">
-                <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-slate-400">
-                  Для этого товара пока нет отзывов. Станьте первым!
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
       </div>
     </div>
   );
