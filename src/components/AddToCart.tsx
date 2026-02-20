@@ -3,7 +3,7 @@
 import { useCart } from "@/context/CartContext";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Check, Minus, Plus, ArrowRight } from "lucide-react";
 import { PRODUCTS } from "@/lib/data";
 import Link from "next/link";
@@ -74,12 +74,20 @@ export function AddToCart({
     setLocalQuantity(quantity.toString());
   }, [quantity]);
 
+  // Используем ref для отслеживания изменений initialQuantity, чтобы избежать зацикливания
+  // при изменении quantity (когда пользователь меняет количество вручную)
+  const prevInitialQuantity = useRef(initialQuantity);
+
   useEffect(() => {
-    if (initialQuantity && initialQuantity !== quantity) {
+    // Если initialQuantity изменился (пришел новый от калькулятора)
+    if (initialQuantity && initialQuantity !== prevInitialQuantity.current) {
+      prevInitialQuantity.current = initialQuantity;
+      
       // Если это панель и есть initialQuantity (от калькулятора), синхронизируем
       if (isPanel) {
         setLocalQuantity(initialQuantity.toString());
-        if (quantity > 0) {
+        // Если товар уже в корзине (quantity > 0), обновляем его количество до рассчитанного калькулятором
+        if (quantity > 0 && quantity !== initialQuantity) {
           updateQuantity(itemId, initialQuantity);
         }
       }

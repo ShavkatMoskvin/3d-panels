@@ -47,11 +47,8 @@ ${itemsList}
     `;
 
     // 2. Отправка в Telegram (через Bot API)
-    //const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-    //const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-    // ВРЕМЕННО для теста (замените в route.ts):
-    const TELEGRAM_BOT_TOKEN = "8076366171:AAFYAMBnfp0rpR8GpCnmGbRs0pKLP8knat8";
-    const TELEGRAM_CHAT_ID = "96814218";
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
     console.log("DEBUG: Attempting to send TG message...");
     console.log("DEBUG: Token exists:", !!TELEGRAM_BOT_TOKEN);

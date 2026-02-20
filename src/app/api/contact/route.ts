@@ -15,9 +15,10 @@ export async function POST(req: Request) {
 ${message}
     `;
 
-    // Используем те же учетные данные, что и в заказах
-    const TELEGRAM_BOT_TOKEN = "8076366171:AAFYAMBnfp0rpR8GpCnmGbRs0pKLP8knat8";
-    const TELEGRAM_CHAT_ID = "96814218";
+    // Используем переменные окружения
+    // Используем отдельного бота для вопросов, если он задан, иначе основного
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_SUPPORT_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
+    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
     if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
       await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {

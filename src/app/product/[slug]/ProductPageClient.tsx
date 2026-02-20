@@ -8,16 +8,31 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Product } from "@/types";
 import { CATEGORIES, PRODUCTS } from "@/lib/data";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useCart } from "@/context/CartContext";
 
 export default function ProductPageClient({ product }: { product: Product }) {
   const router = useRouter();
+  const { items } = useCart();
   const [mainImage, setMainImage] = useState(product.images[0] || "");
   const [mainQuantity, setMainQuantity] = useState<number>(1);
   const [extraCalculatedItems, setExtraCalculatedItems] = useState<{ product: Product, quantity: number }[]>([]);
   const [selectedVariation, setSelectedVariation] = useState(product.variations?.[0] || null);
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0] || null);
   const [kitItems, setKitItems] = useState(product.bundleItems || []);
+
+  // Синхронизация количества с корзиной при загрузке или изменении корзины
+  useEffect(() => {
+    const cartItem = items.find(item => 
+      item.id === product.id && 
+      item.selectedVariation?.size === selectedVariation?.size &&
+      (item.selectedColor === (selectedColor?.name || undefined) || item.selectedColor === selectedColor?.name)
+    );
+    
+    if (cartItem) {
+      setMainQuantity(cartItem.quantity);
+    }
+  }, [items, product.id, selectedVariation, selectedColor]);
 
   // Проверка наличия выбранного цвета
   const isSelectedColorInStock = useMemo(() => {

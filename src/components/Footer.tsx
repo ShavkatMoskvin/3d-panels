@@ -66,7 +66,7 @@ export function Footer() {
                 />
               </a>
               <a 
-                href="mailto:shavkatmoskvin@gmail.com" 
+                href="mailto:shavkatmoskvin@gmail.com"
                 className="group transition-transform hover:scale-110"
                 title="Email"
               >

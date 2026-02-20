@@ -24,9 +24,7 @@ export default function ContactsPage() {
       if (response.ok) {
         setIsSubmitted(true);
         setFormData({ name: "", contact: "", message: "" });
-        setTimeout(() => {
-          setIsSubmitted(false);
-        }, 5000);
+        // Убрали автоматическое скрытие сообщения об успехе через 5 секунд
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -161,53 +159,60 @@ export default function ContactsPage() {
                   <MessageSquare className="w-10 h-10 text-white" />
                 </div>
                 
-                <h3 className="text-2xl font-bold uppercase tracking-tighter mb-4">Напишите нам</h3>
-                <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-10 leading-loose">
-                  Оставьте заявку, и мы подготовим для вас индивидуальное предложение с расчетом доставки.
+                <h3 className="text-2xl font-bold uppercase tracking-tighter mb-4">Задать вопрос</h3>
+                <p className="text-sm text-slate-500 mb-10 leading-relaxed">
+                  Если у вас возникли вопросы по ассортименту или условиям, напишите нам. Мы ответим в течение дня.
                 </p>
 
                 {isSubmitted ? (
                   <div className="py-20 text-center animate-in fade-in zoom-in duration-500">
-                    <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <div className="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
                       <CheckCircle2 className="w-10 h-10" />
                     </div>
-                    <h4 className="text-3xl font-bold uppercase tracking-tighter mb-4">Сообщение отправлено!</h4>
-                    <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
-                      Мы свяжемся с вами в течение 15 минут.
+                    <h4 className="text-3xl font-bold uppercase tracking-tighter mb-4">Вопрос отправлен!</h4>
+                    <p className="text-sm text-slate-500 mb-8 leading-relaxed max-w-md mx-auto">
+                      Спасибо за ваше обращение. Мы ответим на ваш вопрос в течение рабочего дня.
                     </p>
+                    <Button 
+                      onClick={() => setIsSubmitted(false)}
+                      variant="outline"
+                      className="rounded-none px-8 py-6 uppercase tracking-widest text-xs border-slate-200 hover:bg-slate-50"
+                    >
+                      Задать еще вопрос
+                    </Button>
                   </div>
                 ) : (
                   <form className="space-y-8" onSubmit={handleSubmit}>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваше Имя</label>
+                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваше имя *</label>
                       <input 
                         required
                         type="text" 
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest" 
-                        placeholder="ИВАН ИВАНОВ"
+                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors text-sm placeholder:text-slate-300" 
+                        placeholder="Как к вам обращаться?"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Telegram или Телефон</label>
+                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Телефон или Telegram *</label>
                       <input 
                         required
                         type="text" 
                         value={formData.contact}
                         onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest" 
-                        placeholder="@USERNAME ИЛИ +7..."
+                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors text-sm placeholder:text-slate-300" 
+                        placeholder="+7 (999) 000-00-00 или @username"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваш вопрос</label>
+                      <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваш вопрос *</label>
                       <textarea 
                         required
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors uppercase text-xs tracking-widest min-h-[100px] resize-none" 
-                        placeholder="ОПИШИТЕ ВАШ ПРОЕКТ..."
+                        className="w-full border-b border-slate-200 py-4 outline-none focus:border-blue-600 transition-colors text-sm min-h-[100px] resize-none placeholder:text-slate-300" 
+                        placeholder="Например: Хочу узнать стоимость доставки в Пензу..."
                       ></textarea>
                     </div>
                     <Button 
