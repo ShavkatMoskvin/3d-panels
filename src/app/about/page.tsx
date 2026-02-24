@@ -1,16 +1,9 @@
 "use client";
 
-import { CheckCircle2, Trophy, Users, Star, Info, ShieldCheck } from "lucide-react";
+import { Info, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 
 export default function AboutPage() {
-  const stats = [
-    { label: "Лет опыта", value: "10+", icon: <Trophy className="w-5 h-5" /> },
-    { label: "Проектов", value: "500+", icon: <CheckCircle2 className="w-5 h-5" /> },
-    { label: "Специалистов", value: "15", icon: <Users className="w-5 h-5" /> },
-    { label: "Отзывов", value: "200+", icon: <Star className="w-5 h-5" /> },
-  ];
-
   return (
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
@@ -37,23 +30,6 @@ export default function AboutPage() {
           <p className="text-white/50 max-w-2xl mx-auto text-sm uppercase tracking-widest leading-relaxed">
             MoskWin — это не просто строительная компания. Это команда профессионалов, влюбленных в свое дело. Мы специализируемся на инновационных решениях для интерьера.
           </p>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 border-b border-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center group">
-                <div className="flex justify-center mb-4 text-blue-600 group-hover:scale-110 transition-transform">
-                  {stat.icon}
-                </div>
-                <div className="text-3xl font-bold mb-1 tracking-tighter">{stat.value}</div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{stat.label}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

@@ -388,15 +388,12 @@ export default function ProductPageClient({ product }: { product: Product }) {
                     {kitItems.map((item) => (
                       <div key={item.id} className="flex items-center gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm group/item">
                         <Link href={item.slug ? `/product/${item.slug}` : "#"} className={`w-16 h-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-50 relative flex items-center justify-center ${item.slug ? 'cursor-pointer' : 'cursor-default'}`}>
-                          {item.image ? (
-                            <Image src={item.image} alt={item.name} fill className="object-cover transition-transform group-hover/item:scale-110" />
-                          ) : (
-                            <div className="p-2 text-center">
-                              <p className="text-[7px] font-bold uppercase tracking-tighter text-slate-300 leading-tight">
-                                {item.name}
-                              </p>
-                            </div>
-                          )}
+                          <ProductImage 
+                            src={item.image} 
+                            alt={item.name} 
+                            showText={false}
+                            className="w-full h-full transition-transform group-hover/item:scale-110" 
+                          />
                         </Link>
                         <div className="flex-1 min-w-0">
                           <Link href={item.slug ? `/product/${item.slug}` : "#"}>

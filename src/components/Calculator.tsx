@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Product } from "@/types";
 import { Plus, Minus, RotateCcw, LayoutGrid } from "lucide-react";
 import { PRODUCTS } from "@/lib/data";
-import Image from "next/image";
+import { ProductImage } from "./ProductImage";
 import { useCart } from "@/context/CartContext";
 
 interface PanelData {
@@ -719,14 +719,12 @@ export function Calculator({
                     >
                       <div className="flex items-center gap-5 flex-1">
                         <div className="w-20 h-20 bg-white flex-shrink-0 overflow-hidden border border-slate-100 group-hover:border-slate-200 transition-colors relative flex items-center justify-center">
-                          {prod.images[0] && (
-                            <Image 
-                              src={prod.images[0]} 
-                              alt={prod.name} 
-                              fill
-                              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
-                            />
-                          )}
+                          <ProductImage 
+                            src={prod.images[0]} 
+                            alt={prod.name} 
+                            showText={false}
+                            className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-500" 
+                          />
                         </div>
                         
                         <div className="flex-1 min-w-0">

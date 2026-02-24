@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { ShoppingCart, Check, Minus, Plus, ArrowRight } from "lucide-react";
 import { PRODUCTS } from "@/lib/data";
 import Link from "next/link";
-import Image from "next/image";
+import { ProductImage } from "./ProductImage";
 
 export function AddToCart({ 
   product, 
@@ -200,6 +200,57 @@ export function AddToCart({
     }
   };
 
+  const upsellBlock = showUpsell && mountingKit && !showIconOnly && !hideUpsell && (
+    <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 w-full rounded-none">
+      <div className="flex items-start gap-4">
+        <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors rounded-none relative flex items-center justify-center">
+          <ProductImage 
+            src={mountingKit.images[0]} 
+            alt={mountingKit.name} 
+            showText={false}
+            className="w-full h-full" 
+          />
+        </Link>
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-1">Рекомендуем</p>
+          <Link href={`/product/${mountingKit.slug}`} className="hover:text-blue-600 transition-colors">
+            <p className="text-[11px] font-bold uppercase tracking-tight text-slate-900 mb-2 truncate">{mountingKit.name}</p>
+          </Link>
+          
+          {kitQuantity > 0 ? (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center border border-blue-200 bg-white rounded-none">
+                <button 
+                  onClick={() => handleUpdateKitQty(kitQuantity - 1)}
+                  className="w-7 h-7 flex items-center justify-center hover:bg-blue-50 text-blue-600 transition-colors"
+                >
+                  <Minus className="w-3 h-3" />
+                </button>
+                <span className="w-8 text-center text-[10px] font-bold text-slate-900">{kitQuantity}</span>
+                <button 
+                  onClick={() => handleUpdateKitQty(kitQuantity + 1)}
+                  className="w-7 h-7 flex items-center justify-center hover:bg-blue-50 text-blue-600 transition-colors"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
+              <span className="text-[9px] font-bold uppercase text-green-600 flex items-center gap-1">
+                <Check className="w-3 h-3" /> Добавлено
+              </span>
+            </div>
+          ) : (
+            <button 
+              onClick={handleAddKit}
+              className="flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900 hover:text-blue-600 transition-colors group"
+            >
+              Добавить за {mountingKit.price} ₽ <ArrowRight className="w-3 h-3 ml-2 group-hover:translate-x-1 transition-transform" />
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   const handleIncrement = () => {
     const newQty = quantity + 1;
     if (isKitProduct) {
@@ -272,60 +323,7 @@ export function AddToCart({
           </button>
         </div>
         
-        {/* Встроенный блок рекомендации */}
-        {showUpsell && mountingKit && !showIconOnly && !hideUpsell && (
-          <div className="animate-in fade-in slide-in-from-top-2 duration-500 bg-blue-50/50 border border-blue-100 p-5 max-w-sm rounded-none">
-            <div className="flex items-start gap-4">
-              <Link href={`/product/${mountingKit.slug}`} className="w-16 h-16 bg-white flex-shrink-0 overflow-hidden border border-blue-100 hover:border-blue-400 transition-colors rounded-none relative flex items-center justify-center">
-                {mountingKit.images[0] ? (
-                  <Image src={mountingKit.images[0]} alt="" fill className="object-cover" />
-                ) : (
-                  <div className="p-2 text-center">
-                    <p className="text-[7px] font-bold uppercase tracking-tighter text-slate-300 leading-tight">
-                      {mountingKit.name}
-                    </p>
-                  </div>
-                )}
-              </Link>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-1">Рекомендуем</p>
-                <Link href={`/product/${mountingKit.slug}`} className="hover:text-blue-600 transition-colors">
-                  <p className="text-[11px] font-bold uppercase tracking-tight text-slate-900 mb-2 truncate">{mountingKit.name}</p>
-                </Link>
-                
-                {kitQuantity > 0 ? (
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center border border-blue-200 bg-white rounded-none">
-                      <button 
-                        onClick={() => handleUpdateKitQty(kitQuantity - 1)}
-                        className="w-7 h-7 flex items-center justify-center hover:bg-blue-50 text-blue-600 transition-colors"
-                      >
-                        <Minus className="w-3 h-3" />
-                      </button>
-                      <span className="w-8 text-center text-[10px] font-bold text-slate-900">{kitQuantity}</span>
-                      <button 
-                        onClick={() => handleUpdateKitQty(kitQuantity + 1)}
-                        className="w-7 h-7 flex items-center justify-center hover:bg-blue-50 text-blue-600 transition-colors"
-                      >
-                        <Plus className="w-3 h-3" />
-                      </button>
-                    </div>
-                    <span className="text-[9px] font-bold uppercase text-green-600 flex items-center gap-1">
-                      <Check className="w-3 h-3" /> Добавлено
-                    </span>
-                  </div>
-                ) : (
-                  <button 
-                    onClick={handleAddKit}
-                    className="flex items-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-900 hover:text-blue-600 transition-colors group"
-                  >
-                    Добавить за {mountingKit.price} ₽ <ArrowRight className="w-3 h-3 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+        {upsellBlock}
       </div>
     );
   }
@@ -363,7 +361,7 @@ export function AddToCart({
   }
 
   return (
-    <div className="relative group/tooltip">
+    <div className="relative group/tooltip space-y-4">
       <Button 
         onClick={handleAdd}
         disabled={!inStock}
@@ -382,6 +380,7 @@ export function AddToCart({
           <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900"></div>
         </div>
       )}
+      {upsellBlock}
     </div>
   );
 }

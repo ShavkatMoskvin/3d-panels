@@ -84,8 +84,16 @@ export function Footer() {
             </p>
           </div>
         </div>
-        <div className="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
-          <p>&copy; {new Date().getFullYear()} MoskWin. Все права защищены.</p>
+        <div className="border-t border-gray-800 pt-8 text-center text-gray-500">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-[10px] uppercase tracking-widest">
+            <p>&copy; {new Date().getFullYear()} MoskWin. Все права защищены.</p>
+            <span className="hidden md:block text-gray-700">|</span>
+            <p>ИП Москвин Станислав Владимирович</p>
+            <span className="hidden md:block text-gray-700">|</span>
+            <p>ИНН 023800419102</p>
+            <span className="hidden md:block text-gray-700">|</span>
+            <p>ОГРНИП 320583500029382</p>
+          </div>
         </div>
       </div>
     </footer>

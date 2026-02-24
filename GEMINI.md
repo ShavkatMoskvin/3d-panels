@@ -9,6 +9,7 @@ This project is a modern e-commerce platform specializing in 3D decorative panel
 - **State Management**: React Context API (`CartContext`)
 - **Icons**: Lucide React
 - **Analytics**: Yandex Metrika, Vercel Analytics
+- **Domain**: 3dpaneli-moskwin.ru
 
 ## 🏗️ Architecture & Key Components
 
@@ -16,6 +17,7 @@ This project is a modern e-commerce platform specializing in 3D decorative panel
 - **Requirement**: Use `ProductImage` for ALL product-related images. Standard `next/image` is only for static UI assets.
 - **Fallback**: Automatically shows a branded minimalist placeholder with the product name centered.
 - **Loading**: Implements pulse animations and blur-in effects.
+- **Adaptivity**: `showText={false}` prop for small containers (Calculator, KitItems) to hide title and keep only icon/brand.
 
 ### 🌿 Eco-Passport System
 - **Component**: `src/components/EcoPassport.tsx`.
@@ -23,16 +25,14 @@ This project is a modern e-commerce platform specializing in 3D decorative panel
 - **Goal**: Highlight premium quality and health safety (Natural Carbon, Zero VOC, etc.).
 
 ### 🛡️ Security & Anti-Spam
-- **Honeypot**: Mandatory for all public forms (`_honeypot` field).
+- **Honeypot**: Mandatory for all public forms (`_honeypot` field) in `src/app/contacts/page.tsx`.
 - **Validation**: Server-side length checks and bot trapping in `/api/contact`.
 
 ### ⚖️ Legal & Trust
-- **Entity**: IP Moskvin Stanislav Vladimirovich.
-- **Placement**: Footer, Contacts (full details), About (Trust cards), Legal policies.
-
-## 🛠️ Code Quality Standards
-- **Zero Unused**: No unused imports or variables (enforced by ESLint). 
-- **Fixed**: Corrected `Calculator.tsx` constructor error by restoring necessary imports and migrating to `ProductImage`.
+- **Entity**: ИП Москвин Станислав Владимирович (Moskvin Stanislav Vladimirovich).
+- **INN**: 023800419102
+- **OGRNIP**: 320583500029382
+- **Placement**: Footer, Contacts (full details), About (Trust cards), Legal policies (Privacy, Offer).
 
 ## 📦 Data
 - **Static Store**: `src/lib/data.ts`.

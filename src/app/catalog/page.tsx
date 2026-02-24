@@ -5,6 +5,7 @@ import { Category } from "@/types";
 import Link from "next/link";
 import { PRODUCTS, CATEGORIES } from "@/lib/data";
 import Image from "next/image";
+import { ProductImage } from "@/components/ProductImage";
 
 export default function CatalogPage() {
   const [activeCategory, setActiveCategory] = useState<Category>(CATEGORIES[0].value);
@@ -92,14 +93,11 @@ export default function CatalogPage() {
               {filteredProducts.map((product) => (
                 <div key={product.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl flex flex-col">
                   <Link href={`/product/${product.slug}`} className={`relative block aspect-square bg-white overflow-hidden mb-6 border border-slate-100 transition-all duration-500 flex items-center justify-center ${!product.inStock ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-                    {product.images && product.images.length > 0 && (
-                      <Image 
-                        src={product.images[0]} 
-                        alt={product.name}
-                        fill
-                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                      />
-                    )}
+                    <ProductImage 
+                      src={product.images[0]} 
+                      alt={product.name}
+                      className="w-full h-full transition-transform duration-1000 group-hover:scale-110"
+                    />
                     {!product.inStock && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/5">
                         <span className="bg-slate-900/90 text-white text-[9px] font-bold uppercase tracking-[0.3em] px-4 py-2 backdrop-blur-sm">
