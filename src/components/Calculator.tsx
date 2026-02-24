@@ -742,8 +742,8 @@ export function Calculator({
                                 </span>
                               )}
                             </div>
-                            {detail?.consumption && (
-                              <p className="text-[9px] text-blue-600 font-bold uppercase tracking-widest">Расход: {detail.consumption}</p>
+                            {detail?.description && (
+                              <p className="text-[9px] text-blue-600 font-bold uppercase tracking-widest">Расход: {detail.description}</p>
                             )}
                           </div>
                         </div>
