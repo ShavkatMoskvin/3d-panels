@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Product } from '@/types';
 
 export interface CartItem extends Product {
@@ -71,7 +71,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, includeInstallation, isLoaded]);
 
-  const addToCart = (product: Product, quantity: number = 1, variation?: CartItem['selectedVariation'], color?: string, kitItems?: Product['bundleItems']) => {
+  const addToCart = useCallback((product: Product, quantity: number = 1, variation?: CartItem['selectedVariation'], color?: string, kitItems?: Product['bundleItems']) => {
     setItems(currentItems => {
       const existingItemIndex = currentItems.findIndex(item => 
         item.id === product.id && 
@@ -99,31 +99,39 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         kitItems: kitItems
       }];
     });
-  };
+  }, []);
 
-  const removeFromCart = (itemId: string) => {
+  const removeFromCart = useCallback((itemId: string) => {
     setItems(currentItems => currentItems.filter(item => {
       const currentItemId = `${item.id}-${item.selectedVariation?.size || 'default'}-${item.selectedColor || 'default'}`;
       return currentItemId !== itemId;
     }));
-  };
+  }, []);
 
-  const updateQuantity = (itemId: string, quantity: number) => {
+  const updateQuantity = useCallback((itemId: string, quantity: number) => {
     if (quantity < 1) {
       removeFromCart(itemId);
       return;
     }
-    setItems(currentItems =>
-      currentItems.map(item => {
+    setItems(currentItems => {
+      const itemIndex = currentItems.findIndex(item => {
         const currentItemId = `${item.id}-${item.selectedVariation?.size || 'default'}-${item.selectedColor || 'default'}`;
-        return currentItemId === itemId ? { ...item, quantity } : item;
-      })
-    );
-  };
+        return currentItemId === itemId;
+      });
 
-  const clearCart = () => {
+      if (itemIndex === -1 || currentItems[itemIndex].quantity === quantity) {
+        return currentItems;
+      }
+
+      const newItems = [...currentItems];
+      newItems[itemIndex] = { ...newItems[itemIndex], quantity };
+      return newItems;
+    });
+  }, [removeFromCart]);
+
+  const clearCart = useCallback(() => {
     setItems([]);
-  };
+  }, []);
 
   const totalItems = items.length;
   const itemsPrice = items.reduce((total, item) => total + (item.price * item.quantity), 0);

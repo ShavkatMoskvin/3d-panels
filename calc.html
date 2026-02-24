@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>3D Panel Calculator - Professional Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        
+        #canvas-container {
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(to right, #f1f5f9 1px, transparent 1px),
+                linear-gradient(to bottom, #f1f5f9 1px, transparent 1px);
+            background-size: 20px 20px;
+            cursor: crosshair;
+        }
+
+        /* Анимация переключателя */
+        .dot { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        input:checked ~ .dot { transform: translateX(100%); background-color: #fff; }
+        input:checked ~ .bg-toggle { background-color: #3b82f6; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            main { padding: 0; margin: 0; }
+            #canvas-container { border: none; shadow: none; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white p-4 shadow-xl no-print">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-tight">3D-PANEL <span class="text-blue-500">CALC</span></h1>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Professional Layout Tool</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-lg transition-colors border border-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow flex flex-col lg:flex-row max-w-7xl mx-auto w-full p-2 sm:p-6 gap-6">
+        
+        <!-- Canvas Section -->
+        <section class="lg:order-2 flex-grow flex flex-col gap-4 min-w-0">
+            
+            <div class="flex justify-between items-center no-print px-1">
+                <div class="text-xs text-slate-500 font-medium">Кликните на плитку, чтобы убрать её из расчета</div>
+                <button onclick="resetToggles()" class="text-xs text-blue-600 hover:underline font-bold">Вернуть всё</button>
+            </div>
+
+            <div id="canvas-container" class="relative bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden flex-grow lg:h-[650px]">
+                <canvas id="renderCanvas" class="w-full h-full block"></canvas>
+                
+                <!-- Legend -->
+                <div class="absolute bottom-6 right-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl text-xs border border-slate-200 flex flex-col gap-3 shadow-2xl no-print">
+                    <div class="flex items-center gap-3">
+                        <span class="w-5 h-5 border-2 border-blue-500 bg-blue-50 rounded-md"></span> 
+                        <span class="font-bold text-slate-700">В смете</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="w-5 h-5 border-2 border-red-500 border-dashed rounded-md"></span> 
+                        <span class="font-bold text-slate-700">Линия реза</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-slate-400">
+                        <span class="w-5 h-5 border-2 border-slate-300 border-dashed rounded-md relative overflow-hidden">
+                             <span class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-200 -rotate-45"></span>
+                        </span> 
+                        <span class="font-bold">Исключено</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Summary -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 no-print">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] uppercase text-slate-400 font-black mb-1">Целых</p>
+                    <p class="text-2xl font-black text-slate-800" id="resWhole">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] uppercase text-slate-400 font-black mb-1 text-red-400">Подрезка</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-2xl font-black text-red-500" id="resCut">0</span>
+                        <span class="text-xs font-bold text-slate-400" id="resCutPanels">(из 0)</span>
+                    </div>
+                </div>
+                <div class="bg-blue-600 p-4 rounded-2xl shadow-lg shadow-blue-200 text-white">
+                    <p class="text-[10px] uppercase text-blue-200 font-black mb-1">Итого заказ</p>
+                    <p class="text-2xl font-black" id="resTotal">0 шт</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] uppercase text-slate-400 font-black mb-1">Площадь</p>
+                    <p class="text-2xl font-black text-slate-800" id="resArea">0 м²</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sidebar Settings -->
+        <section class="lg:order-1 lg:w-85 shrink-0 no-print">
+            <div class="bg-white p-6 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 lg:sticky lg:top-24 space-y-6">
+                
+                <!-- Wall -->
+                <div class="space-y-3">
+                    <h3 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span> Стена
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 ml-1">Ширина (мм)</label>
+                            <input type="number" id="wallWidth" value="3000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 ml-1">Высота (мм)</label>
+                            <input type="number" id="wallHeight" value="2500" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel -->
+                <div class="space-y-3">
+                    <h3 class="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span> Панель
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 ml-1">Ширина (мм)</label>
+                            <input type="number" id="panelWidth" value="600" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 ml-1">Высота (мм)</label>
+                            <input type="number" id="panelHeight" value="600" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700">
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 ml-1">Шов / Зазор (мм)</label>
+                        <input type="number" id="gap" value="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700">
+                    </div>
+                </div>
+
+                <!-- Layout Strategy -->
+                <div class="space-y-3 pt-2">
+                    <h3 class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Стратегия</h3>
+                    <div class="flex p-1 bg-slate-100 rounded-xl">
+                        <button onclick="setAlign('left')" id="btn-left" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all bg-white shadow-sm text-blue-600">От угла</button>
+                        <button onclick="setAlign('center')" id="btn-center" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-500">Центр</button>
+                    </div>
+                    
+                    <label class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 cursor-pointer group">
+                        <span class="text-xs font-bold text-slate-700">Умный рез (кроить обрезки)</span>
+                        <div class="relative inline-block w-10 h-6">
+                            <input type="checkbox" id="optimizeCuts" class="sr-only" checked onchange="calculateAndDraw()">
+                            <div class="bg-toggle block bg-slate-300 w-10 h-6 rounded-full shadow-inner transition-colors"></div>
+                            <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow transition-transform"></div>
+                        </div>
+                    </label>
+                </div>
+
+                <button onclick="handleSettingsChange()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-2xl shadow-xl transition-all active:scale-95 flex justify-center items-center gap-2">
+                    Обновить чертеж
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const canvas = document.getElementById('renderCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('canvas-container');
+
+        let removedPanels = new Set(); 
+        let currentPanels = [];
+        let renderMath = null;
+        let alignment = 'left';
+
+        // Load removed panels from storage if exists
+        try {
+            const saved = localStorage.getItem('removedPanels');
+            if (saved) removedPanels = new Set(JSON.parse(saved));
+        } catch(e) {}
+
+        function setAlign(val) {
+            alignment = val;
+            document.getElementById('btn-left').className = val === 'left' ? 'flex-1 py-2 text-xs font-bold rounded-lg transition-all bg-white shadow-sm text-blue-600' : 'flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-500';
+            document.getElementById('btn-center').className = val === 'center' ? 'flex-1 py-2 text-xs font-bold rounded-lg transition-all bg-white shadow-sm text-blue-600' : 'flex-1 py-2 text-xs font-bold rounded-lg transition-all text-slate-500';
+            handleSettingsChange();
+        }
+
+        canvas.addEventListener('click', (e) => {
+            if (!renderMath) return;
+            const rect = canvas.getBoundingClientRect();
+            const clickX = (e.clientX - rect.left) * (canvas.width / rect.width / (window.devicePixelRatio || 1));
+            const clickY = (e.clientY - rect.top) * (canvas.height / rect.height / (window.devicePixelRatio || 1));
+
+            const { originX, originY, scale } = renderMath;
+            const wallX = (clickX - originX) / scale;
+            const wallY = (originY - clickY) / scale;
+
+            for (let p of currentPanels) {
+                if (wallX >= p.visX && wallX <= p.visX + p.visW && wallY >= p.visY && wallY <= p.visY + p.visH) {
+                    if (removedPanels.has(p.id)) removedPanels.delete(p.id); else removedPanels.add(p.id);
+                    localStorage.setItem('removedPanels', JSON.stringify([...removedPanels]));
+                    calculateAndDraw(false);
+                    break;
+                }
+            }
+        });
+
+        function resetToggles() {
+            removedPanels.clear();
+            localStorage.removeItem('removedPanels');
+            calculateAndDraw(true);
+        }
+
+        function handleSettingsChange() {
+            removedPanels.clear();
+            localStorage.removeItem('removedPanels');
+            calculateAndDraw(true);
+        }
+
+        function resizeCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = container.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+        }
+
+        window.addEventListener('resize', () => { resizeCanvas(); calculateAndDraw(false); });
+
+        window.onload = () => {
+            ['wallWidth', 'wallHeight', 'panelWidth', 'panelHeight', 'gap'].forEach(id => {
+                document.getElementById(id).addEventListener('input', () => calculateAndDraw(true));
+            });
+            resizeCanvas();
+            calculateAndDraw(true);
+        };
+
+        function calculateAndDraw(fullReset) {
+            const wallW = parseFloat(document.getElementById('wallWidth').value) || 0;
+            const wallH = parseFloat(document.getElementById('wallHeight').value) || 0;
+            const panelW = parseFloat(document.getElementById('panelWidth').value) || 0;
+            const panelH = parseFloat(document.getElementById('panelHeight').value) || 0;
+            const gap = parseFloat(document.getElementById('gap').value) || 0;
+            const optimize = document.getElementById('optimizeCuts').checked;
+
+            if (wallW <= 0 || wallH <= 0 || panelW <= 0 || panelH <= 0) return;
+
+            currentPanels = [];
+            let wholeCount = 0;
+            let cutCount = 0;
+            let requiredCuts = [];
+
+            const stepX = panelW + gap;
+            const stepY = panelH + gap;
+            let startX = 0, startY = 0;
+
+            if (alignment === 'center') {
+                startX = -((stepX - (wallW % stepX)) / 2);
+                startY = -((stepY - (wallH % stepY)) / 2);
+            }
+
+            for (let y = startY; y < wallH; y += stepY) {
+                for (let x = startX; x < wallW; x += stepX) {
+                    const visLeft = Math.max(0, x), visRight = Math.min(wallW, x + panelW);
+                    const visW = visRight - visLeft;
+                    const visBottom = Math.max(0, y), visTop = Math.min(wallH, y + panelH);
+                    const visH = visTop - visBottom;
+
+                    if (visW <= 0.1 || visH <= 0.1) continue;
+
+                    const id = `p_${Math.round(x)}_${Math.round(y)}`;
+                    const isActive = !removedPanels.has(id);
+                    const isWhole = (Math.abs(visW - panelW) < 0.5 && Math.abs(visH - panelH) < 0.5);
+
+                    if (isActive) {
+                        if (isWhole) wholeCount++; else { cutCount++; requiredCuts.push({w: visW, h: visH}); }
+                    }
+                    currentPanels.push({ id, isActive, isWhole, visX: visLeft, visY: visBottom, visW, visH, x, y });
+                }
+            }
+
+            // Simple Bin Packing
+            let panelsForCuts = 0;
+            if (optimize && requiredCuts.length > 0) {
+                requiredCuts.sort((a,b) => (b.w*b.h) - (a.w*a.h));
+                let bin = [];
+                requiredCuts.forEach(c => {
+                    let fit = bin.find(b => b.w >= c.w && b.h >= c.h);
+                    if (fit) fit.w -= c.w; // Very simple subtractive logic
+                    else { panelsForCuts++; bin.push({w: panelW - c.w, h: panelH}); }
+                });
+            } else panelsForCuts = cutCount;
+
+            const total = wholeCount + panelsForCuts;
+            document.getElementById('resWhole').innerText = wholeCount;
+            document.getElementById('resCut').innerText = cutCount;
+            document.getElementById('resCutPanels').innerText = `(из ${panelsForCuts})`;
+            document.getElementById('resTotal').innerText = total + ' шт';
+            
+            let area = 0;
+            currentPanels.forEach(p => { if (p.isActive) area += (p.visW * p.visH) / 1000000; });
+            document.getElementById('resArea').innerText = area.toFixed(2) + ' м²';
+
+            // Draw
+            const rect = container.getBoundingClientRect();
+            const margin = 60;
+            const scale = Math.min((rect.width - margin*2)/wallW, (rect.height - margin*2)/wallH);
+            const originX = (rect.width - wallW * scale) / 2;
+            const originY = (rect.height + wallH * scale) / 2;
+            renderMath = { originX, originY, scale };
+
+            ctx.clearRect(0, 0, rect.width, rect.height);
+            
+            // Wall Background
+            ctx.fillStyle = "#ffffff";
+            ctx.shadowColor = "rgba(0,0,0,0.1)"; ctx.shadowBlur = 20;
+            ctx.fillRect(originX, originY - wallH*scale, wallW*scale, wallH*scale);
+            ctx.shadowBlur = 0;
+            
+            ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 3;
+            ctx.strokeRect(originX, originY - wallH*scale, wallW*scale, wallH*scale);
+
+            // Labels
+            ctx.fillStyle = "#64748b"; ctx.font = "bold 12px Inter"; ctx.textAlign = "center";
+            ctx.fillText(wallW + " мм", originX + (wallW*scale)/2, originY - wallH*scale - 15);
+
+            currentPanels.forEach(p => {
+                const px = originX + p.visX * scale, py = originY - (p.visY + p.visH) * scale;
+                const pw = p.visW * scale, ph = p.visH * scale;
+
+                if (!p.isActive) {
+                    ctx.strokeStyle = "#e2e8f0"; ctx.setLineDash([5,5]); ctx.strokeRect(px, py, pw, ph);
+                    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px+pw, py+ph); ctx.stroke();
+                } else {
+                    ctx.fillStyle = "#f8fafc"; ctx.fillRect(px, py, pw, ph);
+                    ctx.strokeStyle = "#3b82f6"; ctx.setLineDash([]); ctx.lineWidth = 1;
+                    ctx.strokeRect(px, py, pw, ph);
+
+                    if (!p.isWhole) {
+                        ctx.strokeStyle = "#ef4444"; ctx.setLineDash([6,4]); ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        if (p.visX + p.visW < p.x + panelW) { ctx.moveTo(px+pw, py); ctx.lineTo(px+pw, py+ph); }
+                        if (p.visX > p.x) { ctx.moveTo(px, py); ctx.lineTo(px, py+ph); }
+                        if (p.visY + p.visH < p.y + panelH) { ctx.moveTo(px, py); ctx.lineTo(px+pw, py); }
+                        if (p.visY > p.y) { ctx.moveTo(px, py+ph); ctx.lineTo(px+pw, py+ph); }
+                        ctx.stroke();
+                        
+                        if (pw > 30) {
+                            ctx.fillStyle = "#ef4444"; ctx.font = "bold 10px sans-serif";
+                            ctx.fillText(Math.round(p.visW < panelW ? p.visW : p.visH), px+pw/2, py+ph/2+4);
+                        }
+                    }
+                }
+            });
+            ctx.setLineDash([]);
+        }
+    </script>
+</body>
+</html>

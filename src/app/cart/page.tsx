@@ -161,19 +161,15 @@ export default function CartPage() {
                   {/* Image */}
                   <Link 
                     href={`/product/${item.slug}`}
-                    className="w-24 h-24 sm:w-48 sm:h-48 flex-shrink-0 bg-slate-50 relative overflow-hidden border border-slate-100 group-hover:bg-slate-100 transition-colors"
+                    className="w-24 h-24 sm:w-48 sm:h-48 flex-shrink-0 bg-slate-50 relative overflow-hidden border border-slate-100 group-hover:bg-slate-100 transition-colors flex items-center justify-center"
                   >
-                    {item.images && item.images.length > 0 ? (
+                    {item.images && item.images.length > 0 && (
                       <Image 
                         src={item.images[0]} 
                         alt={item.name}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-[8px] sm:text-[10px] uppercase tracking-widest text-slate-400 text-center px-2">
-                        {item.name}
-                      </div>
                     )}
                   </Link>
                   

@@ -29,10 +29,11 @@ export default function ProductPageClient({ product }: { product: Product }) {
       (item.selectedColor === (selectedColor?.name || undefined) || item.selectedColor === selectedColor?.name)
     );
     
-    if (cartItem) {
+    if (cartItem && cartItem.quantity !== mainQuantity) {
       setMainQuantity(cartItem.quantity);
     }
-  }, [items, product.id, selectedVariation, selectedColor]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, product.id, selectedVariation, selectedColor]); // mainQuantity исключен для предотвращения циклов
 
   // Проверка наличия выбранного цвета
   const isSelectedColorInStock = useMemo(() => {
@@ -46,6 +47,9 @@ export default function ProductPageClient({ product }: { product: Product }) {
 
   // Синхронизация количества с AddToCart
   const handleCalculate = (q: number, extras?: { product: Product, quantity: number }[]) => {
+    // Мы обновляем количество только если оно еще не было изменено пользователем вручную
+    // или если это первый расчет.
+    // Но по умолчанию калькулятор должен предлагать, а пользователь — решать.
     setMainQuantity(q);
     if (extras) {
       setExtraCalculatedItems(extras);
@@ -54,14 +58,6 @@ export default function ProductPageClient({ product }: { product: Product }) {
 
   // Рассчитываем отображаемую цену за единицу (с учетом вариации)
   const currentPrice = selectedVariation ? selectedVariation.price : product.price;
-
-  // Общая стоимость комплекта (если есть kitItems)
-  const bundleTotalPrice = kitItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const baseUnitPrice = currentPrice + bundleTotalPrice;
-
-  // Итоговая стоимость всего набора (панели + расходники)
-  const extrasTotal = extraCalculatedItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-  const totalOrderPrice = (baseUnitPrice * mainQuantity) + extrasTotal;
 
   const handleVariationChange = (v: { size: string; price: number }) => {
     setSelectedVariation(v);
@@ -145,7 +141,9 @@ export default function ProductPageClient({ product }: { product: Product }) {
             <h1 className="text-5xl md:text-7xl font-bold text-white uppercase tracking-tighter leading-none mb-6">
               {product.name}
             </h1>
-            <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em]">Premium Quality Wall Panels</p>
+            <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.3em]">
+              {isPanel ? "Premium Quality Wall Panels" : "Professional Quality Materials"}
+            </p>
           </div>
         </div>
       </section>
@@ -166,8 +164,11 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   <div className="absolute inset-0 image-overlay-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </>
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-[10px] text-slate-300 font-light italic tracking-[0.5em] uppercase p-20 text-center">
-                  High Resolution Image: {product.name}
+                <div className="absolute inset-0 flex items-center justify-center p-20 text-center">
+                  <p className="text-[12px] font-bold uppercase tracking-[0.4em] text-slate-300 leading-loose">
+                    {product.name}<br/>
+                    <span className="text-[10px] opacity-60 font-medium">Premium Quality Image</span>
+                  </p>
                 </div>
               )}
             </div>
@@ -175,20 +176,24 @@ export default function ProductPageClient({ product }: { product: Product }) {
               {product.images.map((img, i) => (
                 <button 
                   key={i} 
-                  className={`aspect-square bg-slate-50 border cursor-pointer hover:bg-slate-100 transition-all overflow-hidden group/thumb ${
+                  className={`aspect-square bg-slate-50 border cursor-pointer hover:bg-slate-100 transition-all overflow-hidden group/thumb flex items-center justify-center ${
                     mainImage === img ? "border-blue-600 ring-2 ring-blue-600/20" : "border-slate-100"
                   }`}
                   onClick={() => setMainImage(img)}
                 >
-                  <div className="relative w-full h-full">
-                    <Image 
-                      src={img} 
-                      alt={`${product.name} view ${i + 1}`}
-                      fill
-                      className={`object-cover transition-all duration-500 ${
-                        mainImage === img ? "scale-110 opacity-100" : "opacity-40 group-hover/thumb:opacity-100"
-                      }`}
-                    />
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    {img ? (
+                      <Image 
+                        src={img} 
+                        alt={`${product.name} view ${i + 1}`}
+                        fill
+                        className={`object-cover transition-all duration-500 ${
+                          mainImage === img ? "scale-110 opacity-100" : "opacity-40 group-hover/thumb:opacity-100"
+                        }`}
+                      />
+                    ) : (
+                      <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tighter">View {i+1}</span>
+                    )}
                   </div>
                 </button>
               ))}
@@ -223,16 +228,21 @@ export default function ProductPageClient({ product }: { product: Product }) {
           {/* Right Column: Info & Actions */}
           <div className="lg:col-span-5">
             <div className="sticky top-32">
-              <div className="flex items-center gap-4 mb-8">
-                <p className="text-4xl font-bold tracking-tighter text-slate-900">
-                  {totalOrderPrice.toLocaleString()} ₽ 
-                  {mainQuantity > 1 && <span className="text-[10px] font-bold text-slate-400 ml-4 uppercase tracking-[0.2em]">итого</span>}
-                </p>
-                {(!isSelectedColorInStock) && (
-                  <span className="px-3 py-1 bg-red-50 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full border border-red-100">
-                    Нет в наличии
-                  </span>
-                )}
+              <div className="mb-6">
+                <h1 className="text-4xl font-bold tracking-tighter text-slate-900 uppercase mb-2">
+                  {product.name}
+                </h1>
+                <div className="flex items-center gap-4">
+                  <p className="text-4xl font-bold tracking-tighter text-slate-900">
+                    {currentPrice.toLocaleString()} ₽ 
+                    <span className="text-[10px] font-bold text-slate-400 ml-4 uppercase tracking-[0.2em]">за 1 шт.</span>
+                  </p>
+                  {(!isSelectedColorInStock) && (
+                    <span className="px-3 py-1 bg-red-50 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full border border-red-100">
+                      Нет в наличии
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="prose prose-slate max-w-none mb-12">
@@ -241,69 +251,79 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 </p>
               </div>
 
-              <div className="space-y-10">
-                {product.variations && (
-                  <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Выберите размер</h4>
-                    <div className="flex flex-wrap gap-3">
-                      {product.variations.map((v) => (
-                        <button
-                          key={v.size}
-                          onClick={() => handleVariationChange(v)}
-                          className={`px-6 py-3 text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 ${
-                            selectedVariation?.size === v.size
-                              ? "bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10"
-                              : "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
-                          }`}
-                        >
-                          {v.size}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {product.colors && (
-                  <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Выберите цвет</h4>
-                    <div className="flex flex-wrap gap-3">
-                      {product.colors.map((c) => {
-                        const isColorInStock = c.inStock;
-                        
-                        return (
+              {/* Размер материалов */}
+              {(isPanel || (product.variations && product.variations.length > 0)) && (
+                <div>
+                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Выберите размер</h4>
+                      <div className="flex flex-wrap gap-3">
+                        {product.variations && product.variations.length > 0 ? (
+                          product.variations.map((v) => (
+                            <button
+                              key={v.size}
+                              onClick={() => handleVariationChange(v)}
+                              className={`px-6 py-3 text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 ${
+                                selectedVariation?.size === v.size
+                                  ? "bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10"
+                                  : "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
+                              }`}
+                            >
+                              {v.size}
+                            </button>
+                          ))
+                        ) : (
                           <button
-                            key={c.name}
-                            onClick={() => handleColorChange(c)}
-                            className={`px-6 py-3 text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 relative ${
-                              selectedColor?.name === c.name
-                                ? "bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10"
-                                : isColorInStock
-                                  ? "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
-                                  : "bg-slate-50 text-slate-400 border-slate-100 cursor-not-allowed"
-                            }`}
+                            className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10 cursor-default"
                           >
-                            <span className="relative z-10">{c.name}</span>
-                            {!isColorInStock && (
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-full h-[1px] bg-slate-200 rotate-[15deg]"></div>
-                              </div>
-                            )}
+                            {product.specifications?.width && product.specifications?.height 
+                              ? `${product.specifications.width} x ${product.specifications.height} мм`
+                              : "Стандартный"}
                           </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-
+                        )}
+                      </div>
+                </div>
+              )}
+              {/* Цвет */}
+              {(isPanel || (product.colors && product.colors.length > 0)) && (
+                <div>
+                      <h4 className="text-[10px] font-bold uppercase tracking-widest mt-12  text-slate-400 mb-4">Выберите цвет</h4>
+                      <div className="flex flex-wrap gap-3">
+                        {product.colors && product.colors.length > 0 ? (
+                          product.colors.map((c) => {
+                            const isColorInStock = c.inStock;
+                            
+                            return (
+                              <button
+                                key={c.name}
+                                onClick={() => handleColorChange(c)}
+                                className={`px-6 py-3 text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 relative ${
+                                  selectedColor?.name === c.name
+                                    ? "bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10"
+                                    : isColorInStock
+                                      ? "bg-white text-slate-900 border-slate-200 hover:border-slate-900"
+                                      : "bg-slate-50 text-slate-400 border-slate-100 cursor-not-allowed"
+                                }`}
+                              >
+                                <span className="relative z-10">{c.name}</span>
+                                {!isColorInStock && (
+                                  <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="w-full h-[1px] bg-slate-200 rotate-[15deg]"></div>
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })
+                        ) : (
+                          <button
+                            className="px-6 py-3 text-[10px] font-bold uppercase tracking-widest border transition-all duration-300 bg-slate-900 text-white border-slate-900 shadow-xl shadow-slate-900/10 cursor-default"
+                          >
+                            <span className="relative z-10">Базовый цвет</span>
+                          </button>
+                        )}
+                      </div>
+                </div>
+              )}
               {isPanel && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10 mb-12 pb-12 border-b border-slate-100">
-                  <div className="p-4 sm:p-0 bg-slate-50 sm:bg-transparent rounded-xl sm:rounded-none">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Размер</span>
-                    <p className="text-sm font-bold uppercase tracking-tight">
-                      {product.specifications.width} x {product.specifications.height} мм
-                    </p>
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10 mb-12 pb-12 pt-12 border-b border-slate-100">
                   <div className="p-4 sm:p-0 bg-slate-50 sm:bg-transparent rounded-xl sm:rounded-none">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Материал</span>
                     <p className="text-sm font-bold uppercase tracking-tight">
@@ -312,8 +332,8 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   </div>
                 </div>
               )}
-
-              {/* Calculator Section */}
+              
+              {/* Calculator & Purchase Section - MOVED BELOW */}
               {isPanel && !isSelectedColorInStock && (
                 <div className="mb-12">
                   <div className="p-6 bg-red-50/50 border border-red-100 rounded-xl">
@@ -336,16 +356,12 @@ export default function ProductPageClient({ product }: { product: Product }) {
               )}
 
               {isPanel && isSelectedColorInStock && (
-                <div className="mb-12">
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Расчет количества</h4>
-                  <Calculator 
-                    product={product} 
-                    selectedVariation={selectedVariation || undefined}
-                    onCalculate={handleCalculate} 
-                    extraItems={extraCalculatedItems}
-                  />
-                  
-                  <div className="mt-8">
+                <div className="mb-12 space-y-6">
+                  <div className="p-6 bg-blue-50/30 border border-blue-100 rounded-xl">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-2">Быстрый заказ</p>
+                    <p className="text-[11px] text-slate-400 uppercase tracking-widest leading-relaxed mb-6">
+                      Укажите количество вручную или используйте <a href="#calculator" className="text-blue-600 underline underline-offset-4 hover:text-blue-700">интерактивный калькулятор</a> ниже для точного расчета по размерам стены.
+                    </p>
                     <AddToCart 
                       product={{
                         ...product,
@@ -361,20 +377,22 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 </div>
               )}
 
-              {/* Main AddToCart - Синхронизирован с калькулятором */}
+              {/* Main AddToCart - Виден только если это НЕ панель */}
               {!isPanel && (
-                <div className="mb-12">
-                  <AddToCart 
-                    product={{
-                      ...product,
-                      inStock: isSelectedColorInStock
-                    }} 
-                    selectedVariation={selectedVariation || undefined}
-                    selectedColor={selectedColor?.name || undefined}
-                    kitItems={kitItems}
-                    initialQuantity={mainQuantity}
-                    extraItems={extraCalculatedItems}
-                  />
+                <div className="mb-12 flex justify-end">
+                  <div className="w-full md:w-[400px]">
+                    <AddToCart 
+                      product={{
+                        ...product,
+                        inStock: isSelectedColorInStock
+                      }} 
+                      selectedVariation={selectedVariation || undefined}
+                      selectedColor={selectedColor?.name || undefined}
+                      kitItems={kitItems}
+                      initialQuantity={mainQuantity}
+                      extraItems={extraCalculatedItems}
+                    />
+                  </div>
                 </div>
               )}
               {kitItems.length > 0 && (
@@ -383,9 +401,15 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   <div className="space-y-6">
                     {kitItems.map((item) => (
                       <div key={item.id} className="flex items-center gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm group/item">
-                        <Link href={item.slug ? `/product/${item.slug}` : "#"} className={`w-16 h-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-50 relative ${item.slug ? 'cursor-pointer' : 'cursor-default'}`}>
-                          {item.image && (
+                        <Link href={item.slug ? `/product/${item.slug}` : "#"} className={`w-16 h-16 bg-slate-50 rounded-lg overflow-hidden flex-shrink-0 border border-slate-50 relative flex items-center justify-center ${item.slug ? 'cursor-pointer' : 'cursor-default'}`}>
+                          {item.image ? (
                             <Image src={item.image} alt={item.name} fill className="object-cover transition-transform group-hover/item:scale-110" />
+                          ) : (
+                            <div className="p-2 text-center">
+                              <p className="text-[7px] font-bold uppercase tracking-tighter text-slate-300 leading-tight">
+                                {item.name}
+                              </p>
+                            </div>
                           )}
                         </Link>
                         <div className="flex-1 min-w-0">
@@ -439,6 +463,44 @@ export default function ProductPageClient({ product }: { product: Product }) {
           </div>
         </div>
 
+        {/* Master Planning Section - New Full Width Section for Panels */}
+        {isPanel && isSelectedColorInStock && (
+          <section id="calculator" className="mt-32 pt-20 border-t border-slate-100">
+            <div className="flex flex-col mb-12">
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-600 mb-4">Мастер планирования</span>
+              <h3 className="text-3xl font-bold uppercase tracking-tighter">Расчет материалов и раскладка</h3>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mt-4 max-w-2xl leading-loose">
+                Используйте наш профессиональный инструмент для точного расчета. Укажите размеры стен, выберите раскладку и исключите лишние участки. Результат будет автоматически добавлен в корзину.
+              </p>
+            </div>
+            
+            <Calculator 
+              product={product} 
+              selectedVariation={selectedVariation || undefined}
+              selectedColor={selectedColor?.name || undefined}
+              onCalculate={handleCalculate}
+              extraItems={extraCalculatedItems}
+              quantity={mainQuantity}
+            >
+              <div className="mt-6 flex md:justify-end justify-center">
+                <div className="w-full md:w-[400px]">
+                  <AddToCart 
+                    product={{
+                      ...product,
+                      inStock: isSelectedColorInStock
+                    }} 
+                    selectedVariation={selectedVariation || undefined}
+                    selectedColor={selectedColor?.name || undefined}
+                    kitItems={kitItems}
+                    initialQuantity={mainQuantity}
+                    extraItems={extraCalculatedItems}
+                    hideUpsell={true}
+                  />
+                </div>
+              </div>
+            </Calculator>
+          </section>
+        )}
         {/* Bought Together Section */}
         {!isProfile && suggestedProducts.length > 0 && (
           <section className="mt-32 pt-20 border-t border-slate-100">
@@ -451,12 +513,20 @@ export default function ProductPageClient({ product }: { product: Product }) {
               {suggestedProducts.map((item) => (
                 <div key={item.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl">
                   <div className="aspect-square mb-6 overflow-hidden bg-white relative">
-                    <Image 
-                      src={item.images[0]} 
-                      alt={item.name} 
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
+                    {item.images[0] ? (
+                      <Image 
+                        src={item.images[0]} 
+                        alt={item.name} 
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center p-8 text-center bg-slate-100">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
+                          {item.name}
+                        </p>
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between items-start gap-4">

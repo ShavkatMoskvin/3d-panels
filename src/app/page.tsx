@@ -94,7 +94,7 @@ export default function Home() {
                           className={`group block transition-all duration-700 ${index === 1 ? 'md:mt-12' : ''}`}
                         >
                             <div className={`aspect-[4/5] bg-slate-50 relative overflow-hidden mb-8 border border-slate-100 ${!product.inStock ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-                                {product.images && product.images.length > 0 ? (
+                                {product.images && product.images.length > 0 && (
                                     <>
                                         <Image 
                                             src={product.images[0]} 
@@ -104,10 +104,6 @@ export default function Home() {
                                         />
                                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
                                     </>
-                                ) : (
-                                    <div className="absolute inset-0 flex items-center justify-center text-slate-200 font-light italic tracking-[0.5em] uppercase p-12 text-center text-[10px]">
-                                        {product.name}
-                                    </div>
                                 )}
                                 {!product.inStock && (
                                   <div className="absolute inset-0 flex items-center justify-center bg-black/5">
