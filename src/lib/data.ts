@@ -36,7 +36,21 @@ export const PRODUCTS: Product[] = [
       { name: "Andean white", inStock: false, stockCount: 0, image: "/images/products/Dolomitic Travertine-Andean white.png" },
       { name: "Dark grey", inStock: false, stockCount: 0, image: "/images/products/Dolomitic Travertine-Dark grey.png" },
       { name: "Andean red", inStock: false, stockCount: 0, image: "/images/products/Dolomitic Travertine-Andean red.png" }
-    ]
+    ],
+    ecoDetails: {
+      rating: 5,
+      labels: [
+        { id: "1", icon: "leaf", label: "Natural Carbon", description: "Натуральная основа из минералов" },
+        { id: "2", icon: "wind", label: "Zero VOC", description: "Без вредных летучих соединений" },
+        { id: "3", icon: "shield", label: "Health Safe", description: "Безопасно для детей и аллергиков" }
+      ],
+      composition: [
+        { material: "Кварцевый песок", percentage: 70 },
+        { material: "Минеральные пигменты", percentage: 20 },
+        { material: "Полимерная эмульсия", percentage: 10 }
+      ],
+      certificates: ["ISO 14001", "Eco Standard 2024", "Fire Safety A1"]
+    }
   },
   {
     id: "2",

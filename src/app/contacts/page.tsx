@@ -6,33 +6,34 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function ContactsPage() {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({ name: "", contact: "", message: "" });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setIsSubmitted(true);
-        setFormData({ name: "", contact: "", message: "" });
-        // Убрали автоматическое скрытие сообщения об успехе через 5 секунд
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState({ name: "", contact: "", message: "", _honeypot: "" });
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setIsLoading(true);
+  
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+  
+        if (response.ok) {
+          setIsSubmitted(true);
+          setFormData({ name: "", contact: "", message: "", _honeypot: "" });
+        } else {
+          const errorText = await response.text();
+          alert("Ошибка при отправке: " + errorText);
+        }
+      } catch {
+        alert("Сетевая ошибка. Проверьте соединение.");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error sending message:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  const contactInfo = [
+    };  const contactInfo = [
     {
       title: "Email",
       value: "shavkatmoskvin@gmail.com",
@@ -183,6 +184,17 @@ export default function ContactsPage() {
                   </div>
                 ) : (
                   <form className="space-y-8" onSubmit={handleSubmit}>
+                    {/* Honeypot field - hidden from users, visible to bots */}
+                    <div className="hidden" aria-hidden="true">
+                      <input 
+                        type="text" 
+                        name="_honeypot" 
+                        value={formData._honeypot}
+                        onChange={(e) => setFormData({ ...formData, _honeypot: e.target.value })}
+                        tabIndex={-1} 
+                        autoComplete="off" 
+                      />
+                    </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 ml-1">Ваше имя *</label>
                       <input 
@@ -224,6 +236,39 @@ export default function ContactsPage() {
                     </Button>
                   </form>
                 )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Legal Info Section */}
+      <section className="py-20 bg-slate-50 border-t border-slate-100">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold uppercase tracking-tighter mb-10 text-center">Юридическая информация</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 bg-white p-8 md:p-12 border border-slate-200 shadow-sm">
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Наименование</span>
+                <p className="text-sm font-bold uppercase">ИП Москвин Станислав Владимирович</p>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">ИНН</span>
+                <p className="text-sm font-bold uppercase tracking-widest">023800419102</p>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">ОГРНИП</span>
+                <p className="text-sm font-bold uppercase tracking-widest">320583500029382</p>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Дата регистрации</span>
+                <p className="text-sm font-bold uppercase tracking-widest">29 июля 2020 г.</p>
+              </div>
+              <div className="col-span-1 md:col-span-2 space-y-1 pt-4 border-t border-slate-50">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Основной вид деятельности</span>
+                <p className="text-xs text-slate-600 uppercase tracking-wider leading-relaxed">
+                  43.39 Производство прочих отделочных и завершающих работ
+                </p>
               </div>
             </div>
           </div>

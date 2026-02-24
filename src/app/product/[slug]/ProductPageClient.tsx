@@ -10,6 +10,8 @@ import { Product } from "@/types";
 import { CATEGORIES, PRODUCTS } from "@/lib/data";
 import { useState, useMemo, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import { ProductImage } from "@/components/ProductImage";
+import { EcoPassport } from "@/components/EcoPassport";
 
 export default function ProductPageClient({ product }: { product: Product }) {
   const router = useRouter();
@@ -152,25 +154,13 @@ export default function ProductPageClient({ product }: { product: Product }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
           {/* Left Column: Images */}
           <div className="lg:col-span-7">
-            <div className="aspect-[4/5] bg-slate-50 border border-slate-100 flex items-center justify-center relative overflow-hidden group">
-              {mainImage ? (
-                <>
-                  <Image 
-                    src={mainImage} 
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 image-overlay-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </>
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center p-20 text-center">
-                  <p className="text-[12px] font-bold uppercase tracking-[0.4em] text-slate-300 leading-loose">
-                    {product.name}<br/>
-                    <span className="text-[10px] opacity-60 font-medium">Premium Quality Image</span>
-                  </p>
-                </div>
-              )}
+            <div className="aspect-[4/5] bg-slate-50 border border-slate-100 relative overflow-hidden group">
+              <ProductImage 
+                src={mainImage} 
+                alt={product.name}
+                className="w-full h-full"
+              />
+              <div className="absolute inset-0 image-overlay-shadow opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
             </div>
             <div className="grid grid-cols-4 gap-4 mt-6">
               {product.images.map((img, i) => (
@@ -181,20 +171,11 @@ export default function ProductPageClient({ product }: { product: Product }) {
                   }`}
                   onClick={() => setMainImage(img)}
                 >
-                  <div className="relative w-full h-full flex items-center justify-center">
-                    {img ? (
-                      <Image 
-                        src={img} 
-                        alt={`${product.name} view ${i + 1}`}
-                        fill
-                        className={`object-cover transition-all duration-500 ${
-                          mainImage === img ? "scale-110 opacity-100" : "opacity-40 group-hover/thumb:opacity-100"
-                        }`}
-                      />
-                    ) : (
-                      <span className="text-[8px] font-bold text-slate-300 uppercase tracking-tighter">View {i+1}</span>
-                    )}
-                  </div>
+                  <ProductImage 
+                    src={img} 
+                    alt={`${product.name} view ${i + 1}`}
+                    className="w-full h-full"
+                  />
                 </button>
               ))}
             </div>
@@ -223,6 +204,11 @@ export default function ProductPageClient({ product }: { product: Product }) {
                 </div>
               </div>
             </div>
+
+            {/* Eco Passport */}
+            {product.ecoDetails && (
+              <EcoPassport details={product.ecoDetails} />
+            )}
           </div>
 
           {/* Right Column: Info & Actions */}
@@ -513,20 +499,11 @@ export default function ProductPageClient({ product }: { product: Product }) {
               {suggestedProducts.map((item) => (
                 <div key={item.id} className="group relative bg-slate-50 border border-slate-100 p-6 transition-all hover:bg-white hover:shadow-2xl">
                   <div className="aspect-square mb-6 overflow-hidden bg-white relative">
-                    {item.images[0] ? (
-                      <Image 
-                        src={item.images[0]} 
-                        alt={item.name} 
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center p-8 text-center bg-slate-100">
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
-                          {item.name}
-                        </p>
-                      </div>
-                    )}
+                    <ProductImage 
+                      src={item.images[0]} 
+                      alt={item.name} 
+                      className="w-full h-full transition-transform duration-700 group-hover:scale-110"
+                    />
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between items-start gap-4">

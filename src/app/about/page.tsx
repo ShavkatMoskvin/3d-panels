@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Trophy, Users, Star, Info } from "lucide-react";
+import { CheckCircle2, Trophy, Users, Star, Info, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 
 export default function AboutPage() {
@@ -78,6 +78,43 @@ export default function AboutPage() {
             <div className="relative aspect-square bg-slate-100 rounded-2xl overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center text-slate-300 font-bold uppercase tracking-[0.2em]">
                 Photo of our work
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust & Legal Section */}
+      <section className="py-24 bg-slate-50 border-t border-slate-100">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full shadow-sm mb-8">
+              <ShieldCheck className="w-8 h-8 text-blue-600" />
+            </div>
+            <h2 className="text-3xl font-bold uppercase tracking-tighter mb-6">Официальность и прозрачность</h2>
+            <p className="text-slate-500 text-sm uppercase tracking-widest leading-relaxed mb-10 max-w-2xl mx-auto">
+              Мы дорожим своей репутацией и работаем в строгом соответствии с законодательством РФ. 
+              Бренд <span className="text-slate-900 font-bold">MoskWin</span> представлен ИП Москвиным Станиславом Владимировичем, 
+              зарегистрированным в 2020 году. 
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+              <div className="bg-white p-8 border border-slate-100">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-blue-600">Договор</h4>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
+                  Заключаем официальный договор на поставку и монтаж, фиксируя сроки и стоимость.
+                </p>
+              </div>
+              <div className="bg-white p-8 border border-slate-100">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-blue-600">Гарантия</h4>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
+                  Несем полную юридическую ответственность за качество материалов и выполненных работ.
+                </p>
+              </div>
+              <div className="bg-white p-8 border border-slate-100">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest mb-3 text-blue-600">Документы</h4>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
+                  Предоставляем все необходимые закрывающие документы и чеки для каждого заказа.
+                </p>
               </div>
             </div>
           </div>

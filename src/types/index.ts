@@ -49,6 +49,20 @@ export interface Product {
     text: string;
     images?: string[];
   }[];
+  ecoDetails?: {
+    rating: number;
+    labels: {
+      id: string;
+      icon: string;
+      label: string;
+      description: string;
+    }[];
+    composition?: {
+      material: string;
+      percentage: number;
+    }[];
+    certificates?: string[];
+  };
 }
 
 export type Category = 
