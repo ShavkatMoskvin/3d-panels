@@ -5,7 +5,22 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
 
 // ЗАМЕНИТЕ XXXXXXXX НА ВАШ РЕАЛЬНЫЙ ID СЧЕТЧИКА ЯНДЕКС.МЕТРИКИ
-const YM_ID = 106837657; 
+export const YM_ID = 106837657; 
+
+/**
+ * Функция для отправки целей в Яндекс.Метрику
+ * @param goal - Идентификатор цели (например, 'add_to_cart')
+ */
+export const reachGoal = (goal: string) => {
+  // @ts-expect-error - ym is added by Yandex Metrika script
+  if (typeof window.ym !== 'undefined') {
+    // @ts-expect-error - ym is added by Yandex Metrika script
+    window.ym(YM_ID, 'reachGoal', goal);
+    console.log(`[YM] Goal reached: ${goal}`);
+  } else {
+    console.warn(`[YM] Cannot reach goal: ${goal}. Script not loaded.`);
+  }
+};
 
 function MetrikaLogic() {
   const pathname = usePathname();

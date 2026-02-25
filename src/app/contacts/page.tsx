@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Send, MessageSquare, Clock, ShieldCheck, Sparkles, Phone, CheckCircle2 } from "lucide-react";
+import { Mail, Send, MessageSquare, Clock, ShieldCheck, Sparkles, Phone, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState } from "react";
@@ -8,11 +8,13 @@ import { useState } from "react";
 export default function ContactsPage() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [formData, setFormData] = useState({ name: "", contact: "", message: "", _honeypot: "" });
   
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       setIsLoading(true);
+      setError(null);
   
       try {
         const response = await fetch("/api/contact", {
@@ -25,15 +27,16 @@ export default function ContactsPage() {
           setIsSubmitted(true);
           setFormData({ name: "", contact: "", message: "", _honeypot: "" });
         } else {
-          const errorText = await response.text();
-          alert("Ошибка при отправке: " + errorText);
+          const errorData = await response.json();
+          setError(errorData.error || "Произошла ошибка при отправке");
         }
       } catch {
-        alert("Сетевая ошибка. Проверьте соединение.");
+        setError("Сетевая ошибка. Проверьте соединение.");
       } finally {
         setIsLoading(false);
       }
-    };  const contactInfo = [
+    };
+  const contactInfo = [
     {
       title: "Email",
       value: "shavkatmoskvin@gmail.com",
@@ -227,6 +230,14 @@ export default function ContactsPage() {
                         placeholder="Например: Хочу узнать стоимость доставки в Пензу..."
                       ></textarea>
                     </div>
+
+                    {error && (
+                      <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 text-red-600 text-[10px] font-bold uppercase tracking-widest animate-in fade-in slide-in-from-top-1">
+                        <AlertCircle size={14} />
+                        {error}
+                      </div>
+                    )}
+
                     <Button 
                       disabled={isLoading}
                       className="w-full py-8 rounded-none bg-slate-900 hover:bg-blue-600 text-white transition-all uppercase text-xs font-bold tracking-[0.2em] group"

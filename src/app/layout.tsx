@@ -11,13 +11,13 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://3d-panels-penza.ru"),
+  metadataBase: new URL("https://3dpaneli-moskwin.ru"),
   title: {
-    default: "MoskWin | Премиальные 3D панели в Пензе",
+    default: "MoskWin | Продажа 3D панелей в Пензе",
     template: "%s | MoskWin"
   },
-  description: "Производство и продажа декоративных 3D панелей в Пензе. Гипсовые, реечные и SPC панели с бесплатной доставкой и профессиональным монтажом.",
-  keywords: ["3d панели", "стеновые панели", "дизайн интерьера", "Пенза", "отделка стен", "гипсовые панели", "реечные панели", "купить панели"],
+  description: "Продажа и доставка декоративных 3D панелей в Пензе. Гипсовые, реечные и SPC панели с бесплатной доставкой и профессиональным монтажом по городу и области.",
+  keywords: ["3d панели пенза", "купить стеновые панели", "дизайн интерьера пенза", "отделка стен пенза", "гипсовые панели пенза", "реечные панели", "магазин панелей"],
   authors: [{ name: "MoskWin" }],
   creator: "MoskWin",
   icons: {
@@ -28,10 +28,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    url: "https://3d-panels-penza.ru", // Замените на ваш реальный домен
+    url: "https://3dpaneli-moskwin.ru",
     siteName: "MoskWin",
-    title: "MoskWin | Премиальные 3D панели в Пензе",
-    description: "Декоративные панели для вашего интерьера. Бесплатная доставка и гарантия на монтаж.",
+    title: "MoskWin | Продажа 3D панелей в Пензе",
+    description: "Декоративные панели в Пензе. Бесплатная доставка, большой выбор и гарантия на монтаж.",
     images: [
       {
         url: "/og-image.jpg",

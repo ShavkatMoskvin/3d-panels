@@ -3,7 +3,24 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, contact, message } = body;
+    const { name, contact, message, _honeypot } = body;
+
+    // Honeypot check: if this hidden field is filled, it's a bot
+    if (_honeypot && _honeypot.length > 0) {
+      console.log("Honeypot triggered, ignoring request");
+      return NextResponse.json({ success: true, shadowed: true });
+    }
+
+    // Basic validation: prevent empty or too short "garbage" messages
+    if (!name || name.trim().length < 2) {
+      return NextResponse.json({ success: false, error: "Имя слишком короткое" }, { status: 400 });
+    }
+    if (!contact || contact.trim().length < 3) {
+      return NextResponse.json({ success: false, error: "Укажите корректный контакт" }, { status: 400 });
+    }
+    if (!message || message.trim().length < 5) {
+      return NextResponse.json({ success: false, error: "Сообщение слишком короткое" }, { status: 400 });
+    }
 
     const text = `
 📩 **НОВОЕ СООБЩЕНИЕ ИЗ ФОРМЫ СВЯЗИ** 📩

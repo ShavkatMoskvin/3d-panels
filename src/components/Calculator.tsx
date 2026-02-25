@@ -7,6 +7,7 @@ import { Plus, Minus, RotateCcw, LayoutGrid } from "lucide-react";
 import { PRODUCTS } from "@/lib/data";
 import { ProductImage } from "./ProductImage";
 import { useCart } from "@/context/CartContext";
+import { reachGoal } from "./YandexMetrika";
 
 interface PanelData {
   id: string;
@@ -460,7 +461,10 @@ export function Calculator({
                 <input
                   type="number"
                   value={width}
-                  onChange={(e) => setWidth(e.target.value)}
+                  onChange={(e) => {
+                    setWidth(e.target.value);
+                    reachGoal('use_calculator');
+                  }}
                   className="w-full bg-slate-50 border-b-2 border-slate-100 focus:border-blue-600 outline-none p-3 text-lg font-bold transition-all"
                 />
               </div>
@@ -469,7 +473,10 @@ export function Calculator({
                 <input
                   type="number"
                   value={height}
-                  onChange={(e) => setHeight(e.target.value)}
+                  onChange={(e) => {
+                    setHeight(e.target.value);
+                    reachGoal('use_calculator');
+                  }}
                   className="w-full bg-slate-50 border-b-2 border-slate-100 focus:border-blue-600 outline-none p-3 text-lg font-bold transition-all"
                 />
               </div>

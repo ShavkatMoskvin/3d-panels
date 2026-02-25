@@ -7,6 +7,7 @@ import { Trash2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { CATEGORIES } from "@/lib/data";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { reachGoal } from "@/components/YandexMetrika";
 
 export default function CartPage() {
   const { items, removeFromCart, updateQuantity, clearCart, totalPrice, includeInstallation, setIncludeInstallation, installationPrice } = useCart();
@@ -300,7 +301,11 @@ export default function CartPage() {
                 <span>{totalPrice} ₽</span>
               </div>
 
-              <Link href="/checkout" className="block">
+              <Link 
+                href="/checkout" 
+                className="block"
+                onClick={() => reachGoal('start_checkout')}
+              >
                 <Button className="w-full rounded-none py-10 uppercase tracking-[0.3em] text-sm bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-2xl shadow-blue-200 border-none" size="lg">
                   Оформить заказ
                 </Button>

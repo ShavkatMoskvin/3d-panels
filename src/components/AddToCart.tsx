@@ -8,6 +8,7 @@ import { ShoppingCart, Check, Minus, Plus, ArrowRight } from "lucide-react";
 import { PRODUCTS } from "@/lib/data";
 import Link from "next/link";
 import { ProductImage } from "./ProductImage";
+import { reachGoal } from "./YandexMetrika";
 
 export function AddToCart({ 
   product, 
@@ -93,6 +94,9 @@ export function AddToCart({
 
   const handleAdd = () => {
     const q = initialQuantity || 1;
+    
+    // Отправляем цель в Яндекс.Метрику
+    reachGoal('add_to_cart');
     
     // Добавляем основной товар только если это НЕ набор
     // (Если это набор, мы добавляем только его компоненты)
