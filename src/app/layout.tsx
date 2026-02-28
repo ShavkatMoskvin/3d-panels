@@ -51,6 +51,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={`${inter.className} min-h-screen flex flex-col`}>
+        <YandexMetrika />
         <CartProvider>
           <Header />
           <main className="flex-1">
@@ -58,7 +59,6 @@ export default function RootLayout({
           </main>
           <Footer />
         </CartProvider>
-        <YandexMetrika />
         <Analytics />
         <Script 
           src="https://integrationjs.tbank.ru/integration.js"
