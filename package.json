@@ -25,10 +25,12 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.19",
+    "dotenv": "^17.3.1",
     "eslint": "^8",
     "eslint-config-next": "latest",
     "husky": "^9.1.7",

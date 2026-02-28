@@ -12,7 +12,10 @@ export default function Home() {
   const [reviewForm, setReviewForm] = useState({ name: "", text: "", rating: 5 });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const featuredProducts = PRODUCTS.filter(p => p.inStock && !p.isHidden).slice(0, 3);
+  const featuredSlugs = ['dolomitic-travertine', 'ancient-wood', 'ridged-stone'];
+  const featuredProducts = featuredSlugs
+    .map(slug => PRODUCTS.find(p => p.slug === slug))
+    .filter((p): p is NonNullable<typeof p> => !!p);
 
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();

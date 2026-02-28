@@ -15,6 +15,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 4600,
     images: [
+      "/images/products/viz-stone/Dolomitic Travertine-viz.jpeg",
       "/images/products/Dolomitic Travertine-Claybank.jpg",
       "/images/products/Dolomitic Travertine.png",
       "/images/products/Dolomitic Travertine-Andean white.png",
@@ -91,6 +92,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 4600,
     images: [
+      "/images/products/viz-stone/Romantine-Cloudy White-viz.jpeg",
       "/images/products/Romantine-Cloudy White.jpg",
       "/images/products/Romanite.png",
       "/images/products/Romanite-Cloudy white.png",
@@ -98,7 +100,7 @@ export const PRODUCTS: Product[] = [
     ],
     stockCount: 100,
     inStock: true,
-    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    description: "Точная имитация античного римского камня с характерными «облачными» переходами цвета. Материал обладает матовой, слегка шероховатой поверхностью, которая идеально передает эстетику состаренной каменной кладки.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
       { size: "1200*600", price: 4600 },
@@ -110,7 +112,21 @@ export const PRODUCTS: Product[] = [
       { name: "Cloudy White", inStock: true, stockCount: 100, image: "/images/products/Romantine-Cloudy White.jpg" },
       { name: "Cloudy white", inStock: false, stockCount: 0, image: "/images/products/Romanite-Cloudy white.png" },
       { name: "Cloudy grey", inStock: false, stockCount: 0, image: "/images/products/Romanite-Cloudy grey.png" }
-    ]
+    ],
+    ecoDetails: {
+      rating: 5,
+      labels: [
+        { id: "e1", icon: "leaf", label: "Natural Base", description: "90% натуральных минеральных компонентов" },
+        { id: "e2", icon: "wind", label: "Breathable", description: "Паропроницаемая структура материала" },
+        { id: "e3", icon: "shield", label: "Eco Certified", description: "Безопасно для жилых помещений" }
+      ],
+      composition: [
+        { material: "Минеральный кварц", percentage: 75 },
+        { material: "Природные пигменты", percentage: 15 },
+        { material: "Связующее ECO-Life", percentage: 10 }
+      ],
+      certificates: ["Green Building Council", "EcoStandard Silver", "Fire Safe KM1"]
+    }
   },
   {
     id: "4",
@@ -147,6 +163,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 4600,
     images: [
+      "/images/products/viz-stone/Rowena Travertine-viz.png",
       "/images/products/Rowena Travertine-Taupe.jpg",
       "/images/products/Rowena Travertine.png",
       "/images/products/Rowena Travertine-Beige.png",
@@ -156,7 +173,7 @@ export const PRODUCTS: Product[] = [
     ],
     stockCount: 100,
     inStock: true,
-    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    description: "Реалистичная репродукция итальянского травертина с выраженной слоистой структурой. Текстура имеет характерные каверны и прожилки, создавая глубокий визуальный объем при любом типе освещения.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
       { size: "1200*600", price: 4600 },
@@ -170,7 +187,21 @@ export const PRODUCTS: Product[] = [
       { name: "Creamy Yellow", inStock: false, stockCount: 0, image: "/images/products/Rowena Travertine-Creamy Yellow.png" },
       { name: "Grey", inStock: false, stockCount: 0, image: "/images/products/Rowena Travertine-Grey.png" },
       { name: "Light brown", inStock: false, stockCount: 0, image: "/images/products/Rowena Travertine-Light brown.png" }
-    ]
+    ],
+    ecoDetails: {
+      rating: 5,
+      labels: [
+        { id: "e4", icon: "leaf", label: "Zero VOC", description: "Отсутствие летучих органических соединений" },
+        { id: "e5", icon: "wind", label: "Clean Air", description: "Способствует чистоте воздуха в помещении" },
+        { id: "e6", icon: "shield", label: "Anti-Bacterial", description: "Природная защита от плесени и грибка" }
+      ],
+      composition: [
+        { material: "Осадочные породы", percentage: 80 },
+        { material: "Природные смолы", percentage: 12 },
+        { material: "Минеральные добавки", percentage: 8 }
+      ],
+      certificates: ["ISO 14001 Certified", "Indoor Air Comfort GOLD"]
+    }
   },
   {
     id: "6",
@@ -179,6 +210,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 4800,
     images: [
+      "/images/products/viz-stone/Ando Cement-viz.jpeg",
       "/images/products/Ando Cement-Warm grey.jpg",
       "/images/products/Ando Cement.png",
       "/images/products/Ando Cement-Cement grey.png",
@@ -186,7 +218,7 @@ export const PRODUCTS: Product[] = [
     ],
     stockCount: 100,
     inStock: true,
-    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    description: "Индустриальный дизайн с фактурой архитектурного бетона. Поверхность сочетает гладкость цементной плиты и естественные микро-дефекты «сырого» литья, характерные для стиля брутализм.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
       { size: "1200*600", price: 4800 },
@@ -198,7 +230,21 @@ export const PRODUCTS: Product[] = [
       { name: "Warm grey", inStock: true, stockCount: 100, image: "/images/products/Ando Cement-Warm grey.jpg" },
       { name: "Cement grey", inStock: false, stockCount: 0, image: "/images/products/Ando Cement-Cement grey.png" },
       { name: "Sunset Glow", inStock: false, stockCount: 0, image: "/images/products/Ando Cement-Sunset Glow.png" }
-    ]
+    ],
+    ecoDetails: {
+      rating: 5,
+      labels: [
+        { id: "e7", icon: "leaf", label: "Recyclable", description: "Материал полностью подлежит переработке" },
+        { id: "e8", icon: "wind", label: "Low Emission", description: "Минимальный углеродный след при производстве" },
+        { id: "e9", icon: "shield", label: "Safe Home", description: "Рекомендовано для детских и спален" }
+      ],
+      composition: [
+        { material: "Очищенный песок", percentage: 85 },
+        { material: "Природный цемент", percentage: 10 },
+        { material: "Акриловые полимеры", percentage: 5 }
+      ],
+      certificates: ["EU Ecolabel", "Blue Angel Environmentally Friendly"]
+    }
   },
   {
     id: "7",
@@ -207,12 +253,13 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 4800,
     images: [
+      "/images/products/viz-stone/Slate-Veil Dark Grey-viz.jpeg",
       //"/images/products/Slate.png",
       "/images/products/Slate-Veil Dark Grey.jpg"
     ],
     stockCount: 100,
     inStock: true,
-    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    description: "Материал с многослойной фактурой натурального колотого сланца. Глубокий рельеф и игра оттенков антрацита создают эффект монолитной каменной скалы с выраженной тактильностью.",
     specifications: { width: 1200, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
       { size: "1200*600", price: 4800 },
@@ -222,7 +269,21 @@ export const PRODUCTS: Product[] = [
     ],
     colors: [
       { name: "Veil Dark Grey", inStock: true, stockCount: 100, image: "/images/products/Slate-Veil Dark Grey.jpg" }
-    ]
+    ],
+    ecoDetails: {
+      rating: 5,
+      labels: [
+        { id: "e10", icon: "leaf", label: "Mineral Content", description: "Натуральная основа из каменной крошки" },
+        { id: "e11", icon: "wind", label: "Odorless", description: "Абсолютно никакого запаха после монтажа" },
+        { id: "e12", icon: "shield", label: "Non-Toxic", description: "Не содержит формальдегидов и тяжелых металлов" }
+      ],
+      composition: [
+        { material: "Сланцевая крошка", percentage: 78 },
+        { material: "Минеральное волокно", percentage: 12 },
+        { material: "Эко-полимер", percentage: 10 }
+      ],
+      certificates: ["Eco-Certificate 2024", "Standard 100 by OEKO-TEX"]
+    }
   },
   {
     id: "8",
@@ -374,12 +435,13 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 7400,
     images: [
+      "/images/products/viz-stone/Marble Pillar-Bulgari-viz.jpeg",
       "/images/products/Marble Pillar-Bulgari.jpg",
       "/images/products/Marble Pillar.png"
     ],
     stockCount: 100,
     inStock: true,
-    description: "Гибкий камень NEO с UV-печатью. Толщина 3-5 мм.",
+    description: "Эксклюзивные рельефные панели с вертикальным 3D-профилем. Рисунок премиального мрамора Bulgari плавно огибает полукруглые ребра, создавая эффектную игру теней и бесшовный ритм на стене.",
     specifications: { width: 3000, height: 600, depth: 3, material: "Кварцевый песок, кальциевый порошок, эмульсия" },
     variations: [
       { size: "3000*600", price: 7400 },
@@ -387,7 +449,21 @@ export const PRODUCTS: Product[] = [
     ],
     colors: [
       { name: "Bulgari", inStock: true, stockCount: 100, image: "/images/products/Marble Pillar-Bulgari.jpg" }
-    ]
+    ],
+    ecoDetails: {
+      rating: 5,
+      labels: [
+        { id: "e13", icon: "leaf", label: "Sustainable", description: "Использование восполняемых ресурсов" },
+        { id: "e14", icon: "wind", label: "Indoor Care", description: "Поддерживает здоровый уровень влажности" },
+        { id: "e15", icon: "shield", label: "Family Safe", description: "Сертифицировано для жилых зон" }
+      ],
+      composition: [
+        { material: "Природный кварц", percentage: 72 },
+        { material: "Минеральные наполнители", percentage: 18 },
+        { material: "Эко-акрилат", percentage: 10 }
+      ],
+      certificates: ["Green Label Plus", "EMICODE EC1 Plus"]
+    }
   },
   {
     id: "16",
@@ -396,6 +472,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 7400,
     images: [
+      "/images/products/viz-stone/Crude Wood Ripple-Light Yellow-viz.jpeg",
       "/images/products/Crude Wood Ripple-Light Yellow.jpg",
       "/images/products/Crude Wood Ripple Board.png"
     ],
@@ -418,6 +495,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 6700,
     images: [
+      "/images/products/viz-stone/Ancient Wood-Dark Brown-viz.png",
       "/images/products/Ancient Wood-Dark Brown.jpg",
       "/images/products/Ancient Wood.png"
     ],
@@ -651,6 +729,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 5900,
     images: [
+      "/images/products/viz-stone/Big Weaving-Jacinth-viz.jpeg",
       "/images/products/Big Weaving-Jacinth.jpg",
       "/images/products/Big Weaving.png"
     ],
@@ -673,6 +752,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 5900,
     images: [
+      "/images/products/viz-stone/Cut Stone-Red-viz.jpeg",
       "/images/products/Cut Stone-Red.jpg"
     ],
     stockCount: 100,
@@ -707,6 +787,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 7200,
     images: [
+      "/images/products/viz-stone/Ridged Stone-Pire White-viz.png",
       "/images/products/Ridged Stone-Pire White.jpg"
     ],
     stockCount: 100,
@@ -724,6 +805,7 @@ export const PRODUCTS: Product[] = [
     category: "flexible-stone",
     price: 7200,
     images: [
+      "/images/products/viz-stone/Starmoon Stone-Dark Grey-viz.jpeg",
       "/images/products/Starmoon Stone-Dark Grey.jpg"
     ],
     stockCount: 100,
